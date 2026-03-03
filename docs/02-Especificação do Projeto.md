@@ -50,15 +50,25 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 
 |ID    | Descrição do Requisito  | Prioridade | Responsável |
 |------|-----------------------------------------|----|----|
-|RF-001| Permitir que o usuário cadastre tarefas | ALTA | Pedro |
-|RF-002| Emitir um relatório de tarefas no mês   | MÉDIA | João |
+|RF-001| O sistema deve permitir registrar o nome, contato e uma breve descrição de cada devedor.  | ALTA | Pedro |
+|RF-002| O usuário deve conseguir inserir o valor principal, a taxa de juros ou acréscimo (lucro) e a data da transação.   | MÉDIA | João |
+|RF-003| A aplicação deve calcular e exibir automaticamente o valor total a ser recebido (Principal + Lucro)   | MÉDIA | João |
+|RF-004| O usuário deve definir uma data de vencimento para cada dívida cadastrada.   | MÉDIA | João |
+|RF-005| O sistema deve enviar alertas ou notificações no dia exato estipulado para cobrar o devedor.   | MÉDIA | João |
+|RF-006| Deve ser possível marcar as dívidas como "Pendente", "Pago Parcialmente" ou "Liquidado"   | MÉDIA | João |
+|RF-007| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | João |
 
 ### Requisitos não Funcionais
 
 |ID     | Descrição do Requisito  |Prioridade |
 |-------|-------------------------|----|
-|RNF-001| O sistema deve ser responsivo para rodar em um dispositivos móvel | MÉDIA | 
-|RNF-002| Deve processar requisições do usuário em no máximo 3s |  BAIXA | 
+|RNF-001| Por ser focado em pequenos comerciantes, o design deve ser intuitivo e fácil de usar em dispositivos móveis. | MÉDIA | 
+|RNF-002| Os dados financeiros devem ser protegidos por senha, biometria ou autenticação de dois fatores (2FA). |  ALTA |
+|RNF-003| O comerciante deve conseguir consultar e registrar dívidas mesmo sem conexão com a internet, sincronizando os dados posteriormente. |  MÉDIA |
+|RNF-004| O carregamento da lista de devedores e cálculos de juros deve ocorrer em menos de 2 segundos. |  MÉDIA |
+|RNF-005| O sistema deve garantir que os dados dos devedores não sejam compartilhados com terceiros, seguindo as diretrizes da LGPD (Lei Geral de Proteção de Dados). |  ALTA |
+|RNF-006| A aplicação deve ser responsiva, funcionando perfeitamente em sistemas Android e iOS. |  BAIXA |
+|RNF-007| O sistema deve realizar cópias de segurança em nuvem (ex: Google Drive) para evitar perda de dados em caso de troca de aparelho. |  MÉDIA |
 
 Com base nas Histórias de Usuário, enumere os requisitos da sua solução. Classifique esses requisitos em dois grupos:
 
@@ -79,10 +89,15 @@ todos os aspectos capturados nas Histórias de Usuário foram cobertos.
 
 O projeto está restrito pelos itens apresentados na tabela a seguir.
 
-|ID| Restrição                                             |
-|--|-------------------------------------------------------|
-|01| O projeto deverá ser entregue até o final do semestre |
-|02| Não pode ser desenvolvido um módulo de backend        |
+|ID| Restrição                                             |                                                                                       |
+|--|-------------------------------------------------------|---------------------------------------------------------------------------------------|
+|01| Tecnologia Multiplataforma       | O código deve ser único para rodar em Web, Android e iOS (não pode fazer um código separado para cada um). |
+|02| Custo Zero de Licenciamento       | Não podem ser usadas ferramentas pagas no desenvolvimento; apenas tecnologias gratuitas ou de código aberto. |
+|03| Dependência de Conexão        | O sistema não pode depender de internet de alta velocidade para funcionar (deve ser leve para redes 3G). |
+|04| Segurança da Informação        | É proibido armazenar senhas em texto simples; deve-se usar criptografia para proteger os dados dos comerciantes. |
+|05| Identidade Visual        | O design deve seguir estritamente o guia de cores e logo do "Paga Aí", sem usar componentes padrão de outros sistemas. |
+|06| Escalabilidade de Dados        | O banco de dados não pode ser apenas local; deve suportar o crescimento para milhares de usuários simultâneos. |
+|07| Limitação Financeira        | O app não pode realizar cobranças bancárias (boletos/PIX) diretamente, funcionando apenas como uma agenda de controle. |
 
 Enumere as restrições à sua solução. Lembre-se de que as restrições geralmente limitam a solução candidata.
 
