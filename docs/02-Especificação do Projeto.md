@@ -11,31 +11,38 @@ Apresente uma visão geral do que será abordado nesta parte do documento, enume
 Pedro Paulo tem 26 anos, é arquiteto recém-formado e autônomo. Pensa em se desenvolver profissionalmente através de um mestrado fora do país, pois adora viajar, é solteiro e sempre quis fazer um intercâmbio. Está buscando uma agência que o ajude a encontrar universidades na Europa que aceitem alunos estrangeiros.
 
 Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
-## 01 - Gustavo Almeida
 
-![download (1)](https://github.com/user-attachments/assets/5e0b1b73-85a0-4b76-93b9-f1d5c616bc17)
+## 01 - Davi Lutier
+
+![Face](https://github.com/user-attachments/assets/e0fb603c-5d56-4a66-b5f7-1f4a8b11ba70)
 
 **Idade:** 38 anos  
-**Profissão:** Empresário no setor de tecnologia  
+**Profissão:** Dono de Mercearia  
 **Localização:** São Paulo, Brasil  
-**Formação:** Administração de Empresas  
-**Objetivo:** Melhorar sua produtividade organizando tarefas e compromissos de forma eficiente. 
+**Formação:** Ensino Médio  
+**Objetivo:** Organizar e administrar de forma mais facil as pessoas que estão em débito
 
 ## Descrição  
-Gustavo é um empresário dinamico e apaixonado por inovação. Ele gerencia sua própria empresa de tecnologia e precisa lidar com múltiplos projetos, reuniões, clientes e sua equipe diariamente. Apesar de ter experiência em administração, ele sente dificuldade em acompanhar todas as suas tarefas e prazos, o que gera estresse e retrabalho. Gustavo busca uma ferramenta que o ajude a organizar sua rotina de forma prática, permitindo a delegação de atividades e o controle do progresso de suas responsabilidades.  
+Davi Lutier é dono de um pequeno comércio e lida diariamente com clientes fiéis. Para manter o bom relacionamento, ele costuma vender fiado ou parcelar pagamentos informalmente. Com o tempo, passou a ter dificuldades para controlar quem está devendo, quanto deve e há quanto tempo a dívida existe. Hoje, Davi usa anotações em cadernos e mensagens no WhatsApp, o que gera confusão, esquecimentos e prejuízos financeiros.
 
 ## Dores  
-- Sente que está sempre sobrecarregado e com tarefas acumuladas.  
-- Tem dificuldade em manter controle sobre prazos e compromissos.  
-- Muitas reuniões acabam conflitando com outras prioridades do dia.  
-- Perde tempo com retrabalho por não visualizar claramente suas pendências.  
+- Não consegue lembrar exatamente quem está devendo e quanto cada pessoa deve.
+
+- Perde tempo procurando anotações antigas ou mensagens espalhadas.
+
+- Sente desconforto ao cobrar clientes por não ter informações claras.
+
+- Já teve prejuízos financeiros por esquecer ou perder registros de dívidas.
 
 ## Expectativas  
-- Utilize um gerenciador de tarefas intuitivo para planejar e priorizar suas atividades.  
-- Receber notificações e lembretes para compromissos importantes.  
-- Ter a opção de direcionar e delegar tarefas para sua equipe e acompanhar o andamento.  
-- Opção de extrair relatórios sobre sua produtividade para otimizar sua gestão de tempo.
-- 
+- Ter uma lista organizada de pessoas devedoras, com valores e datas.
+
+- Conseguir registrar novas dívidas rapidamente, direto pelo celular.
+
+- Visualizar alertas ou lembretes de cobranças pendentes.
+
+- Manter um histórico simples e confiável, sem precisar de planilhas ou papel.
+ 
 > **Links Úteis**:
 > - [Rock Content](https://rockcontent.com/blog/personas/)
 > - [Hotmart](https://blog.hotmart.com/pt-br/como-criar-persona-negocio/)
