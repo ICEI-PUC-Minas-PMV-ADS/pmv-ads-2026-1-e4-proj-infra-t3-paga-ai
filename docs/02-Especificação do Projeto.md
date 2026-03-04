@@ -42,6 +42,76 @@ Davi Lutier é dono de um pequeno comércio e lida diariamente com clientes fié
 - Visualizar alertas ou lembretes de cobranças pendentes.
 
 - Manter um histórico simples e confiável, sem precisar de planilhas ou papel.
+
+
+ ## 02 - Victor Ferraz
+
+![Face (1)](https://github.com/user-attachments/assets/1f35e4ab-8ada-40d3-8a62-86e7b155dfbb)
+
+- **Idade**: 45 anos
+- **Profissão**: Autônomo / Investidor informal
+- **Localização**: Belo Horizonte, Brasil
+- **Formação**: Ensino Médio completo
+- **Objetivo**: Reduzir erros de cálculo e retrabalho, usando uma ferramenta confiável e automatizada.
+
+## Descrição
+
+Victor Ferraz empresta dinheiro para conhecidos como uma forma de renda extra. Ele sempre combina juros antes do empréstimo, mas faz esse controle de maneira informal, usando blocos de notas e planilhas simples. Com o aumento da quantidade de pessoas que tomam dinheiro emprestado, Marcos começou a se perder nos cálculos de juros, prazos e no lucro real obtido em cada empréstimo.
+
+## Dores
+
+- Dificuldade em calcular corretamente juros acumulados.
+
+- Falta de visão clara sobre o lucro real de cada empréstimo.
+
+- Risco de erro ao usar planilhas manuais.
+
+- Perda de tempo recalculando valores sempre que alguém paga parcialmente.
+
+## Expectativas
+
+- Definir valor emprestado, juros e prazo no momento do registro.
+
+- Cálculo automático do valor total a receber.
+
+- Visualização clara do lucro obtido com juros.
+
+- Histórico detalhado de pagamentos e empréstimos concluídos.
+
+
+  ## 03 - Carla Menezes
+
+ ![download](https://github.com/user-attachments/assets/e84e5090-be00-4e33-8edd-270feb1139ea)
+
+- **Idade**: 32 anos
+- **Profissão**: Microempreendedora
+- **Localização**: Curitiba, Brasil
+- **Formação**: Graduação em Marketing Digital
+- **Objetivo**: Visualizar facilmente quanto já recebeu e quanto ainda falta receber.
+
+## Descrição
+
+Carla empresta dinheiro para amigos, familiares e conhecidos do bairro, sempre cobrando juros acordados verbalmente. Ela não se considera uma investidora, mas vê isso como uma forma de ajudar e, ao mesmo tempo, ganhar um retorno financeiro. O problema é que Carla se confunde com valores, datas e quanto realmente lucrou no final de cada empréstimo.
+
+## Dores
+
+- Esquece datas de pagamento combinadas.
+
+- Não sabe exatamente quanto lucrou em cada empréstimo.
+
+- Dificuldade para acompanhar pagamentos parciais.
+
+- Falta de organização gera conflitos com quem pegou dinheiro emprestado.
+
+## Expectativas
+
+- Cadastro rápido de empréstimos pelo celular.
+
+- Definição clara de juros personalizados por pessoa.
+
+- Visualização simples do lucro total e por empréstimo.
+
+- Alertas de vencimento e controle de pagamentos parciais.
  
 > **Links Úteis**:
 > - [Rock Content](https://rockcontent.com/blog/personas/)
