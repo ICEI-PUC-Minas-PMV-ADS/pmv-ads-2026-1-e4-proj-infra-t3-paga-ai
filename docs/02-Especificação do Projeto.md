@@ -11,7 +11,31 @@ Apresente uma visão geral do que será abordado nesta parte do documento, enume
 Pedro Paulo tem 26 anos, é arquiteto recém-formado e autônomo. Pensa em se desenvolver profissionalmente através de um mestrado fora do país, pois adora viajar, é solteiro e sempre quis fazer um intercâmbio. Está buscando uma agência que o ajude a encontrar universidades na Europa que aceitem alunos estrangeiros.
 
 Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
+## 01 - Gustavo Almeida
 
+![download (1)](https://github.com/user-attachments/assets/5e0b1b73-85a0-4b76-93b9-f1d5c616bc17)
+
+**Idade:** 38 anos  
+**Profissão:** Empresário no setor de tecnologia  
+**Localização:** São Paulo, Brasil  
+**Formação:** Administração de Empresas  
+**Objetivo:** Melhorar sua produtividade organizando tarefas e compromissos de forma eficiente. 
+
+## Descrição  
+Gustavo é um empresário dinamico e apaixonado por inovação. Ele gerencia sua própria empresa de tecnologia e precisa lidar com múltiplos projetos, reuniões, clientes e sua equipe diariamente. Apesar de ter experiência em administração, ele sente dificuldade em acompanhar todas as suas tarefas e prazos, o que gera estresse e retrabalho. Gustavo busca uma ferramenta que o ajude a organizar sua rotina de forma prática, permitindo a delegação de atividades e o controle do progresso de suas responsabilidades.  
+
+## Dores  
+- Sente que está sempre sobrecarregado e com tarefas acumuladas.  
+- Tem dificuldade em manter controle sobre prazos e compromissos.  
+- Muitas reuniões acabam conflitando com outras prioridades do dia.  
+- Perde tempo com retrabalho por não visualizar claramente suas pendências.  
+
+## Expectativas  
+- Utilize um gerenciador de tarefas intuitivo para planejar e priorizar suas atividades.  
+- Receber notificações e lembretes para compromissos importantes.  
+- Ter a opção de direcionar e delegar tarefas para sua equipe e acompanhar o andamento.  
+- Opção de extrair relatórios sobre sua produtividade para otimizar sua gestão de tempo.
+- 
 > **Links Úteis**:
 > - [Rock Content](https://rockcontent.com/blog/personas/)
 > - [Hotmart](https://blog.hotmart.com/pt-br/como-criar-persona-negocio/)
