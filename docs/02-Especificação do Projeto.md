@@ -129,8 +129,18 @@ Com base na análise das personas forma identificadas as seguintes histórias de
 
 |EU COMO... `PERSONA`| QUERO/PRECISO ... `FUNCIONALIDADE` |PARA ... `MOTIVO/VALOR`                 |
 |--------------------|------------------------------------|----------------------------------------|
-|Usuário do sistema  | Registrar minhas tarefas           | Não esquecer de fazê-las               |
-|Administrador       | Alterar permissões                 | Permitir que possam administrar contas |
+|Davi  | cadastrar o nome, contato e descrição de um devedor                    | identificar facilmente quem está me devendo      |
+|Davi  | registrar uma nova dívida com valor e data da transação                | manter controle das vendas feitas fiado          |
+|Davi  |	definir uma data de vencimento para cada dívida                        |	saber quando devo cobrar o cliente               |
+|Davi  |	marcar uma dívida como pendente, parcialmente paga ou liquidada        |	acompanhar o status dos pagamentos               |
+|Marcos|	registrar um empréstimo informando valor principal e taxa de juros     |	calcular corretamente o retorno do empréstimo    |
+|Marcos|	visualizar automaticamente o valor total a receber (principal + lucro) |	entender quanto irei ganhar com o empréstimo     |
+|Marcos|	visualizar um resumo do dinheiro emprestado e do lucro previsto        |	acompanhar meus ganhos e investimentos           |
+|Marcos|	registrar quando um pagamento parcial ou total é realizado             |	manter controle sobre quanto ainda falta receber |
+|Carla |	cadastrar rapidamente pessoas que pegaram dinheiro emprestado	         | organizar melhor meus registros                  |
+|Carla |	definir juros ou acréscimos em cada empréstimo                         |	garantir que eu tenha lucro nas transações       |
+|Carla |	receber notificações na data de vencimento das dívidas                 |	não esquecer de cobrar quem me deve              |
+|Carla |	visualizar o valor total de dinheiro emprestado e lucro esperado       |	entender quanto estou ganhando com essa atividade|
 
 Apresente aqui as histórias de usuário que são relevantes para o projeto de sua solução. As Histórias de Usuário consistem em uma ferramenta poderosa para a compreensão e elicitação dos requisitos funcionais e não funcionais da sua aplicação. Se possível, agrupe as histórias de usuário por contexto, para facilitar consultas recorrentes à essa parte do documento.
 
