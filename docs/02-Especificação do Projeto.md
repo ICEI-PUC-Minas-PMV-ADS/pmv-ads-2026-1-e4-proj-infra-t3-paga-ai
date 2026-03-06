@@ -161,11 +161,11 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 
 |ID    | Descrição do Requisito  | Prioridade | Responsável |
 |------|-----------------------------------------|----|----|
-|RF-001| O sistema deve permitir registrar o nome, contato e uma breve descrição de cada devedor.  | ALTA | Pedro |
-|RF-002| O usuário deve conseguir inserir o valor principal, a taxa de juros ou acréscimo (lucro) e a data da transação.   | MÉDIA | João |
-|RF-003| A aplicação deve calcular e exibir automaticamente o valor total a ser recebido (Principal + Lucro)   | MÉDIA | João |
+|RF-001| O sistema deve permitir cadrastar e registrar, nome, contato e adicionar  cada devedor, com sincronização em nuvem entre Web e Mobile.  | ALTA | Pedro |
+|RF-002| O usuário deve inserir o valor principal, a taxa de juros/acréscimo e a data, permitindo edição em ambas as plataformas.   | ALTA | João |
+|RF-003| O sistema deve calcular automaticamente o valor total (Principal + Lucro) usando a mesma lógica de cálculo no servidor.   | ALTA | João |
 |RF-004| O usuário deve definir uma data de vencimento para cada dívida cadastrada.   | MÉDIA | João |
-|RF-005| O sistema deve enviar alertas ou notificações no dia exato estipulado para cobrar o devedor.   | MÉDIA | João |
+|RF-005| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | MÉDIA | João |
 |RF-006| Deve ser possível marcar as dívidas como "Pendente", "Pago Parcialmente" ou "Liquidado"   | MÉDIA | João |
 |RF-007| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | João |
 
@@ -174,8 +174,8 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 |ID     | Descrição do Requisito  |Prioridade |
 |-------|-------------------------|----|
 |RNF-001| Por ser focado em pequenos comerciantes, o design deve ser intuitivo e fácil de usar em dispositivos móveis. | MÉDIA | 
-|RNF-002| Os dados financeiros devem ser protegidos por senha, biometria ou autenticação de dois fatores (2FA). |  ALTA |
-|RNF-003| O comerciante deve conseguir consultar e registrar dívidas mesmo sem conexão com a internet, sincronizando os dados posteriormente. |  MÉDIA |
+|RNF-002| O acesso deve ser protegido por biometria (no Mobile) e senha forte com 2FA (na Web). |  ALTA |
+|RNF-003| O sistema deve permitir o registro offline no Mobile e sincronizar assim que detectar conexão com a internet. |  MÉDIA |
 |RNF-004| O carregamento da lista de devedores e cálculos de juros deve ocorrer em menos de 2 segundos. |  MÉDIA |
 |RNF-005| O sistema deve garantir que os dados dos devedores não sejam compartilhados com terceiros, seguindo as diretrizes da LGPD (Lei Geral de Proteção de Dados). |  ALTA |
 |RNF-006| A aplicação deve ser responsiva, funcionando perfeitamente em sistemas Android e iOS. |  BAIXA |
