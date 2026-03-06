@@ -36,9 +36,11 @@ Fornecer uma visão consolidada das operações cadastradas na aplicação, apre
 
 ## Justificativa
 
-Descreva a importância ou a motivação para trabalhar com esta aplicação que você escolheu. Indique as razões pelas quais você escolheu seus objetivos específicos ou as razões para aprofundar em certos aspectos do software.
+A criação de uma aplicação externa para a gestão de empréstimos pessoais e controle de cobranças se justifica pela necessidade de organizar e estruturar atividades que, na maioria dos casos, ainda são realizadas por meio de métodos informais. A utilização de anotações manuais ou planilhas improvisadas pode gerar inconsistências nos registros, dificultar o acompanhamento dos pagamentos e aumentar a chance de erros operacionais e cobranças indevidas.
 
-O grupo de trabalho pode fazer uso de questionários, entrevistas e dados estatísticos, que podem ser apresentados, com o objetivo de esclarecer detalhes do problema que será abordado pelo grupo.
+Uma solução digital dedicada a esse tipo de controle permite centralizar as informações em um único sistema, facilitando o registro de clientes, valores emprestados e prazos de pagamento. Além disso, a aplicação pode oferecer recursos que auxiliam no acompanhamento das cobranças e na identificação de pendências financeiras.
+
+Ao disponibilizar uma ferramenta prática e intuitiva, o sistema pode contribuir para melhorar a organização das operações financeiras, reduzir erros no controle dos empréstimos e fornecer maior clareza na gestão das cobranças. Dessa forma, a aplicação se apresenta como uma alternativa eficiente para substituir métodos manuais por um processo mais estruturado, confiável e acessível aos usuários.
 
 > **Links Úteis**:
 > - [Como montar a justificativa](https://guiadamonografia.com.br/como-montar-justificativa-do-tcc/)
