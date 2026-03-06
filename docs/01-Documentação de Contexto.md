@@ -7,12 +7,11 @@ Com o crescimento do uso de dispositivos móveis e aplicações digitais no dia 
 Neste contexto, o presente projeto propõe o desenvolvimento de uma aplicação web e mobile voltada para a gestão de empréstimos pessoais e controle de cobranças. A busca por solução centraliza as informações relacionadas aos empréstimos e oferece uma visão clara da situação financeira das operações registradas.
 
 ## Problema
-Nesse momento você deve apresentar o problema que a sua aplicação deve  resolver. No entanto, não é a hora de comentar sobre a aplicação.
+Atualmente, muitas pessoas que realizam empréstimos pessoais ou administram pequenas cobranças utilizam métodos informais para registrar e acompanhar suas operações financeiras. Esses registros geralmente são feitos em cadernos, planilhas simples ou até mesmo em conversas de aplicativos de mensagens, o que dificulta a organização das informações e aumenta a probabilidade de erros.
 
-Descreva também o contexto em que essa aplicação será usada, se  houver: empresa, tecnologias, etc. Novamente, descreva apenas o que de  fato existir, pois ainda não é a hora de apresentar requisitos  detalhados ou projetos.
+A falta de um sistema estruturado pode causar diversos problemas, como dificuldade em monitorar prazos de pagamento, identificar valores pendentes, registrar corretamente os pagamentos realizados e manter um histórico confiável das transações. Além disso, a ausência de uma visão consolidada das operações pode dificultar a tomada de decisões e o controle geral das atividades financeiras.
 
-Nesse momento, o grupo pode optar por fazer uso  de ferramentas como Design Thinking, que permite um olhar de ponta a ponta para o problema.
-
+Dessa forma, surge a necessidade de uma ferramenta digital que permita registrar e gerenciar empréstimos pessoais de forma organizada, facilitando o acompanhamento das cobranças, a visualização das parcelas em aberto e o controle das informações relacionadas aos clientes e às transações realizadas.
 > **Links Úteis**:
 > - [Objetivos, Problema de pesquisa e Justificativa](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
 > - [Matriz Certezas, Suposições e Dúvidas](https://medium.com/educa%C3%A7%C3%A3o-fora-da-caixa/matriz-certezas-suposi%C3%A7%C3%B5es-e-d%C3%BAvidas-fa2263633655)
