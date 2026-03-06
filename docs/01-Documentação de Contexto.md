@@ -1,6 +1,10 @@
 # Introdução
 
-Texto descritivo com a visão geral do projeto abordado. Inclui o contexto, o problema, os objetivos, a justificativa e o público-alvo do projeto.
+O controle de empréstimos pessoais e a gestão de cobranças são atividades comuns em pequenos negócios ou entre pessoas que realizam empréstimos de forma independente. Em muitos casos, essas atividades ainda são realizadas por meio de métodos informais, como anotações em cadernos, planilhas simples ou registros em aplicativos de mensagens, o que pode dificultar a organização das informações e o envio correto dos pagamentos.
+
+Com o crescimento do uso de dispositivos móveis e aplicações digitais no dia a dia, surge a oportunidade de desenvolver ferramentas que auxiliem na organização dessas atividades financeiras. Uma aplicação dedicada ao gerenciamento de empréstimos pode facilitar o registro de clientes, valores emprestados e prazos de pagamento, proporcionando maior controle e clareza sobre as operações realizadas.
+
+Neste contexto, o presente projeto propõe o desenvolvimento de uma aplicação web e mobile voltada para a gestão de empréstimos pessoais e controle de cobranças. A busca por solução centraliza as informações relacionadas aos empréstimos e oferece uma visão clara da situação financeira das operações registradas.
 
 ## Problema
 Nesse momento você deve apresentar o problema que a sua aplicação deve  resolver. No entanto, não é a hora de comentar sobre a aplicação.
