@@ -1,10 +1,10 @@
 # Introdução
 
-O controle de empréstimos pessoais e a gestão de cobranças são atividades comuns em pequenos negócios ou entre pessoas que realizam empréstimos de forma independente. Em muitos casos, essas atividades ainda são realizadas por meio de métodos informais, como anotações em cadernos, planilhas simples ou registros em aplicativos de mensagens, o que pode dificultar a organização das informações e o envio correto dos pagamentos.
+O registro de valores emprestados entre pessoas faz parte de diversas situações do cotidiano, como entre amigos, familiares ou conhecidos. Em muitos casos, esse tipo de controle é feito de maneira simples e informal, utilizando anotações em cadernos, planilhas ou
 
-Com o crescimento do uso de dispositivos móveis e aplicações digitais no dia a dia, surge a oportunidade de desenvolver ferramentas que auxiliem na organização dessas atividades financeiras. Uma aplicação dedicada ao gerenciamento de empréstimos pode facilitar o registro de clientes, valores emprestados e prazos de pagamento, proporcionando maior controle e clareza sobre as operações realizadas.
+Com o passar do tempo, esse tipo de organização pode se tornar menos eficiente, principalmente quando existem vários valores emprestados ou quando os pagamentos são realizados em momentos diferentes. A ausência de um registro estruturado pode dificultar a visualização clara das informações relacionadas aos valores emprestados, aos pagamentos
 
-Neste contexto, o presente projeto propõe o desenvolvimento de uma aplicação web e mobile voltada para a gestão de empréstimos pessoais e controle de cobranças. A busca por solução centraliza as informações relacionadas aos empréstimos e oferece uma visão clara da situação financeira das operações registradas.
+Nesse contexto, surge a possibilidade de utilizar ferramentas digitais para auxiliar na organização dessas informações. Este projeto propõe o desenvolvimento de uma aplicação web e mobile voltada ao gerenciamento de empréstimos pessoais, permitindo registrar pessoas, valores emprestados e controlar o status dos pagamentos, possibilitando ao usuário marcar quando um valor foi recebido ou quando ainda permanecer pendente.
 
 ## Problema
 Atualmente, muitas pessoas que realizam empréstimos pessoais ou administram pequenas cobranças utilizam métodos informais para registrar e acompanhar suas operações financeiras. Esses registros geralmente são feitos em cadernos, planilhas simples ou até mesmo em conversas de aplicativos de mensagens, o que dificulta a organização das informações e aumenta a probabilidade de erros.
