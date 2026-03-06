@@ -7,11 +7,11 @@ Com o passar do tempo, esse tipo de organização pode se tornar menos eficiente
 Nesse contexto, surge a possibilidade de utilizar ferramentas digitais para auxiliar na organização dessas informações. Este projeto propõe o desenvolvimento de uma aplicação web e mobile voltada ao gerenciamento de empréstimos pessoais, permitindo registrar pessoas, valores emprestados e controlar o status dos pagamentos, possibilitando ao usuário marcar quando um valor foi recebido ou quando ainda permanecer pendente.
 
 ## Problema
-Atualmente, muitas pessoas que realizam empréstimos pessoais ou administram pequenas cobranças utilizam métodos informais para registrar e acompanhar suas operações financeiras. Esses registros geralmente são feitos em cadernos, planilhas simples ou até mesmo em conversas de aplicativos de mensagens, o que dificulta a organização das informações e aumenta a probabilidade de erros.
+O controle de valores emprestados entre indivíduos pode apresentar dificuldades quando não existe um método organizado para registrar e acompanhar essas informações. Registros feitos de maneira informal podem tornar mais difícil identificar quanto foi emprestado, quais valores já foram recebidos e quais ainda permanecem pendentes.
 
-A falta de um sistema estruturado pode causar diversos problemas, como dificuldade em monitorar prazos de pagamento, identificar valores pendentes, registrar corretamente os pagamentos realizados e manter um histórico confiável das transações. Além disso, a ausência de uma visão consolidada das operações pode dificultar a tomada de decisões e o controle geral das atividades financeiras.
+Quando essas informações ficam armazenadas em diferentes formas de registro, como anotações, planilhas ou mensagens, podem ocorrer perda de controle sobre os dados ou dificuldade em consultar rapidamente a situação de cada empréstimo. Isso pode gerar dúvidas sobre valores registrados, pagamentos realizados ou valores que ainda precisam ser recebidos.
 
-Dessa forma, surge a necessidade de uma ferramenta digital que permita registrar e gerenciar empréstimos pessoais de forma organizada, facilitando o acompanhamento das cobranças, a visualização das parcelas em aberto e o controle das informações relacionadas aos clientes e às transações realizadas.
+Desta forma, observa-se a necessidade de uma ferramenta que permita ao registrador e organizar essas informações de maneira centralizada, facilitando o envio dos valores emprestados e a visualização do status de recebimento de cada registro.
 > **Links Úteis**:
 > - [Objetivos, Problema de pesquisa e Justificativa](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
 > - [Matriz Certezas, Suposições e Dúvidas](https://medium.com/educa%C3%A7%C3%A3o-fora-da-caixa/matriz-certezas-suposi%C3%A7%C3%B5es-e-d%C3%BAvidas-fa2263633655)
