@@ -1,21 +1,21 @@
 # TÍTULO DO PROJETO
 
-`CURSO`
+`Análise e Desenvolvimento de Sistemas - PUC Minas`
 
-`DISCIPLINA`
+`Desenvolvimento de uma Aplicação Distribuída `
 
-`SEMESTRE`
+`4º semestre/2026`
 
-Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo desenvolvido.
+O projeto tem como objetivo geral desenvolver uma aplicação destribuida que facilita no registro e gerenciamento de empréstimos e dívidas, calcular automaticamente juros e lucros, e acompanhar pagamentos e vencimentos de forma organizada.
 
 ## Integrantes
 
-* Nome completo do aluno 1
-* Nome completo do aluno 2
-* Nome completo do aluno 3
-* Nome completo do aluno 4
-* Nome completo do aluno 5
-* Nome completo do aluno 6
+* Alex Junio Alves Batista
+* Cristina Ludimila da Silva Santos
+* Flavio Lucas Moreira
+* Thiago Andrade de Souza
+* Renata Dimas Tomé
+* Luan Miranda de Sousa
 
 ## Orientador
 
