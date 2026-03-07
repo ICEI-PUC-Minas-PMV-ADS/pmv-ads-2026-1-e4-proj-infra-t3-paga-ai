@@ -218,17 +218,46 @@ Enumere as restrições à sua solução. Lembre-se de que as restrições geral
 
 ## Diagrama de Casos de Uso
 
-O diagrama de casos de uso é o próximo passo após a elicitação de requisitos, que utiliza um modelo gráfico e uma tabela com as descrições sucintas dos casos de uso e dos atores. Ele contempla a fronteira do sistema e o detalhamento dos requisitos funcionais com a indicação dos atores, casos de uso e seus relacionamentos. 
 <img width="683" height="651" alt="caso de uso Paga Aí" src="https://github.com/user-attachments/assets/c3bb83ed-124b-43fa-8cb8-896298ba24eb" />
 
-As referências abaixo irão auxiliá-lo na geração do artefato “Diagrama de Casos de Uso”.
+ Diagrama de Casos de Uso
+1 Visão Geral
+O diagrama de casos de uso tem como objetivo representar as principais funcionalidades do sistema e as interações entre os atores externos e o sistema.
+No contexto deste projeto, o diagrama modela as operações disponíveis no Sistema de Controle de Empréstimos e Vendas Informais, utilizado para registrar empréstimos pessoais, vendas informais a prazo e acompanhar pagamentos realizados por clientes ou devedores.
+Por meio desse sistema, o credor pode controlar valores emprestados ou vendidos, acompanhar contas a receber e registrar pagamentos realizados. Além disso, o sistema possui um mecanismo de notificação que auxilia no controle de vencimentos, informando o credor sobre dívidas próximas do vencimento ou em atraso.
+ 
+2 Atores do Sistema
+Os atores representam entidades externas que interagem com o sistema.
+Credor
+É o ator principal do sistema. O credor é responsável por registrar empréstimos, registrar vendas informais, cadastrar clientes ou devedores e acompanhar os pagamentos realizados.
+Serviço de Notificação
+Ator secundário responsável por auxiliar o sistema no envio de avisos relacionados aos vencimentos das dívidas registradas. Esse serviço permite que o credor seja informado sobre pagamentos próximos do vencimento ou em atraso.
+ 
+3 Casos de Uso
+Os casos de uso representam as principais funcionalidades disponibilizadas pelo sistema ao ator principal.
+Manter cadastro
+Permite ao credor manter seus próprios dados cadastrais dentro do sistema.
+Manter cliente/devedor
+Permite ao credor cadastrar, consultar, alterar e remover informações de clientes ou devedores com os quais realiza empréstimos ou vendas.
+Registrar empréstimo
+Permite registrar empréstimos concedidos a um cliente ou devedor, incluindo valor emprestado, possíveis juros ou correções e datas previstas para pagamento.
+Registrar venda
+Permite registrar vendas informais realizadas a prazo, informando o custo do produto, o valor de venda e as condições de pagamento acordadas com o cliente.
+Registrar pagamento
+Permite registrar pagamentos realizados por clientes ou devedores referentes a empréstimos ou vendas previamente cadastrados.
+Consultar contas a receber
+Permite ao credor visualizar todas as dívidas em aberto, incluindo valores pendentes e datas de vencimento.
+Emitir relatórios financeiros
+Permite gerar relatórios com informações sobre empréstimos, vendas e pagamentos registrados no sistema.
+Gerar aviso de vencimento
+Permite ao sistema identificar dívidas próximas do vencimento ou em atraso e acionar o serviço de notificação para informar o credor.
+ 
+4 Interpretação do Diagrama
+O diagrama de casos de uso apresenta o Credor como ator principal, responsável por interagir diretamente com o sistema para registrar operações financeiras e acompanhar pagamentos.
+O Serviço de Notificação atua como ator secundário, apoiando o sistema no envio de avisos relacionados aos vencimentos das dívidas registradas.
+As funcionalidades representadas no diagrama contemplam as operações essenciais para o controle de empréstimos e vendas informais, permitindo ao credor registrar transações, acompanhar contas a receber e manter controle sobre os pagamentos realizados.
 
-> **Links Úteis**:
-> - [Criando Casos de Uso](https://www.ibm.com/docs/pt-br/elm/6.0?topic=requirements-creating-use-cases)
-> - [Como Criar Diagrama de Caso de Uso: Tutorial Passo a Passo](https://gitmind.com/pt/fazer-diagrama-de-caso-uso.html/)
-> - [Lucidchart](https://www.lucidchart.com/)
-> - [Astah](https://astah.net/)
-> - [Diagrams](https://app.diagrams.net/)
+
 
 
 # Gerenciamento de Projeto
