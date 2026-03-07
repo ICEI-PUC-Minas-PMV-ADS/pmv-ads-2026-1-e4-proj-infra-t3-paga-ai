@@ -221,6 +221,7 @@ Enumere as restrições à sua solução. Lembre-se de que as restrições geral
 <img width="683" height="651" alt="caso de uso Paga Aí" src="https://github.com/user-attachments/assets/c3bb83ed-124b-43fa-8cb8-896298ba24eb" />
 
  Diagrama de Casos de Uso
+ 
 1 Visão Geral
 O diagrama de casos de uso tem como objetivo representar as principais funcionalidades do sistema e as interações entre os atores externos e o sistema.
 No contexto deste projeto, o diagrama modela as operações disponíveis no Sistema de Controle de Empréstimos e Vendas Informais, utilizado para registrar empréstimos pessoais, vendas informais a prazo e acompanhar pagamentos realizados por clientes ou devedores.
