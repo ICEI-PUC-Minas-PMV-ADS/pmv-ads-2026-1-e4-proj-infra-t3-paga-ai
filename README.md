@@ -19,7 +19,7 @@ O projeto tem como objetivo geral desenvolver uma aplicação destribuida que fa
 
 ## Orientador
 
-* Nome completo do professor 1
+* Carolina Stephanie Jerônimo de Almeida
 
 ## Instruções de utilização
 
