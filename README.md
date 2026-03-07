@@ -1,4 +1,4 @@
-# TÍTULO DO PROJETO
+# Paga Aí
 
 `Análise e Desenvolvimento de Sistemas - PUC Minas`
 
