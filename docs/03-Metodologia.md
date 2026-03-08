@@ -43,7 +43,7 @@ Discuta como a configuração do projeto foi feita na ferramenta de versionament
 
 ## Gerenciamento de Projeto
 
-Metodologia Ágil 
+### Metodologia Ágil 
 
 Para o desenvolvimento deste projeto, a equipe adotou o framework Scrum como metodologia ágil. Conforme destacam Amaral, Fleury e Isoni (2019, p. 68), o Scrum proporciona benefícios relevantes, tais como:
 
@@ -74,7 +74,10 @@ O gerenciamento das atividades é realizado por meio do GitHub Projects, estrutu
 
 Esse fluxo é visualizado em um quadro Kanban, link: https://github.com/orgs/ICEI-PUC-Minas-PMV-ADS/projects/2651 que permite acompanhar o progresso das tarefas de forma transparente e colaborativa.
  
-> ** Ferramentas que auxiliarão no gerenciamento**: 
-> - [Slack](https://slack.com/)
-> - [Github](https://github.com/)
-> - [whatsapp](https://whatsapp.com/)
+### As ferramentas empregadas no projeto são: 
+
+- Editor de código: Visual Studio.
+- Ferramentas de comunicação: Teams, Whatsapp, Discord.
+- Ferramentas de desenho de tela: Lucid, MarvelApp, Figma.
+ 
+O editor de código foi escolhido porque possui uma integração com o sistema de versão. As ferramentas de comunicação utilizadas possuem integração semelhante e por isso foram selecionadas. Por fim, para criar diagramas utilizamos essa ferramenta para melhor captar as necessidades de nossa solução.
