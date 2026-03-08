@@ -42,6 +42,8 @@ Davi Lutier é dono de um pequeno comércio e lida diariamente com clientes fié
 - Manter um histórico simples e confiável, sem precisar de planilhas ou papel.
 
 
+
+
  ## 02 - Victor Ferraz
 
 - **Idade**: 45 anos
@@ -73,6 +75,8 @@ Victor Ferraz empresta dinheiro para conhecidos como uma forma de renda extra. E
 - Visualização clara do lucro obtido com juros.
 
 - Histórico detalhado de pagamentos e empréstimos concluídos.
+
+
 
 
   ## 03 - Carla Menezes
