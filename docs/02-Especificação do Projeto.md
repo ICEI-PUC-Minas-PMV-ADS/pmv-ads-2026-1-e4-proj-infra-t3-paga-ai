@@ -14,8 +14,6 @@ Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos 
 
 ## 01 - Davi Lutier
 
-![Face](https://github.com/user-attachments/assets/e0fb603c-5d56-4a66-b5f7-1f4a8b11ba70)
-
 **Idade:** 38 anos  
 **Profissão:** Dono de Mercearia  
 **Localização:** São Paulo, Brasil  
@@ -45,8 +43,6 @@ Davi Lutier é dono de um pequeno comércio e lida diariamente com clientes fié
 
 
  ## 02 - Victor Ferraz
-
-![Face (1)](https://github.com/user-attachments/assets/1f35e4ab-8ada-40d3-8a62-86e7b155dfbb)
 
 - **Idade**: 45 anos
 - **Profissão**: Autônomo / Investidor informal
@@ -80,8 +76,6 @@ Victor Ferraz empresta dinheiro para conhecidos como uma forma de renda extra. E
 
 
   ## 03 - Carla Menezes
-
- ![download](https://github.com/user-attachments/assets/e84e5090-be00-4e33-8edd-270feb1139ea)
 
 - **Idade**: 32 anos
 - **Profissão**: Microempreendedora
