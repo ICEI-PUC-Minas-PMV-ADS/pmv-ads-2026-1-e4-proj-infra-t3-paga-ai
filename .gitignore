@@ -1,0 +1,15 @@
+## Ignorar arquivos de compilação e sistema
+bin/
+obj/
+[Tt]emp/
+.vs/
+.vscode/
+
+## Ignorar arquivos de configuração do usuário
+*.user
+*.userosscache
+*.sln.docstates
+
+## Arquivos de sistema
+.DS_Store
+Thumbs.db
