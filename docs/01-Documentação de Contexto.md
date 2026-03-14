@@ -1,5 +1,7 @@
 # Introdução
 
+A
+
 O registro de valores emprestados entre pessoas faz parte de diversas situações do cotidiano, como entre amigos, familiares ou conhecidos. Em muitos casos, esse tipo de controle é feito de maneira simples e informal, utilizando anotações em cadernos, planilhas ou
 
 Com o passar do tempo, esse tipo de organização pode se tornar menos eficiente, principalmente quando existem vários valores emprestados ou quando os pagamentos são realizados em momentos diferentes. A ausência de um registro estruturado pode dificultar a visualização clara das informações relacionadas aos valores emprestados, aos pagamentos
