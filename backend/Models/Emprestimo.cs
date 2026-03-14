@@ -5,9 +5,8 @@ namespace backend.Models;
 
 public class Emprestimo
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
+    [BsonId] 
+    public int Id { get; set; }
     public string Cliente { get; set; } = null!;
     public decimal Valor { get; set; }
     public bool Pago { get; set; } = false;
