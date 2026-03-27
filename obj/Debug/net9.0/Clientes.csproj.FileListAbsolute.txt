@@ -36,3 +36,6 @@
 /Users/flaviomoreira/Desktop/curso PUC/Eixo 4/clientes/Clientes/obj/Debug/net9.0/Clientes.pdb
 /Users/flaviomoreira/Desktop/curso PUC/Eixo 4/clientes/Clientes/obj/Debug/net9.0/Clientes.genruntimeconfig.cache
 /Users/flaviomoreira/Desktop/curso PUC/Eixo 4/clientes/Clientes/obj/Debug/net9.0/ref/Clientes.dll
+/Users/flaviomoreira/Desktop/curso PUC/Eixo 4/clientes/Clientes/bin/Debug/net9.0/package-lock.json
+/Users/flaviomoreira/Desktop/curso PUC/Eixo 4/clientes/Clientes/bin/Debug/net9.0/package.json
+/Users/flaviomoreira/Desktop/curso PUC/Eixo 4/clientes/Clientes/obj/Debug/net9.0/Clientes.sourcelink.json
