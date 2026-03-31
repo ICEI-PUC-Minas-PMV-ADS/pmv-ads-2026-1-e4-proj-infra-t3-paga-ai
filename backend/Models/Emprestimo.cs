@@ -16,3 +16,10 @@ public class Emprestimo
     public  DateTime DataVencimento {get; set; }
     public bool Pago { get; set; } = false;
 }
+
+public enum StatusPagamento
+{
+    Pendente = 0,
+    ParcialmentePago = 1,
+    Pago = 2
+}

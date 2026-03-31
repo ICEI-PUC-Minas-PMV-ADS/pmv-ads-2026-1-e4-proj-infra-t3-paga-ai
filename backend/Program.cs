@@ -15,7 +15,7 @@ builder.Services.AddSingleton<IMongoClient>(s =>
 
 
 // 3. Injeta o Database específico "pagai" para facilitar o uso nos Controllers
-builder.Services.AddScoped(s => {
+builder.Services.AddSingleton(s => {
     var client = s.GetRequiredService<IMongoClient>();
     var dbName = builder.Configuration.GetValue<string>("MongoDBSettings:DatabaseName");
     return client.GetDatabase(dbName);
