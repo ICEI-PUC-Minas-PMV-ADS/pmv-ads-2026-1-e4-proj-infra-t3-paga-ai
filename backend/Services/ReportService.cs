@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Linq;
 using backend.Models;
+using MongoDB.Driver;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
 public class ReportService
 {
+    private readonly IMongoCollection<Emprestimo> _emprestimosCollection;
+
+    public ReportService(IMongoDatabase database)
+    {
+        _emprestimosCollection = database.GetCollection<Emprestimo>("emprestimos");
+    }
+
     public Report GerarRelatorio(DateTime dataInicio, DateTime dataFim)
     {
         return new Report
@@ -14,15 +23,24 @@ public class ReportService
             DataInicio = dataInicio,
             DataFim = dataFim,
             Tipo = "Relatório por período",
-            Formato = "JSON",
+            Formato = "PDF",
             GeradoEm = DateTime.Now,
             UsuarioId = "user-001"
         };
-
     }
+
     public byte[] GerarPdf(DateTime dataInicio, DateTime dataFim)
     {
         QuestPDF.Settings.License = LicenseType.Community;
+
+        var registros = _emprestimosCollection
+            .Find(x => x.Pago == true &&
+                       x.DataPagamento.HasValue &&
+                       x.DataPagamento.Value >= dataInicio &&
+                       x.DataPagamento.Value <= dataFim)
+            .ToList();
+
+        var totalRecebido = registros.Sum(x => x.ValorFinal);
 
         var pdf = Document.Create(container =>
         {
@@ -51,38 +69,45 @@ public class ReportService
                         .Bold()
                         .FontSize(14);
 
-                    col.Item()
-                        .Text("Aqui depois vamos listar quem pagou no período, valores e total recebido.");
-
-                    col.Item().PaddingTop(10).Table(table =>
+                    if (registros.Any())
                     {
-                        table.ColumnsDefinition(columns =>
+                        col.Item()
+                            .Text($"Foram encontrados {registros.Count} pagamento(s) no período.");
+
+                        col.Item().PaddingTop(10).Table(table =>
                         {
-                            columns.RelativeColumn(3);
-                            columns.RelativeColumn(2);
-                            columns.RelativeColumn(2);
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(3);
+                                columns.RelativeColumn(2);
+                                columns.RelativeColumn(2);
+                            });
+
+                            table.Header(header =>
+                            {
+                                header.Cell().Text("Cliente").Bold();
+                                header.Cell().Text("Data").Bold();
+                                header.Cell().Text("Valor").Bold();
+                            });
+
+                            foreach (var item in registros)
+                            {
+                                table.Cell().Text(item.Cliente);
+                                table.Cell().Text(item.DataPagamento?.ToString("dd/MM/yyyy") ?? "-");
+                                table.Cell().Text($"R$ {item.ValorFinal:N2}");
+                            }
                         });
 
-                        table.Header(header =>
-                        {
-                            header.Cell().Text("Cliente").Bold();
-                            header.Cell().Text("Data").Bold();
-                            header.Cell().Text("Valor").Bold();
-                        });
-
-                        table.Cell().Text("João Silva");
-                        table.Cell().Text("15/01/2024");
-                        table.Cell().Text("R$ 250,00");
-
-                        table.Cell().Text("Maria Souza");
-                        table.Cell().Text("20/02/2024");
-                        table.Cell().Text("R$ 400,00");
-                    });
-
-                    col.Item()
-                        .PaddingTop(10)
-                        .Text("Total recebido no período: R$ 650,00")
-                        .Bold();
+                        col.Item()
+                            .PaddingTop(10)
+                            .Text($"Total recebido no período: R$ {totalRecebido:N2}")
+                            .Bold();
+                    }
+                    else
+                    {
+                        col.Item()
+                            .Text("Nenhum pagamento encontrado no período informado.");
+                    }
                 });
 
                 page.Footer()

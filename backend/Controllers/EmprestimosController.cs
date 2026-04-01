@@ -128,7 +128,9 @@ public async Task<IActionResult> Update(int id, Emprestimo emprestimoAtualizado)
     public async Task<IActionResult> MarcarComoPago(int id)
     {
         var filter = Builders<Emprestimo>.Filter.Eq(x => x.Id, id);
-        var update = Builders<Emprestimo>.Update.Set(x => x.Pago, true);
+        var update = Builders<Emprestimo>.Update
+            .Set(x => x.Pago, true)
+            .Set(x => x.DataPagamento, DateTime.Now);
 
         var result =await _emprestimos.UpdateOneAsync(filter, update);
 
