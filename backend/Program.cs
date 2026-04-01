@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ReportService>();
 
 // 2. Configura o MongoDB usando o appsenttings.json
 builder.Services.AddSingleton<IMongoClient>(s => 
