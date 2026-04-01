@@ -20,17 +20,14 @@ As referências abaixo irão auxiliá-lo na geração do artefato “Diagramas d
 > **Links Úteis**:
 > - [Fluxograma online: seis sites para fazer gráfico sem instalar nada | Produtividade | TechTudo](https://www.techtudo.com.br/listas/2019/03/fluxograma-online-seis-sites-para-fazer-grafico-sem-instalar-nada.ghtml)
 
-## Wireframes
+## Wireframes  
 
-![Exemplo de Wireframe](img/wireframe-example.png)
+Protótipo web do sistema Paga Aí, focado na gestão de empréstimos pessoais.
+Permite cadastrar devedores, acompanhar valores em aberto, pagamentos e atrasos.
 
-São protótipos usados em design de interface para sugerir a estrutura de um site web e seu relacionamentos entre suas páginas. Um wireframe web é uma ilustração semelhante do layout de elementos fundamentais na interface.
+> - [Protótipo]([Paga Aí.pdf](https://github.com/user-attachments/files/26334763/Paga.Ai.pdf))
+
+
+
  
-> **Links Úteis**:
-> - [Protótipos vs Wireframes](https://www.nngroup.com/videos/prototypes-vs-wireframes-ux-projects/)
-> - [Ferramentas de Wireframes](https://rockcontent.com/blog/wireframes/)
-> - [MarvelApp](https://marvelapp.com/developers/documentation/tutorials/)
-> - [Figma](https://www.figma.com/)
-> - [Adobe XD](https://www.adobe.com/br/products/xd.html#scroll)
-> - [Axure](https://www.axure.com/edu) (Licença Educacional)
-> - [InvisionApp](https://www.invisionapp.com/) (Licença Educacional)
+

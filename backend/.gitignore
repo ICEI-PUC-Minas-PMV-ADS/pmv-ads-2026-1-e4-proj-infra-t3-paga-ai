@@ -6,6 +6,10 @@
 # dotenv files
 .env
 
+
+#secretmongodb
+appsettings.json
+
 # User-specific files
 *.rsuser
 *.suo
