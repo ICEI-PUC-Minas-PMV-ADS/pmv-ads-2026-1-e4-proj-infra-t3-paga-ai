@@ -1,37 +1,35 @@
 using MongoDB.Driver;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 2. Configura o MongoDB usando o appsenttings.json
+// 2. Configura o MongoDB usando o appsettings.json ou Variáveis de Ambiente do Azure
 builder.Services.AddSingleton<IMongoClient>(s => 
     new MongoClient(builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")));
 
-
-// 3. Injeta o Database específico "pagai" para facilitar o uso nos Controllers
+// 3. Injeta o Database específico "pagai"
 builder.Services.AddSingleton(s => {
     var client = s.GetRequiredService<IMongoClient>();
-    var dbName = builder.Configuration.GetValue<string>("MongoDBSettings:DatabaseName");
+    var dbName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName");
     return client.GetDatabase(dbName);
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// FORÇAR SWAGGER EM QUALQUER AMBIENTE (Inclusive Produção no Azure)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pagai API V1");
+    c.RoutePrefix = string.Empty; // Isso faz o Swagger abrir direto na URL principal do Azure
+});
 
 app.UseHttpsRedirection();
-
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
