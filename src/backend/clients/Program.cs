@@ -59,10 +59,12 @@ app.MapPut("/cliente/{id}", async (AppDb db, Cliente update, int id) =>
     cliente.Telefone = update.Telefone;
     cliente.Endereco = update.Endereco;
     cliente.Email = update.Email;
+    cliente.Descricao = update.Descricao;
 
     await db.SaveChangesAsync();
     return Results.NoContent();
 });
+
 
 // DELETE - Remove cliente
 app.MapDelete("/cliente/{id}", async (AppDb db, int id) =>
