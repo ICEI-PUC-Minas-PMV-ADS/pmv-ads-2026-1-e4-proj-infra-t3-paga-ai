@@ -6,6 +6,7 @@ namespace backend.Models;
 
 public class Notificacao
 {
+    // No Swagger/POST deve-se apagar a linha Id no Request Body, para que o MongoDb crie sua própria id
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
