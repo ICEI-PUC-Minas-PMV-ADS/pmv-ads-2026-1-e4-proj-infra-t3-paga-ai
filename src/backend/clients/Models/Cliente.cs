@@ -1,8 +1,14 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ApiClientes.Models
 {
     public class Cliente
     {
-        public int Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+
         public string Nome { get; set; }
         public string CPF { get; set; }
         public string Telefone { get; set; }
@@ -11,4 +17,3 @@ namespace ApiClientes.Models
         public string Descricao { get; set; }
     }
 }
-
