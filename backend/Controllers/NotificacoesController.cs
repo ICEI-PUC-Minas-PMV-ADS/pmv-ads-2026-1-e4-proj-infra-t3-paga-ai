@@ -14,6 +14,13 @@ public class NotificacoesController : ControllerBase
         _notificacoes = database.GetCollection<Notificacao>("notificacoes");
     }
 
+    [HttpGet]
+    public async Task<ActionResult<List<Notificacao>>> GetAll()
+    {
+        var notificacoes = await _notificacoes.Find(x => true).ToListAsync();
+        return Ok(notificacoes);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<Notificacao>> Get(string id)
     {
@@ -44,6 +51,17 @@ public class NotificacoesController : ControllerBase
         notificacaoLida.Id = notificacao.Id;
 
         await _notificacoes.ReplaceOneAsync(x => x.Id == id, notificacaoLida);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var resultado = await _notificacoes.DeleteOneAsync(x => x.Id == id);
+
+        if (resultado.DeletedCount == 0)
+            return NotFound();
 
         return NoContent();
     }
