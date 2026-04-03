@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using ApiClientes.Models;
 using ApiClientes.Settings;
 using MongoDB.Driver;
@@ -8,12 +9,15 @@ namespace ApiClientes.Services
     {
         private readonly IMongoCollection<Cliente> _clientes;
 
-        public ClienteService(MongoDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            _clientes = database.GetCollection<Cliente>(settings.ClientesCollectionName);
-        }
+        public ClienteService(IOptions<MongoDbSettings> options)
+{
+    var settings = options.Value;
+
+    var client = new MongoClient(settings.ConnectionString);
+    var database = client.GetDatabase(settings.DatabaseName);
+    _clientes = database.GetCollection<Cliente>(settings.ClientesCollectionName);
+}
+
 
         public async Task<List<Cliente>> GetAsync() =>
             await _clientes.Find(_ => true).ToListAsync();
