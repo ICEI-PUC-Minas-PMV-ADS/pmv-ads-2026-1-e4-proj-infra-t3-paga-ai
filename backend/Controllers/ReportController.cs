@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using backend.Models;
 
+namespace backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
