@@ -7,18 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<<< HEAD:src/backend/clients/Clientes.csproj
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
-    <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5" />
-  </ItemGroup>
-
-</Project>
-========
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.25" />
     <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
 </Project>
->>>>>>>> main:src/backend/backend.csproj
