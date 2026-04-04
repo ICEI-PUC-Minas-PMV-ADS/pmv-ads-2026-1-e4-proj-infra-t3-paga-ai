@@ -6,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ReportService>();
 
 // 2. Configura o MongoDB usando o appsettings.json ou Variáveis de Ambiente do Azure
 builder.Services.AddSingleton<IMongoClient>(s => 
