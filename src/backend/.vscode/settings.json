@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "pagai",
+    "appService.deploySubpath": "bin/Release/net8.0/publish"
+}
