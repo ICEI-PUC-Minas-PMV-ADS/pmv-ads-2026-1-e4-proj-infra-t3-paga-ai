@@ -9,15 +9,17 @@ using QuestPDF.Infrastructure;
 public class ReportService
 {
     private readonly IMongoCollection<Emprestimo> _emprestimosCollection;
+    private readonly IMongoCollection<Report> _reportsCollection;
 
     public ReportService(IMongoDatabase database)
     {
         _emprestimosCollection = database.GetCollection<Emprestimo>("emprestimos");
+        _reportsCollection = database.GetCollection<Report>("reports");
     }
 
     public Report GerarRelatorio(DateTime dataInicio, DateTime dataFim)
     {
-        return new Report
+        var report = new Report
         {
             Id = Guid.NewGuid().ToString(),
             DataInicio = dataInicio,
@@ -27,6 +29,10 @@ public class ReportService
             GeradoEm = DateTime.Now,
             UsuarioId = "user-001"
         };
+
+        _reportsCollection.InsertOne(report);
+
+        return report;
     }
 
     public byte[] GerarPdf(DateTime dataInicio, DateTime dataFim)
