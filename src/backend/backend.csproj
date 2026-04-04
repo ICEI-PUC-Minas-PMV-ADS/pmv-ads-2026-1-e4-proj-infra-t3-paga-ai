@@ -11,5 +11,11 @@
     <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
+  <ItemGroup>
+  <Compile Remove="clients\**" />
+  <Content Remove="clients\**" />
+  <EmbeddedResource Remove="clients\**" />
+  <None Remove="clients\**" />
+</ItemGroup>
 
 </Project>
