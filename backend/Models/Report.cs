@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
+namespace backend.Models;
 public class Report
 {
     public string Id { get; set; }
