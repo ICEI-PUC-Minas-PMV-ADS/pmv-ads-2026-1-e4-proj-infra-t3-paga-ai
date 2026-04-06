@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace ApiClientes.Models
+namespace backend.Models
 {
     public class Cliente
     {
