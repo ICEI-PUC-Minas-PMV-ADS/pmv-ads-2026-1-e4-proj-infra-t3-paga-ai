@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace backend.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ClientesController : ControllerBase
@@ -14,6 +17,9 @@ public class ClientesController : ControllerBase
     {
         _clientes = database.GetCollection<Cliente>("clientes");
     }
+
+    private string GetCobradorId() =>
+        User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Cliente>>> Get()
@@ -36,6 +42,7 @@ public class ClientesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(Cliente novoCliente)
     {
+        novoCliente.CobradorId = GetCobradorId();
         await _clientes.InsertOneAsync(novoCliente);
         return CreatedAtAction(nameof(Get), new { id = novoCliente.Id }, novoCliente);
     }

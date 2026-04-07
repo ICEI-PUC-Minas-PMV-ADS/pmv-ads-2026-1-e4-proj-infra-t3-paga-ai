@@ -8,7 +8,7 @@ namespace backend.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
-
+        public string? CobradorId { get; set; }
         public string? Nome { get; set; }
         public string? CPF { get; set; }
         public string? Telefone { get; set; }

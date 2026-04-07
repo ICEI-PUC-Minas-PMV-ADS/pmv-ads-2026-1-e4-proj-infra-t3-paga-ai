@@ -1,35 +1,88 @@
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// SERVIÇOS 
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Cole o token assim: Bearer SEU_TOKEN"
+    });
 
-// 2. Configura o MongoDB usando o appsettings.json ou Variáveis de Ambiente do Azure
-builder.Services.AddSingleton<IMongoClient>(s => 
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
+// MongoDB 
+builder.Services.AddSingleton<IMongoClient>(s =>
     new MongoClient(builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")));
 
-// 3. Injeta o Database específico "pagai"
 builder.Services.AddSingleton(s => {
     var client = s.GetRequiredService<IMongoClient>();
     var dbName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName");
     return client.GetDatabase(dbName);
 });
 
+// JWT 
+var chaveJwt = builder.Configuration["JwtSettings:SecretKey"]!;
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(chaveJwt))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+// PIPELINE 
+
 var app = builder.Build();
 
-// FORÇAR SWAGGER EM QUALQUER AMBIENTE (Inclusive Produção no Azure)
+// Swagger 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pagai API V1");
-    c.RoutePrefix = string.Empty; // Isso faz o Swagger abrir direto na URL principal do Azure
+    c.RoutePrefix = string.Empty;
 });
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
 
+app.UseAuthentication(); 
+app.UseAuthorization();
+
+app.MapControllers();
 app.Run();

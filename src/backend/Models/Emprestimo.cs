@@ -7,6 +7,7 @@ public class Emprestimo
 {
     [BsonId] 
     public int Id { get; set; }
+    public string? CobradorId { get; set; }
     public string Cliente { get; set; } = null!;
     public string Cobrador { get; set; } = null!;
     public decimal Valor { get; set; }

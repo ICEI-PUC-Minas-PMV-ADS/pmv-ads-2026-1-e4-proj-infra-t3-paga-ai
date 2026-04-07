@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace backend.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class EmprestimosController : ControllerBase
@@ -16,11 +19,16 @@ public class EmprestimosController : ControllerBase
         _emprestimos = database.GetCollection<Emprestimo>("emprestimos");
     }
 
-   [HttpGet("{id:int}")]
+    // Pega o ID do usuário logado pelo token JWT
+    private string GetCobradorId() =>
+        User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<Emprestimo>> Get(int id)
-    { 
-        var emprestimo = await _emprestimos.Find(x => x.Id == id).FirstOrDefaultAsync();
-        
+    {
+        var cobradorId = GetCobradorId();
+        var emprestimo = await _emprestimos.Find(x => x.Id == id && x.CobradorId == cobradorId).FirstOrDefaultAsync();
+
         if (emprestimo is null)
             return NotFound(new {mensagem = $"Empréstimo com ID {id} não encontrado."});
 
@@ -81,9 +89,11 @@ public async Task<IActionResult> GetRelatorioLucro(string nomeCobrador)
     
     // Se não existir nenhum, começa no 1. Se existir, soma +1 ao maior.
     novo.Id = (ultimoEmprestimo == null) ? 1 : ultimoEmprestimo.Id + 1;
+        novo.CobradorId = GetCobradorId();
 
-    // 2. Sua Lógica de Negócio
-    if (novo.TaxaJuros == 0) novo.TaxaJuros = 0.30m;
+
+        // 2. Sua Lógica de Negócio
+        if (novo.TaxaJuros == 0) novo.TaxaJuros = 0.30m;
 
     novo.ValorFinal = novo.Valor * (1 + novo.TaxaJuros);
     
@@ -100,11 +110,13 @@ public async Task<IActionResult> GetRelatorioLucro(string nomeCobrador)
     [HttpPut("{id:int}")]
 public async Task<IActionResult> Update(int id, Emprestimo emprestimoAtualizado)
 {
-    // 1. Garante que o ID da URL seja o mesmo do objeto
-    emprestimoAtualizado.Id = id;
+        // 1. Garante que o ID da URL seja o mesmo do objeto
+        var cobradorId = GetCobradorId(); // só atualiza se for dono
+        emprestimoAtualizado.Id = id;
+        emprestimoAtualizado.CobradorId = cobradorId;
 
-    // 2. Recalcula os valores (Regra de Negócio)
-    if (emprestimoAtualizado.TaxaJuros == 0) emprestimoAtualizado.TaxaJuros = 0.30m;
+        // 2. Recalcula os valores (Regra de Negócio)
+        if (emprestimoAtualizado.TaxaJuros == 0) emprestimoAtualizado.TaxaJuros = 0.30m;
     emprestimoAtualizado.ValorFinal = emprestimoAtualizado.Valor * (1 + emprestimoAtualizado.TaxaJuros);
 
     // 3. Tenta substituir no MongoDB Atlas
@@ -118,7 +130,8 @@ public async Task<IActionResult> Update(int id, Emprestimo emprestimoAtualizado)
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var result = await _emprestimos.DeleteOneAsync(x => x.Id == id);
+        var cobradorId = GetCobradorId();
+        var result = await _emprestimos.DeleteOneAsync(x => x.Id == id && x.CobradorId == cobradorId);
 
         if (result.DeletedCount == 0) return NotFound();
 
