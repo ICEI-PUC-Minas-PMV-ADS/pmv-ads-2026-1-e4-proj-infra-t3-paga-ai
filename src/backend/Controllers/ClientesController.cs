@@ -23,7 +23,7 @@ public class ClientesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Cliente>> Get(string id)
+    public async Task<ActionResult<Cliente>> Get(int id)
     {
         var cliente = await _clientes.Find(c => c.Id == id).FirstOrDefaultAsync();
 
@@ -36,12 +36,19 @@ public class ClientesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(Cliente novoCliente)
     {
+        var ultimoCliente = await _clientes.Find(_ => true)
+            .SortByDescending(c => c.Id)
+            .Limit(1)
+            .FirstOrDefaultAsync();
+
+        novoCliente.Id = (ultimoCliente?.Id ?? 0) + 1;
+
         await _clientes.InsertOneAsync(novoCliente);
         return CreatedAtAction(nameof(Get), new { id = novoCliente.Id }, novoCliente);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, Cliente clienteAtualizado)
+    public async Task<IActionResult> Update(int id, Cliente clienteAtualizado)
     {
         clienteAtualizado.Id = id;
 
@@ -54,7 +61,7 @@ public class ClientesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete(int id)
     {
         var result = await _clientes.DeleteOneAsync(c => c.Id == id);
 
