@@ -6,6 +6,8 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
+namespace backend.Services;
+
 public class ReportService
 {
     private readonly IMongoCollection<Emprestimo> _emprestimosCollection;
@@ -17,33 +19,53 @@ public class ReportService
         _reportsCollection = database.GetCollection<Report>("reports");
     }
 
-    public Report GerarRelatorio(DateTime dataInicio, DateTime dataFim)
+    public Report GerarRelatorio(DateTime dataInicio, DateTime dataFim, string? cobrador = null)
     {
-        var report = new Report
+        return new Report
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = new Random().Next(1, 100000),
             DataInicio = dataInicio,
             DataFim = dataFim,
             Tipo = "Relatório por período",
             Formato = "PDF",
             GeradoEm = DateTime.Now,
-            UsuarioId = "user-001"
+            Cobrador = cobrador ?? string.Empty
         };
-
-        _reportsCollection.InsertOne(report);
-
-        return report;
     }
 
-    public byte[] GerarPdf(DateTime dataInicio, DateTime dataFim)
+    public byte[] GerarPdf(DateTime dataInicio, DateTime dataFim, string? cobrador = null)
     {
         QuestPDF.Settings.License = LicenseType.Community;
 
+        var dataInicioAjustada = dataInicio.Date;
+        var dataFimAjustada = dataFim.Date.AddDays(1).AddTicks(-1);
+
+        var filtro = Builders<Emprestimo>.Filter.Empty;
+
+        // Versão temporária para TESTE:
+        // traz registros pelo período usando DataPagamento OU DataEmprestimo
+        var filtroPeriodo =
+            Builders<Emprestimo>.Filter.Or(
+                Builders<Emprestimo>.Filter.And(
+                    Builders<Emprestimo>.Filter.Ne(x => x.DataPagamento, null),
+                    Builders<Emprestimo>.Filter.Gte(x => x.DataPagamento, dataInicioAjustada),
+                    Builders<Emprestimo>.Filter.Lte(x => x.DataPagamento, dataFimAjustada)
+                ),
+                Builders<Emprestimo>.Filter.And(
+                    Builders<Emprestimo>.Filter.Gte(x => x.DataEmprestimo, dataInicioAjustada),
+                    Builders<Emprestimo>.Filter.Lte(x => x.DataEmprestimo, dataFimAjustada)
+                )
+            );
+
+        filtro &= filtroPeriodo;
+
+        if (!string.IsNullOrWhiteSpace(cobrador))
+        {
+            filtro &= Builders<Emprestimo>.Filter.Eq(x => x.Cobrador, cobrador);
+        }
+
         var registros = _emprestimosCollection
-            .Find(x => x.Pago == true &&
-                       x.DataPagamento.HasValue &&
-                       x.DataPagamento.Value >= dataInicio &&
-                       x.DataPagamento.Value <= dataFim)
+            .Find(filtro)
             .ToList();
 
         var totalRecebido = registros.Sum(x => x.ValorFinal);
@@ -68,6 +90,13 @@ public class ReportService
                         .Text($"Período: {dataInicio:dd/MM/yyyy} até {dataFim:dd/MM/yyyy}")
                         .FontSize(12);
 
+                    if (!string.IsNullOrWhiteSpace(cobrador))
+                    {
+                        col.Item()
+                            .Text($"Cobrador: {cobrador}")
+                            .FontSize(12);
+                    }
+
                     col.Item().LineHorizontal(1);
 
                     col.Item()
@@ -78,7 +107,7 @@ public class ReportService
                     if (registros.Any())
                     {
                         col.Item()
-                            .Text($"Foram encontrados {registros.Count} pagamento(s) no período.");
+                            .Text($"Foram encontrados {registros.Count} registro(s) no período.");
 
                         col.Item().PaddingTop(10).Table(table =>
                         {
@@ -96,23 +125,23 @@ public class ReportService
                                 header.Cell().Text("Valor").Bold();
                             });
 
-                            foreach (var item in registros)
+                            foreach (var item in registros.OrderBy(x => x.DataPagamento ?? x.DataEmprestimo))
                             {
-                                table.Cell().Text(item.Cliente);
-                                table.Cell().Text(item.DataPagamento?.ToString("dd/MM/yyyy") ?? "-");
+                                table.Cell().Text(item.Cliente ?? "-");
+                                table.Cell().Text((item.DataPagamento ?? item.DataEmprestimo).ToString("dd/MM/yyyy"));
                                 table.Cell().Text($"R$ {item.ValorFinal:N2}");
                             }
                         });
 
                         col.Item()
                             .PaddingTop(10)
-                            .Text($"Total recebido no período: R$ {totalRecebido:N2}")
+                            .Text($"Total no período: R$ {totalRecebido:N2}")
                             .Bold();
                     }
                     else
                     {
                         col.Item()
-                            .Text("Nenhum pagamento encontrado no período informado.");
+                            .Text("Nenhum registro encontrado no período informado.");
                     }
                 });
 

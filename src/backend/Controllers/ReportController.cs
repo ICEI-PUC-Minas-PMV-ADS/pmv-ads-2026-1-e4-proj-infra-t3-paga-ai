@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using backend.Models;
+using backend.Services;
 
 namespace backend.Controllers;
 
@@ -16,16 +17,16 @@ public class ReportController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetReport(DateTime dataInicio, DateTime dataFim)
+    public IActionResult GetReport(DateTime dataInicio, DateTime dataFim, string? cobrador = null)
     {
-        var report = _reportService.GerarRelatorio(dataInicio, dataFim);
+        var report = _reportService.GerarRelatorio(dataInicio, dataFim, cobrador);
         return Ok(report);
     }
 
     [HttpPost("export-pdf")]
     public IActionResult ExportPdf([FromBody] Report report)
     {
-        var pdf = _reportService.GerarPdf(report.DataInicio, report.DataFim);
+        var pdf = _reportService.GerarPdf(report.DataInicio, report.DataFim, report.Cobrador);
         return File(pdf, "application/pdf", "relatorio.pdf");
     }
 }
