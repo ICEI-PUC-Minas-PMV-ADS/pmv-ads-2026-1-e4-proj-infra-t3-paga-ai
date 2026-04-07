@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace backend.Models;
 public class Report
 {
-    public string Id { get; set; }
+    public int Id { get; set; }
 
     public DateTime DataInicio { get; set; }
 
@@ -16,5 +16,5 @@ public class Report
 
     public DateTime GeradoEm { get; set; }
 
-    public string UsuarioId { get; set; }
+    public string Cobrador { get; set; } = string.Empty;
 }

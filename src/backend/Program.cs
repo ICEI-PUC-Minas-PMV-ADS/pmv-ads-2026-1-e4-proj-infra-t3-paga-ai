@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,15 +9,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // 2. Configura o MongoDB usando o appsettings.json ou Variáveis de Ambiente do Azure
-builder.Services.AddSingleton<IMongoClient>(s => 
+builder.Services.AddSingleton<IMongoClient>(s =>
     new MongoClient(builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")));
 
 // 3. Injeta o Database específico "pagai"
-builder.Services.AddSingleton(s => {
+builder.Services.AddSingleton<IMongoDatabase>(s => {
     var client = s.GetRequiredService<IMongoClient>();
     var dbName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName");
     return client.GetDatabase(dbName);
 });
+
+// 4. Registra o ReportService
+builder.Services.AddScoped<ReportService>();
 
 var app = builder.Build();
 
