@@ -2,9 +2,10 @@
 using MongoDB.Driver;
 using backend.Models;
 
+namespace backend.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
-
 public class NotificacoesController : ControllerBase
 {
     private readonly IMongoCollection<Notificacao> _notificacoes;
@@ -14,55 +15,45 @@ public class NotificacoesController : ControllerBase
         _notificacoes = database.GetCollection<Notificacao>("notificacoes");
     }
 
+    // 1. Lista TODAS (Útil para o admin)
     [HttpGet]
-    public async Task<ActionResult<List<Notificacao>>> GetAll()
+    public async Task<ActionResult<IEnumerable<Notificacao>>> Get()
     {
-        var notificacoes = await _notificacoes.Find(x => true).ToListAsync();
-        return Ok(notificacoes);
+        var lista = await _notificacoes.Find(_ => true).ToListAsync();
+        return Ok(lista);
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Notificacao>> Get(string id)
+    // 2. Busca notificações de um COBRADOR específico (O seu foco!)
+    // Rota: api/notificacoes/cobrador/Marcos24
+    [HttpGet("cobrador/{nomeCobrador}")]
+    public async Task<ActionResult<IEnumerable<Notificacao>>> GetPorCobrador(string nomeCobrador)
     {
-        var notificacao = await _notificacoes.Find(x => x.Id == id).FirstOrDefaultAsync();
-        if (notificacao == null)
-        {
-            return NotFound();
-        }
+        var lista = await _notificacoes
+            .Find(x => x.Cobrador == nomeCobrador)
+            .SortByDescending(x => x.DataCriacao)
+            .ToListAsync();
 
-        return notificacao;
-
+        return Ok(lista);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Post(Notificacao novo)
+    // 3. Marca como lida (PATCH é melhor que PUT aqui)
+    [HttpPatch("{id:int}/lida")]
+    public async Task<IActionResult> MarcarComoLida(int id)
     {
-        await _notificacoes.InsertOneAsync(novo);
-        return Ok(novo);
-    }
+        var result = await _notificacoes.UpdateOneAsync(
+            x => x.Id == id, 
+            Builders<Notificacao>.Update.Set(x => x.Lida, true)
+        );
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, Notificacao notificacaoLida)
-    {
-        var notificacao = await _notificacoes.Find(x => x.Id == id).FirstOrDefaultAsync();
-
-        if (notificacao == null) return NotFound();
-
-        notificacaoLida.Id = notificacao.Id;
-
-        await _notificacoes.ReplaceOneAsync(x => x.Id == id, notificacaoLida);
-
+        if (result.MatchedCount == 0) return NotFound();
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
     {
         var resultado = await _notificacoes.DeleteOneAsync(x => x.Id == id);
-
-        if (resultado.DeletedCount == 0)
-            return NotFound();
-
+        if (resultado.DeletedCount == 0) return NotFound();
         return NoContent();
     }
 }
