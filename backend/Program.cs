@@ -20,7 +20,6 @@ var jwtAudience = jwtSettings["JwtAudience"] ?? "paga-ai-clients";
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ReportService>();
 
 // Add JWT Authentication
 builder.Services.AddAuthentication(options =>
