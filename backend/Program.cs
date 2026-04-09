@@ -50,13 +50,18 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IRateLimitService, RateLimitService>();
 
 // Configure MongoDB
-builder.Services.AddSingleton<IMongoClient>(s => 
-    new MongoClient(builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")));
+var mongoConnectionString = builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")
+    ?? builder.Configuration.GetValue<string>("MONGODB_CONNECTIONSTRING")
+    ?? throw new InvalidOperationException("MongoDB connection string is not configured. Set MongoDbSettings:ConnectionString in appsettings.json or the environment variable MONGODB_CONNECTIONSTRING.");
+
+var mongoDatabaseName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName")
+    ?? throw new InvalidOperationException("MongoDB database name is not configured. Set MongoDbSettings:DatabaseName in appsettings.json.");
+
+builder.Services.AddSingleton<IMongoClient>(s => new MongoClient(mongoConnectionString));
 
 builder.Services.AddScoped(s => {
     var client = s.GetRequiredService<IMongoClient>();
-    var dbName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName");
-    return client.GetDatabase(dbName);
+    return client.GetDatabase(mongoDatabaseName);
 });
 
 // Add CORS
