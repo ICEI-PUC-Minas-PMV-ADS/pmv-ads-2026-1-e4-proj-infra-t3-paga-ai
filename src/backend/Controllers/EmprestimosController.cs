@@ -100,28 +100,30 @@ public async Task<IActionResult> GetRelatorioLucro(string nomeCobrador)
         // INTERLIGAÇÃO: Cria uma notificação automática de "Empréstimo Realizado"
        // 4. ACESSA A COLEÇÃO DE NOTIFICAÇÕES (mesmo banco, outra tabela)
     // Usamos o banco de dados que já injetamos no construtor
-    var database = _emprestimos.Database; 
+         var database = _emprestimos.Database; 
    // 1. Pega a coleção usando a Classe (não BsonDocument)
-var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
+        var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
 
-// 2. Busca o último ID das notificações para fazer o +1
-var ultima = await colNotificacoes.Find(_ => true)
-    .SortByDescending(x => x.Id)
-    .FirstOrDefaultAsync();
+    // 2. Busca o último ID das notificações para fazer o +1
+        var ultima = await colNotificacoes.Find(_ => true)
+        .SortByDescending(x => x.Id)
+        .FirstOrDefaultAsync();
 
-// 3. Cria o objeto já com o ID correto (int)
-var novaNotif = new Notificacao 
-{
-    Id = (ultima == null) ? 1 : ultima.Id + 1,
-    ClienteId = novo.ClienteId,
-    Cobrador = novo.Cobrador,
-    Mensagem = $"Novo empréstimo de {novo.Valor:C} criado para {novo.Cliente}.",
-    DataCriacao = DateTime.UtcNow,
-    Lida = false
-};
+    // 3. Cria o objeto já com o ID correto (int)
+        var novaNotif = new Notificacao 
+    {
+        Id = (ultima == null) ? 1 : ultima.Id + 1,
+        ClienteId = novo.ClienteId,
+        Cobrador = novo.Cobrador,
+        Valor = novo.ValorFinal,
+        DataVencimento = novo.DataVencimento,
+        Tipo = "Cobrança",
+        DataCriacao = DateTime.UtcNow,
+        Lida = false
+    };
 
-// 4. Salva no banco
-await colNotificacoes.InsertOneAsync(novaNotif);
+    // 4. Salva no banco
+        await colNotificacoes.InsertOneAsync(novaNotif);
       
         return CreatedAtAction(nameof(Get), new { id = novo.Id, nomeCobrador = novo.Cobrador }, novo);
     }
@@ -184,20 +186,30 @@ await colNotificacoes.InsertOneAsync(novaNotif);
         return NotFound(new { mensagem = "Empréstimo não encontrado." });
 
     // 4. GERAR NOTIFICAÇÃO (Usando '_db' que definimos no construtor)
-    var colNotificacoes = _db.GetCollection<BsonDocument>("notificacoes");
-    
-    var notificacaoPagamento = new BsonDocument 
-{
-    { "ClienteId", emprestimoAtualizado.ClienteId },
-    { "Cobrador", nomeCobrador },
-    { "Mensagem", $"💰 RECEBIDO: {emprestimoAtualizado.Cliente} pagou o ID {id} hoje!" },
-    { "Data", DateTime.UtcNow },
-    { "Tipo", "PagamentoRecebido" }
-};
+  var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
+
+    // 2. Buscamos o último ID para manter a contagem 1, 2, 3...
+    var ultima = await colNotificacoes.Find(_ => true)
+        .SortByDescending(x => x.Id)
+        .FirstOrDefaultAsync();
+
+    // 3. Criamos o objeto usando a classe Notificacao
+    var notificacaoPagamento = new Notificacao 
+    {
+        Id = (ultima == null) ? 1 : ultima.Id + 1,
+        ClienteId = emprestimoAtualizado.ClienteId,
+        ClienteNome = emprestimoAtualizado.Cliente, // Nome para a frase
+        Cobrador = nomeCobrador,
+        Valor = emprestimoAtualizado.ValorFinal,
+        Tipo = "Pagamento",
+        Data = DateTime.UtcNow,
+        Lida = false,
+        // A mensagem pode ser montada aqui ou no Controller de Notificações
+        Mensagem = $"💰 RECEBIDO: {emprestimoAtualizado.Cliente} pagou {emprestimoAtualizado.ValorFinal:C} hoje!"
+    };
 
     await colNotificacoes.InsertOneAsync(notificacaoPagamento);
 
     return Ok(new { mensagem = $"O cliente {emprestimoAtualizado.Cliente} pagou com sucesso em {DateTime.Now:dd/MM/yyyy HH:mm}!" });
-    
-}
+    }
 }
