@@ -8,20 +8,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 2. Configura o MongoDB usando o appsettings.json ou variáveis de ambiente
-var mongoConnectionString = builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")
-    ?? builder.Configuration.GetValue<string>("MONGODB_CONNECTIONSTRING")
-    ?? throw new InvalidOperationException("MongoDB connection string is not configured. Set MongoDbSettings:ConnectionString in appsettings.json or the environment variable MONGODB_CONNECTIONSTRING.");
+// 2. Configura o MongoDB usando o appsettings.json ou Variáveis de Ambiente do Azure
+builder.Services.AddSingleton<IMongoClient>(s =>
+    new MongoClient(builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")));
 
-var mongoDatabaseName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName")
-    ?? throw new InvalidOperationException("MongoDB database name is not configured. Set MongoDbSettings:DatabaseName in appsettings.json.");
-
-builder.Services.AddSingleton<IMongoClient>(s => new MongoClient(mongoConnectionString));
-
-// 3. Injeta o Database específico
+// 3. Injeta o Database específico "pagai"
 builder.Services.AddSingleton<IMongoDatabase>(s => {
     var client = s.GetRequiredService<IMongoClient>();
-    return client.GetDatabase(mongoDatabaseName);
+    var dbName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName");
+    return client.GetDatabase(dbName);
 });
 
 // 4. Registra o ReportService
