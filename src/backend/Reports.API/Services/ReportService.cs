@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using backend.Models;
+﻿using System.Linq;
+using Reports.API.Models;
 using MongoDB.Driver;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using Empretimos.API.Models;
 
-namespace backend.Services;
+namespace Reports.API.Services;
 
 public class ReportService
 {
