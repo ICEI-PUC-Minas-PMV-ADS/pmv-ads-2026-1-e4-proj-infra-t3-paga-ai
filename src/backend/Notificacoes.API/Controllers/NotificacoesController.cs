@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using backend.Models;
+using Notificacoes.API.Models;
 
-namespace backend.Controllers;
+namespace Notificacoes.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

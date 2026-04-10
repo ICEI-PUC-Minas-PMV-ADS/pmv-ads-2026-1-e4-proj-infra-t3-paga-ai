@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace backend.Models
+namespace Clientes.API.Models
 {
     public class Cliente
     {
