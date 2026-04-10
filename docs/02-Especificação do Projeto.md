@@ -156,7 +156,7 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 |RF-003| O sistema deve calcular automaticamente o valor total (Principal + Lucro) usando a mesma lógica de cálculo no servidor.   | ALTA | Renata |
 |RF-004| O usuário deve definir uma data de vencimento para cada dívida cadastrada.   | MÉDIA | Cristina |
 |RF-005| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | MÉDIA | Thiago |
-|RF-006| Deve ser possível marcar as dívidas como "Pendente", "Pago Parcialmente" ou "Liquidado"   | MÉDIA | Flávio |
+|RF-006| Deve ser possível marcar as dívidas como "Pendente" e "Pago"   | MÉDIA | Flávio |
 |RF-007| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | Alex |
 
 ### Requisitos não Funcionais
