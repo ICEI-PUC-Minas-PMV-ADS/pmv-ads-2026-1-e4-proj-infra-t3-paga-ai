@@ -15,16 +15,7 @@ public class NotificacoesController : ControllerBase
         _notificacoes = database.GetCollection<Notificacao>("notificacoes");
     }
 
-    // 1. Lista TODAS (Útil para o admin)
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Notificacao>>> Get()
-    {
-        var lista = await _notificacoes.Find(_ => true).ToListAsync();
-        return Ok(lista);
-    }
-
-    // 2. Busca notificações de um COBRADOR específico (O seu foco!)
-    // Rota: api/notificacoes/cobrador/Marcos24
+    
     [HttpGet("cobrador/{nomeCobrador}")]
     public async Task<ActionResult<IEnumerable<Notificacao>>> GetPorCobrador(string nomeCobrador)
     {
@@ -56,4 +47,5 @@ public class NotificacoesController : ControllerBase
         if (resultado.DeletedCount == 0) return NotFound();
         return NoContent();
     }
+
 }
