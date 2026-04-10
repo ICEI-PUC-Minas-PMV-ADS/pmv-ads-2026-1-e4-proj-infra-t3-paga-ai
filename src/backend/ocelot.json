@@ -1,0 +1,23 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/{catchAll}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5167
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{catchAll}",
+      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5167",
+    "UnauthorizedResponse": {
+      "statusCode": 401,
+      "message": "Unauthorized. Please provide a valid token."
+    }
+  }
+}
