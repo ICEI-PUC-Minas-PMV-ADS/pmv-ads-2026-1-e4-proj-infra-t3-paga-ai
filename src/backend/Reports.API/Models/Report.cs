@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace backend.Models;
+namespace Reports.API.Models;
 public class Report
 {
     public int Id { get; set; }

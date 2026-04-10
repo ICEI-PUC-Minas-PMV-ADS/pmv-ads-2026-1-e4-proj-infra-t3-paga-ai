@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using backend.Models;
+using Clientes.API.Models;
 
-namespace backend.Controllers;
+namespace Clientes.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
