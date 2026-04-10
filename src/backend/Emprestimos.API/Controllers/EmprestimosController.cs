@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using backend.Models;
 using MongoDB.Bson;
+using Empretimos.API.Models;
+using Notificacoes.API.Models;
 
 
-namespace backend.Controllers;
+namespace Empretimos.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
