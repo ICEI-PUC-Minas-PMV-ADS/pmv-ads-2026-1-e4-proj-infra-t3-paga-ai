@@ -1,5 +1,6 @@
-using backend.Gateway.Configuration;
+<<<<<<< HEAD
 using System.Collections.Generic;
+using backend.Gateway.Configuration;
 
 namespace backend.Gateway.Services;
 
