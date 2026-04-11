@@ -90,8 +90,27 @@ app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Health check simplificado antes do Ocelot
-app.MapGet("/health", () => Results.Ok(new { status = "Gateway is running", version = "1.0.0" }));
+// Root e health checks simplificados antes do Ocelot
+app.MapGet("/", () => Results.Ok(new
+{
+    status = "Gateway is running",
+    timestamp = DateTime.UtcNow,
+    version = "1.0.0",
+    message = "Welcome to the PagaAi gateway"
+}))
+.WithName("Root")
+.WithOpenApi()
+.AllowAnonymous();
+
+app.MapGet("/health", () => Results.Ok(new
+{
+    status = "Gateway is running",
+    timestamp = DateTime.UtcNow,
+    version = "1.0.0"
+}))
+.WithName("Health")
+.WithOpenApi()
+.AllowAnonymous();
 
 app.MapControllers();
 
