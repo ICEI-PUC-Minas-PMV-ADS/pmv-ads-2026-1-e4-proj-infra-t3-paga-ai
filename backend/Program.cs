@@ -1,6 +1,8 @@
 using MongoDB.Driver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 using System.Text;
 using backend.Gateway.Middleware;
 using backend.Gateway.Services;
@@ -44,6 +46,9 @@ builder.Services.AddAuthentication(options =>
 
 // Add Authorization
 builder.Services.AddAuthorization();
+
+// Add Ocelot gateway services
+builder.Services.AddOcelot();
 
 // Add Gateway Services
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -91,6 +96,7 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+app.UseRouting();
 
 // Add Gateway Middleware
 app.UseMiddleware<LoggingMiddleware>();
@@ -102,11 +108,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Health Check Endpoint
-app.MapGet("/health", () => Results.Ok(new 
-{ 
-    status = "Backend is running", 
+app.MapGet("/health", () => Results.Ok(new
+{
+    status = "Backend is running",
     timestamp = DateTime.UtcNow,
     gateway = "enabled"
 }))
@@ -114,4 +118,22 @@ app.MapGet("/health", () => Results.Ok(new
 .WithOpenApi()
 .AllowAnonymous();
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.Equals("/health", StringComparison.OrdinalIgnoreCase))
+    {
+        context.Response.StatusCode = StatusCodes.Status200OK;
+        await context.Response.WriteAsJsonAsync(new
+        {
+            status = "Backend is running",
+            timestamp = DateTime.UtcNow,
+            gateway = "enabled"
+        });
+        return;
+    }
+
+    await next();
+});
+
+await app.UseOcelot();
 app.Run();
