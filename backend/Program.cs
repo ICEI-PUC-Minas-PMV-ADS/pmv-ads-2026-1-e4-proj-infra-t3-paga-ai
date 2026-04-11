@@ -10,11 +10,65 @@ using backend.Gateway.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Load Ocelot configuration
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+
+var jwtSettings = builder.Configuration.GetSection("GatewaySettings");
+var jwtSecret = jwtSettings["JwtSecret"] ?? throw new InvalidOperationException("JWT Secret is not configured. Set it in appsettings.json");
+var jwtIssuer = jwtSettings["JwtIssuer"] ?? "paga-ai-gateway";
+var jwtAudience = jwtSettings["JwtAudience"] ?? "paga-ai-clients";
+
+// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ReportService>();
+
+<<<<<<< HEAD
+// Add Authorization
+builder.Services.AddAuthorization();
+
+// Add Ocelot gateway services
+builder.Services.AddOcelot();
+
+// Add Gateway Services
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRateLimitService, RateLimitService>();
+
+// Configure MongoDB
+var mongoConnectionString = builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")
+    ?? builder.Configuration.GetValue<string>("MONGODB_CONNECTIONSTRING")
+    ?? throw new InvalidOperationException("MongoDB connection string is not configured. Set MongoDbSettings:ConnectionString in appsettings.json or the environment variable MONGODB_CONNECTIONSTRING.");
+
+var mongoDatabaseName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName")
+    ?? throw new InvalidOperationException("MongoDB database name is not configured. Set MongoDbSettings:DatabaseName in appsettings.json.");
+
+builder.Services.AddSingleton<IMongoClient>(s => new MongoClient(mongoConnectionString));
+
+builder.Services.AddScoped(s => {
+    var client = s.GetRequiredService<IMongoClient>();
+    return client.GetDatabase(mongoDatabaseName);
+=======
+// Add JWT Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+        ClockSkew = TimeSpan.Zero
+    };
+>>>>>>> feature/api-gateway
+});
 
 // Add Authorization
 builder.Services.AddAuthorization();
@@ -41,14 +95,29 @@ builder.Services.AddScoped(s => {
     return client.GetDatabase(mongoDatabaseName);
 });
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", cors =>
+    {
+        cors
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
+// Add HttpClient
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
-// FORÇAR SWAGGER EM QUALQUER AMBIENTE (Inclusive Produção no Azure)
+// Configure Swagger
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pagai API V1");
-    c.RoutePrefix = string.Empty; // Isso faz o Swagger abrir direto na URL principal do Azure
+    c.RoutePrefix = string.Empty;
 });
 
 app.UseHttpsRedirection();
