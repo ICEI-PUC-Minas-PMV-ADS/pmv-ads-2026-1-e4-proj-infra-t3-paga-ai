@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/Usuarios/{catchAll}",
+      "DownstreamPathTemplate": "/api/Auth/{catchAll}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5133 }
@@ -10,7 +10,7 @@
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/api/Usuarios",
+      "DownstreamPathTemplate": "/api/Auth",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5133 }
