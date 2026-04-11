@@ -5,7 +5,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// SERVIÇOS 
+// 1. REGISTRO DE SERVIÇOS (Tudo que usa builder.Services)
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -67,11 +67,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// PIPELINE 
+// Configuração do CORS (Ainda no builder)
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 
+// ---------------------------------------------------------
+// 2. CONSTRUÇÃO DO APP (O momento que a variável 'app' nasce)
+// ---------------------------------------------------------
 var app = builder.Build();
 
-// Swagger 
+// 3. PIPELINE DE EXECUÇÃO (Agora sim usamos 'app')
+
+app.UseCors("AllowAll"); // Movido para cá
+
+// Swagger (acessível na raiz '/' por causa do RoutePrefix vazio)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
