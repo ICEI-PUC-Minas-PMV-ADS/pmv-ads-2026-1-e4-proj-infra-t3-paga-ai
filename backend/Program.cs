@@ -1,36 +1,166 @@
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
+using System.Text;
+using backend.Gateway.Middleware;
+using backend.Gateway.Services;
+using backend.Gateway.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Load Ocelot configuration
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+
+var jwtSettings = builder.Configuration.GetSection("GatewaySettings");
+var jwtSecret = jwtSettings["JwtSecret"] ?? throw new InvalidOperationException("JWT Secret is not configured. Set it in appsettings.json");
+var jwtIssuer = jwtSettings["JwtIssuer"] ?? "paga-ai-gateway";
+var jwtAudience = jwtSettings["JwtAudience"] ?? "paga-ai-clients";
+
+// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ReportService>();
 
-// 2. Configura o MongoDB usando o appsettings.json ou Variáveis de Ambiente do Azure
-builder.Services.AddSingleton<IMongoClient>(s => 
-    new MongoClient(builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")));
+<<<<<<< HEAD
+// Add Authorization
+builder.Services.AddAuthorization();
 
-// 3. Injeta o Database específico "pagai"
-builder.Services.AddSingleton(s => {
+// Add Ocelot gateway services
+builder.Services.AddOcelot();
+
+// Add Gateway Services
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRateLimitService, RateLimitService>();
+
+// Configure MongoDB
+var mongoConnectionString = builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")
+    ?? builder.Configuration.GetValue<string>("MONGODB_CONNECTIONSTRING")
+    ?? throw new InvalidOperationException("MongoDB connection string is not configured. Set MongoDbSettings:ConnectionString in appsettings.json or the environment variable MONGODB_CONNECTIONSTRING.");
+
+var mongoDatabaseName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName")
+    ?? throw new InvalidOperationException("MongoDB database name is not configured. Set MongoDbSettings:DatabaseName in appsettings.json.");
+
+builder.Services.AddSingleton<IMongoClient>(s => new MongoClient(mongoConnectionString));
+
+builder.Services.AddScoped(s => {
     var client = s.GetRequiredService<IMongoClient>();
-    var dbName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName");
-    return client.GetDatabase(dbName);
+    return client.GetDatabase(mongoDatabaseName);
+=======
+// Add JWT Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+        ClockSkew = TimeSpan.Zero
+    };
+>>>>>>> feature/api-gateway
 });
+
+// Add Authorization
+builder.Services.AddAuthorization();
+
+// Add Ocelot gateway services
+builder.Services.AddOcelot();
+
+// Add Gateway Services
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRateLimitService, RateLimitService>();
+
+// Configure MongoDB
+var mongoConnectionString = builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")
+    ?? builder.Configuration.GetValue<string>("MONGODB_CONNECTIONSTRING")
+    ?? throw new InvalidOperationException("MongoDB connection string is not configured. Set MongoDbSettings:ConnectionString in appsettings.json or the environment variable MONGODB_CONNECTIONSTRING.");
+
+var mongoDatabaseName = builder.Configuration.GetValue<string>("MongoDbSettings:DatabaseName")
+    ?? throw new InvalidOperationException("MongoDB database name is not configured. Set MongoDbSettings:DatabaseName in appsettings.json.");
+
+builder.Services.AddSingleton<IMongoClient>(s => new MongoClient(mongoConnectionString));
+
+builder.Services.AddScoped(s => {
+    var client = s.GetRequiredService<IMongoClient>();
+    return client.GetDatabase(mongoDatabaseName);
+});
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", cors =>
+    {
+        cors
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
+// Add HttpClient
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-// FORÇAR SWAGGER EM QUALQUER AMBIENTE (Inclusive Produção no Azure)
+// Configure Swagger
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pagai API V1");
-    c.RoutePrefix = string.Empty; // Isso faz o Swagger abrir direto na URL principal do Azure
+    c.RoutePrefix = string.Empty;
 });
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
+app.UseRouting();
+
+// Add Gateway Middleware
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<RequestTransformationMiddleware>();
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
+// Authentication and Authorization
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
+app.MapGet("/health", () => Results.Ok(new
+{
+    status = "Backend is running",
+    timestamp = DateTime.UtcNow,
+    gateway = "enabled"
+}))
+.WithName("Health")
+.WithOpenApi()
+.AllowAnonymous();
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.Equals("/health", StringComparison.OrdinalIgnoreCase))
+    {
+        context.Response.StatusCode = StatusCodes.Status200OK;
+        await context.Response.WriteAsJsonAsync(new
+        {
+            status = "Backend is running",
+            timestamp = DateTime.UtcNow,
+            gateway = "enabled"
+        });
+        return;
+    }
+
+    await next();
+});
+
+await app.UseOcelot();
 app.Run();
