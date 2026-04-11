@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using backend.Gateway.Configuration;
 
 namespace backend.Gateway.Services;
@@ -14,24 +15,22 @@ public class RateLimitService : IRateLimitService
 
     public bool IsRequestAllowed(string key)
     {
+        if (_settings.RequestsPerMinute <= 0)
+        {
+            return true;
+        }
+
         var now = DateTime.UtcNow;
 
-        if (!_requests.ContainsKey(key))
+        if (!_requests.TryGetValue(key, out var entry) || (now - entry.WindowStart).TotalMinutes >= 1)
         {
             _requests[key] = (1, now);
             return true;
         }
 
-        var (count, windowStart) = _requests[key];
-        if ((now - windowStart).TotalMinutes >= 1)
+        if (entry.Count < _settings.RequestsPerMinute)
         {
-            _requests[key] = (1, now);
-            return true;
-        }
-
-        if (count < _settings.RequestsPerMinute)
-        {
-            _requests[key] = (count + 1, windowStart);
+            _requests[key] = (entry.Count + 1, entry.WindowStart);
             return true;
         }
 
