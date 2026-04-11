@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using backend.Models;
-using backend.Services;
+using Reports.API.Services;
+using Reports.API.Models;
 
 namespace Reports.API.Controllers;
 
