@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using Notificacoes.API.Models;
 
 namespace Notificacoes.API.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class NotificacoesController : ControllerBase

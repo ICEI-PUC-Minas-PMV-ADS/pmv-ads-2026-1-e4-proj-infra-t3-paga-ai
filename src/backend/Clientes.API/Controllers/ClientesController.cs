@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using Clientes.API.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Clientes.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ClientesController : ControllerBase

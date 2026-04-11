@@ -1,15 +1,16 @@
 using MongoDB.Driver;
-// Remova o using de Reports.API.Services se não for usar services aqui
+using Microsoft.AspNetCore.Authentication.JwtBearer; // Adicionado
+using Microsoft.IdentityModel.Tokens; // Adicionado
+using System.Text; // Adicionado
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Isso aqui já cuida de todos os seus Controllers!
+// --- SERVIÇOS ---
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 2. Configuração do MongoDB (Mantenha igual)
+// --- MONGODB ---
 builder.Services.AddSingleton<IMongoClient>(s =>
     new MongoClient(builder.Configuration.GetValue<string>("MongoDbSettings:ConnectionString")));
 
@@ -19,16 +20,44 @@ builder.Services.AddSingleton<IMongoDatabase>(s => {
     return client.GetDatabase(dbName);
 });
 
-// 3. SE NÃO TEM SERVICE, NÃO PRECISA ADICIONAR NADA AQUI.
-// Apague a linha: builder.Services.AddScoped<Notificacoes.API.Controllers>();
+// --- AUTENTICAÇÃO JWT (Obrigatório para validar o token vindo do Gateway) ---
+var chaveJwt = builder.Configuration["JwtSettings:SecretKey"]!;
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(chaveJwt))
+        };
+    });
 
+builder.Services.AddAuthorization();
+
+// --- CORS (Para o Gateway conseguir acessar) ---
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
+// --- PIPELINE ---
 app.UseSwagger();
-app.UseSwaggerUI(); 
+app.UseSwaggerUI(c => {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+    c.RoutePrefix = string.Empty; // Facilita ver o Swagger na Azure
+});
 
+app.UseCors("AllowAll"); // Antes da Autenticação
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
 
+app.UseAuthentication(); // Obrigatório para validar quem está logado
+app.UseAuthorization();
+
+app.MapControllers();
 app.Run();
