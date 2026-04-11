@@ -1,8 +1,11 @@
+using System.Collections.Generic;
+using System.Security.Claims;
+
 namespace backend.Gateway.Services;
 
 public interface ITokenService
 {
     string GenerateToken(string userId, string email, IEnumerable<string> roles);
     bool ValidateToken(string token);
-    IEnumerable<KeyValuePair<string, string>> GetClaims(string token);
+    ClaimsPrincipal GetClaims(string token);
 }
