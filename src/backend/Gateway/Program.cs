@@ -86,6 +86,17 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 
+    endpoints.MapGet("/", () => Results.Ok(new
+    {
+        status = "Gateway is running",
+        timestamp = DateTime.UtcNow,
+        version = "1.0.0",
+        message = "Welcome to the PagaAi gateway"
+    }))
+    .WithName("Root")
+    .WithOpenApi()
+    .AllowAnonymous();
+
     endpoints.MapGet("/health", () => Results.Ok(new
     {
         status = "Gateway is running",
