@@ -1,22 +1,28 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace backend.Models;
+namespace Notificacoes.API.Models;
 
 
 public class Notificacao
 {
     // No Swagger/POST deve-se apagar a linha Id no Request Body, para que o MongoDb crie sua própria id
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
+    public int Id { get; set; }
+    public int ClienteId {get; set; }
+    public string ClienteNome {get; set; } = null!;
+    public string Cobrador {get; set; } = null!;
 
     public string? Mensagem { get; set; }
 
     public bool Lida { get; set; } = false;
+    public DateTime Data { get; set;} = DateTime.UtcNow;
 
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
 
     public int? EmprestimoId { get; set; }
+    public string Tipo {get; set; } = "Cobranca";
+    public decimal Valor { get; set; }
+    public DateTime DataVencimento {get; set;}
 }
 
