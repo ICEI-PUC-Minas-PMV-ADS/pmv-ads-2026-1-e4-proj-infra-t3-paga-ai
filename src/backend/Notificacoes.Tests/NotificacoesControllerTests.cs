@@ -18,6 +18,7 @@ namespace Notificacoes.Tests
         [SetUp]
         public void Setup()
         {
+
             _databaseMock = new Mock<IMongoDatabase>();
             _collectionMock = new Mock<IMongoCollection<Notificacao>>();
 
@@ -33,6 +34,7 @@ namespace Notificacoes.Tests
         [Test]
         public async Task Delete_IdExiste_RetornaNoContent()
         {
+            // Arrange
             var deleteResultMock = new Mock<DeleteResult>();
             deleteResultMock.Setup(x => x.DeletedCount).Returns(1);
 
@@ -42,14 +44,17 @@ namespace Notificacoes.Tests
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(deleteResultMock.Object);
 
+            // Act
             var result = await _controller.Delete(1);
 
+            // Assert
             Assert.That(result, Is.InstanceOf<NoContentResult>());
         }
 
         [Test]
         public async Task Delete_IdNaoExiste_RetornaNotFound()
         {
+            //Arrange
             var deleteResultMock = new Mock<DeleteResult>();
             deleteResultMock.Setup(x => x.DeletedCount).Returns(0);
 
@@ -59,14 +64,17 @@ namespace Notificacoes.Tests
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(deleteResultMock.Object);
 
+            //Act
             var result = await _controller.Delete(1);
 
+            //Assert
             Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
         public async Task MarcarComoLida_IdExiste_RetornaNoContent()
         {
+            //Arrange
             var updateResultMock = new Mock<UpdateResult>();
             updateResultMock.Setup(x => x.MatchedCount).Returns(1);
 
@@ -78,8 +86,10 @@ namespace Notificacoes.Tests
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(updateResultMock.Object);
 
+            //Act
             var result = await _controller.MarcarComoLida(1);
 
+            //Assert
             Assert.That(result, Is.InstanceOf<NoContentResult>());
         }
     }
