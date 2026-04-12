@@ -4,21 +4,19 @@
 
 Definição de como o software é estruturado em termos dos componentes que fazem parte da solução e do ambiente de hospedagem da aplicação.
 
-![Arquitetura da Solução](img/api_web_mobile.png)
 
 ## Diagrama de Classes
 
 O diagrama de classes ilustra graficamente como será a estrutura do software, e como cada uma das classes da sua estrutura estarão interligadas. Essas classes servem de modelo para materializar os objetos que executarão na memória.
 
-<img width="1800" height="1200" alt="diagrama de classes" src="https://github.com/user-attachments/assets/25170889-16c6-40e5-b7e8-34052c2a5240" />
-<img width="1800" height="1200" alt="diagrama de doucmentos" src="https://github.com/user-attachments/assets/e1a87754-fe35-4084-b7e6-0335ab6c34ee" />
+![Arquitetura da Solução](img/api_web_mobile.png)<img width="1400" height="900" alt="DIAGRAMA DE CLASSES (2)" src="https://github.com/user-attachments/assets/44ebc4d9-9ec6-4a21-b514-957f4070cf12" />
 
 
 
 ## Documentação do Banco de Dados MongoDB
 
 Este documento descreve a estrutura e o esquema do banco de dados não relacional utilizado por nosso projeto, baseado em MongoDB. O MongoDB é um banco de dados NoSQL que armazena dados em documentos JSON (ou BSON, internamente), permitindo uma estrutura flexível e escalável para armazenar e consultar dados.
-
+<img width="1700" height="1150" alt="DIAGRAMA DE DOCUMENTOS" src="https://github.com/user-attachments/assets/535a291d-e91b-43e6-8f29-628764437c56" />
 ## Esquema do Banco de Dados
 ### Coleção: users
 Armazena as informações dos usuários do sistema.
