@@ -23,11 +23,11 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Build Gateway project
+        run: dotnet build src/backend/Gateway/Gateway.csproj --configuration Release
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Publish Gateway project
+        run: dotnet publish src/backend/Gateway/Gateway.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
