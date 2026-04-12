@@ -51,7 +51,10 @@ builder.Services.AddAuthorization();
 
 // 4. INJEÇÃO DE DEPENDÊNCIAS PERSONALIZADAS
 builder.Services.Configure<GatewaySettings>(jwtSettingsSection);
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<GatewaySettings>>().Value);
+
 builder.Services.Configure<RateLimitSettings>(builder.Configuration.GetSection("RateLimiting"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<RateLimitSettings>>().Value);
 
 builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddSingleton<IRateLimitService, RateLimitService>();
