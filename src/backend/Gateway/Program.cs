@@ -10,7 +10,7 @@ using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. CARREGAMENTO DE CONFIGURAÇÃO (Suporta ocelot.json e ocelot.Development.json)
+// 1. CARREGAMENTO DE CONFIGURAÇÃO
 builder.Configuration
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("ocelot.json", optional: false, reloadOnChange: true)
@@ -21,7 +21,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 3. CONFIGURAÇÃO JWT (Deve ser igual ao das outras APIs)
+// 3. CONFIGURAÇÃO JWT
 var jwtSettingsSection = builder.Configuration.GetSection("GatewaySettings");
 var jwtSecret = jwtSettingsSection["JwtSecret"] ?? "chave_mestra_paga_ai_2026_secreta";
 var jwtIssuer = jwtSettingsSection["JwtIssuer"] ?? "pagai-api";
@@ -49,7 +49,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// 4. INJEÇÃO DE DEPENDÊNCIAS PERSONALIZADAS
+// 4. INJEÇÃO DE DEPENDÊNCIAS
 builder.Services.Configure<GatewaySettings>(jwtSettingsSection);
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<GatewaySettings>>().Value);
 
@@ -73,62 +73,42 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// 7. PIPELINE (A ORDEM É CRUCIAL)
+// 7. PIPELINE
 
 app.UseSwagger();
-app.UseSwaggerUI(c => 
+app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "PagaAi Gateway V1");
-    c.RoutePrefix = "swagger"; // Swagger disponível em /swagger
+    c.RoutePrefix = "swagger";
 });
 
-app.UseHttpsRedirection();
+app.UseCors();
 
-// Seus middlewares personalizados
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<LoggingMiddleware>();
-
-app.UseRouting();
-
-app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.Use(async (context, next) =>
+// Rotas de status — antes do Ocelot
+app.MapGet("/", () => Results.Ok(new
 {
-    if (context.Request.Path == "/" || context.Request.Path == "/health")
-    {
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = StatusCodes.Status200OK;
+    status = "Gateway is running",
+    timestamp = DateTime.UtcNow,
+    version = "1.0.0",
+    message = "Welcome to the PagaAi gateway"
+})).AllowAnonymous();
 
-        if (context.Request.Path == "/health")
-        {
-            await context.Response.WriteAsJsonAsync(new
-            {
-                status = "Gateway is running",
-                timestamp = DateTime.UtcNow,
-                version = "1.0.0"
-            });
-            return;
-        }
-
-        await context.Response.WriteAsJsonAsync(new
-        {
-            status = "Gateway is running",
-            timestamp = DateTime.UtcNow,
-            version = "1.0.0",
-            message = "Welcome to the PagaAi gateway"
-        });
-        return;
-    }
-
-    await next();
-});
+app.MapGet("/health", () => Results.Ok(new
+{
+    status = "Gateway is running",
+    timestamp = DateTime.UtcNow,
+    version = "1.0.0"
+})).AllowAnonymous();
 
 app.MapControllers();
 
-// Ocelot deve ser a última peça do pipeline
+// Ocelot deve ser o último
 await app.UseOcelot();
 
 app.Run();
