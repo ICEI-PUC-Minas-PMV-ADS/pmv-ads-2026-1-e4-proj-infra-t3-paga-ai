@@ -1,11 +1,27 @@
 {
   "Routes": [
     {
+<<<<<<< HEAD
+      "DownstreamPathTemplate": "/api/Auth/{everything}",
+=======
+      "DownstreamPathTemplate": "/api/Usuarios",
+>>>>>>> main
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "usuario-cyajcbadamgcabhk.eastus-01.azurewebsites.net", "Port": 443 }
+      ],
+<<<<<<< HEAD
+=======
+      "UpstreamPathTemplate": "/",
+      "UpstreamHttpMethod": ["Get"]
+    },
+    {
       "DownstreamPathTemplate": "/api/Auth/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         { "Host": "usuario-cyajcbadamgcabhk.eastus-01.azurewebsites.net", "Port": 443 }
       ],
+>>>>>>> main
       "UpstreamPathTemplate": "/api/Usuarios/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
