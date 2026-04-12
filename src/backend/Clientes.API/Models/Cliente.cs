@@ -1,12 +1,13 @@
+using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace backend.Models
+namespace Clientes.API.Models
 {
     public class Cliente
     {
-        [BsonId]
+        [MongoDB.Bson.Serialization.Attributes.BsonId]
         public int Id { get; set; }
-
+        [Required]
         public string? Nome { get; set; }
         public string? CPF { get; set; }
         public string? Telefone { get; set; }
