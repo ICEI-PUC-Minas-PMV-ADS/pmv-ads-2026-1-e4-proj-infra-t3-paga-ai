@@ -83,7 +83,6 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
-app.UseCors();
 
 // Seus middlewares personalizados
 app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -91,34 +90,33 @@ app.UseMiddleware<LoggingMiddleware>();
 
 app.UseRouting();
 
+app.UseCors();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
+app.MapGet("/", () => Results.Ok(new
 {
-    endpoints.MapGet("/", () => Results.Ok(new
-    {
-        status = "Gateway is running",
-        timestamp = DateTime.UtcNow,
-        version = "1.0.0",
-        message = "Welcome to the PagaAi gateway"
-    }))
-    .WithName("Root")
-    .WithOpenApi()
-    .AllowAnonymous();
+    status = "Gateway is running",
+    timestamp = DateTime.UtcNow,
+    version = "1.0.0",
+    message = "Welcome to the PagaAi gateway"
+}))
+.WithName("Root")
+.WithOpenApi()
+.AllowAnonymous();
 
-    endpoints.MapGet("/health", () => Results.Ok(new
-    {
-        status = "Gateway is running",
-        timestamp = DateTime.UtcNow,
-        version = "1.0.0"
-    }))
-    .WithName("Health")
-    .WithOpenApi()
-    .AllowAnonymous();
+app.MapGet("/health", () => Results.Ok(new
+{
+    status = "Gateway is running",
+    timestamp = DateTime.UtcNow,
+    version = "1.0.0"
+}))
+.WithName("Health")
+.WithOpenApi()
+.AllowAnonymous();
 
-    endpoints.MapControllers();
-});
+app.MapControllers();
 
 // Ocelot deve ser a última peça do pipeline
 await app.UseOcelot();
