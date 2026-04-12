@@ -75,8 +75,6 @@ var app = builder.Build();
 
 // 7. PIPELINE (A ORDEM É CRUCIAL)
 
-app.UseRouting();
-
 app.UseSwagger();
 app.UseSwaggerUI(c => 
 {
