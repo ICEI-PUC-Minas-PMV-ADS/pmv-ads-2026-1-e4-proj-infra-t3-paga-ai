@@ -95,31 +95,38 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
+app.Use(async (context, next) =>
 {
-    endpoints.MapGet("/", () => Results.Ok(new
+    if (context.Request.Path == "/" || context.Request.Path == "/health")
     {
-        status = "Gateway is running",
-        timestamp = DateTime.UtcNow,
-        version = "1.0.0",
-        message = "Welcome to the PagaAi gateway"
-    }))
-    .WithName("Root")
-    .WithOpenApi()
-    .AllowAnonymous();
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = StatusCodes.Status200OK;
 
-    endpoints.MapGet("/health", () => Results.Ok(new
-    {
-        status = "Gateway is running",
-        timestamp = DateTime.UtcNow,
-        version = "1.0.0"
-    }))
-    .WithName("Health")
-    .WithOpenApi()
-    .AllowAnonymous();
+        if (context.Request.Path == "/health")
+        {
+            await context.Response.WriteAsJsonAsync(new
+            {
+                status = "Gateway is running",
+                timestamp = DateTime.UtcNow,
+                version = "1.0.0"
+            });
+            return;
+        }
 
-    endpoints.MapControllers();
+        await context.Response.WriteAsJsonAsync(new
+        {
+            status = "Gateway is running",
+            timestamp = DateTime.UtcNow,
+            version = "1.0.0",
+            message = "Welcome to the PagaAi gateway"
+        });
+        return;
+    }
+
+    await next();
 });
+
+app.MapControllers();
 
 // Ocelot deve ser a última peça do pipeline
 await app.UseOcelot();
