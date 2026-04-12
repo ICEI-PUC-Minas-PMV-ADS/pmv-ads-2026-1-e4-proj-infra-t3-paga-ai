@@ -1,101 +1,61 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/Auth/{catchAll}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Usuarios",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5133 }
+        { "Host": "usuario-cyajcbadamgcabhk.eastus-01.azurewebsites.net", "Port": 443 }
       ],
-      "UpstreamPathTemplate": "/api/Usuarios/{catchAll}",
+      "UpstreamPathTemplate": "/",
+      "UpstreamHttpMethod": ["Get"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "usuario-cyajcbadamgcabhk.eastus-01.azurewebsites.net", "Port": 443 }
+      ],
+      "UpstreamPathTemplate": "/api/Usuarios/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/api/Auth",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Clientes/{everything}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5133 }
+        { "Host": "clientes-bdezc9cvekduebee.eastus-01.azurewebsites.net", "Port": 443 }
       ],
-      "UpstreamPathTemplate": "/api/Usuarios",
+      "UpstreamPathTemplate": "/api/Clientes/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/api/Clientes/{catchAll}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Emprestimos/{everything}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5156 }
+        { "Host": "emprestimos-fra0habvh3cvf7ee.eastus-01.azurewebsites.net", "Port": 443 }
       ],
-      "UpstreamPathTemplate": "/api/Clientes/{catchAll}",
+      "UpstreamPathTemplate": "/api/Emprestimos/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/api/Clientes",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Report/{everything}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5156 }
+        { "Host": "reportss-g9hzg2g6akcxc3fu.eastus-01.azurewebsites.net", "Port": 443 }
       ],
-      "UpstreamPathTemplate": "/api/Clientes",
+      "UpstreamPathTemplate": "/api/Report/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/api/Emprestimos/{catchAll}",
-      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Notificacoes/{everything}",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5276 }
+        { "Host": "notificacoe-ezdecvdvhfe8becj.eastus-01.azurewebsites.net", "Port": 443 }
       ],
-      "UpstreamPathTemplate": "/api/Emprestimos/{catchAll}",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Emprestimos",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5276 }
-      ],
-      "UpstreamPathTemplate": "/api/Emprestimos",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Notificacoes/{catchAll}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5243 }
-      ],
-      "UpstreamPathTemplate": "/api/Notificacoes/{catchAll}",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Notificacoes",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5243 }
-      ],
-      "UpstreamPathTemplate": "/api/Notificacoes",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Report/{catchAll}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5169 }
-      ],
-      "UpstreamPathTemplate": "/api/Report/{catchAll}",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Report",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5169 }
-      ],
-      "UpstreamPathTemplate": "/api/Report",
+      "UpstreamPathTemplate": "/api/Notificacoes/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5046",
-    "UnauthorizedResponse": {
-      "statusCode": 401,
-      "message": "Unauthorized. Please provide a valid token."
-    }
+    "BaseUrl": "https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net"
   }
 }

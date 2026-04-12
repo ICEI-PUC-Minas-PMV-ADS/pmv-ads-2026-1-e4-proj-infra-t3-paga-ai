@@ -6,7 +6,7 @@ namespace Notificacoes.API.Models;
 
 public class Notificacao
 {
-    // No Swagger/POST deve-se apagar a linha Id no Request Body, para que o MongoDb crie sua própria id
+
     [BsonId]
     public int Id { get; set; }
     public int ClienteId {get; set; }

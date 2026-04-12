@@ -1,0 +1,42 @@
+[33m027f1ad[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnotificacoes-final[m[33m, [m[1;31morigin/notificacoes[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mnotificacoes[m[33m, [m[1;32mmain[m[33m)[m Backend publicado
+[33mda037ae[m Merge branch 'main' of https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2026-1-e4-proj-infra-t3-paga-ai
+[33m11616a3[m feat: update mongodb
+[33ma3314f9[m feat: update mongodb
+[33md5d207f[m Revise wireframe section with project details
+[33m8d347a9[m[33m ([m[1;31morigin/feature/api-gateway[m[33m)[m Update 05-Arquitetura da Solução.md
+[33mca2c161[m Update 05-Arquitetura da Solução- Diagrama de Classes.md
+[33mbf38ba2[m fixed: API Emprestimos
+[33m89057fc[m fixed: API Emprestimos
+[33m3ee1dc8[m Removendo lixo de compilação do rastreio
+[33m66c865a[m[33m ([m[1;31morigin/infra[m[33m)[m feat: infraestrutura mongodb e backend inicial
+[33ma0a9554[m Update README.md
+[33mebb3694[m Update 02-Especificação do Projeto.md
+[33m55b82f1[m Update 02-Especificação do Projeto.md
+[33m6afd849[m Update 02-Especificação do Projeto.md
+[33mda462fb[m Update 02-Especificação do Projeto.md
+[33mae3a6c0[m Update 02-Especificação do Projeto.md
+[33m8fad023[m Criação do gerenciamento de pessoas e orçamento
+[33m48dbfd4[m Revise project methodology and tools section
+[33m548d32b[m Criação do Gerenciamento de Projeto
+[33m084379c[m Fix formatting in project specification document
+[33m8a835ce[m Update project specification with use case diagram overview
+[33m91e18f4[m Enhance use case diagram section with detailed descriptions
+[33m8198ba5[m Add image to use case diagram section
+[33m47b5b53[m Update README.md
+[33mddd2556[m Update README.md
+[33mba00dfa[m Update README.md
+[33md4a3d07[m Complemento / Público-Alvo
+[33mbef749c[m Revise requisitos funcionais e não funcionais
+[33m5097fe3[m Update 01-Documentação de Contexto.md
+[33me4bd762[m Update 01-Documentação de Contexto.md
+[33m9b09bbf[m justificativa
+[33m4c2d1fb[m problema
+[33m54b30e1[m Introdução
+[33m6b2da98[m Objetivos e Público-Alvo
+[33m054988b[m Update 02-Especificação do Projeto.md
+[33me9c9a81[m Update 02-Especificação do Projeto.md
+[33m17e1bda[m Update 02-Especificação do Projeto.md
+[33m92b3ce8[m Update 02-Especificação do Projeto.md
+[33m708aea3[m Update 02-Especificação do Projeto.md
+[33mafb23fd[m docs: define requisitos técnicos e restrições do projeto Paga Aí
+[33m9cac480[m Initial commit

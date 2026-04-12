@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using Notificacoes.API.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Notificacoes.API.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class NotificacoesController : ControllerBase
