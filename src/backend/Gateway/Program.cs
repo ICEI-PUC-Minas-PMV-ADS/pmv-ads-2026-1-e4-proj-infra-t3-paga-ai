@@ -75,16 +75,17 @@ var app = builder.Build();
 
 // 7. PIPELINE (A ORDEM É CRUCIAL)
 
+app.UseRouting();
+
 app.UseSwagger();
 app.UseSwaggerUI(c => 
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "PagaAi Gateway V1");
-    c.RoutePrefix = string.Empty; // <-- ISSO faz abrir direto na home da Azure
+    c.RoutePrefix = "swagger"; // Swagger disponível em /swagger
 });
 
 app.UseHttpsRedirection();
 app.UseCors();
-app.UseRouting();
 
 // Seus middlewares personalizados
 app.UseMiddleware<ErrorHandlingMiddleware>();
