@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using Empretimos.API.Models;
+
 
 namespace Reports.API.Services;
 

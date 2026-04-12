@@ -1,21 +1,21 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/Auth/{catchAll}",
+      "DownstreamPathTemplate": "/api/Usuarios/{catchAll}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5133 }
       ],
-      "UpstreamPathTemplate": "/api/Auth/{catchAll}",
+      "UpstreamPathTemplate": "/api/Usuarios/{catchAll}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/api/Auth",
+      "DownstreamPathTemplate": "/api/Usuarios",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5133 }
       ],
-      "UpstreamPathTemplate": "/api/Auth",
+      "UpstreamPathTemplate": "/api/Usuarios",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
@@ -92,7 +92,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:56367",
+    "BaseUrl": "http://localhost:5046",
     "UnauthorizedResponse": {
       "statusCode": 401,
       "message": "Unauthorized. Please provide a valid token."
