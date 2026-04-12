@@ -10,9 +10,8 @@ public class Report
 
     public DateTime DataFim { get; set; }
 
-    public string Tipo { get; set; }
-
-    public string Formato { get; set; }
+    public string Tipo { get; set; } = string.Empty;
+    public string Formato { get; set; } = string.Empty;
 
     public DateTime GeradoEm { get; set; }
 
