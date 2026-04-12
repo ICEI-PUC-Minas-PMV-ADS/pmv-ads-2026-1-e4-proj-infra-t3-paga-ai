@@ -3,7 +3,7 @@ using Moq;
 using MongoDB.Driver;
 using Reports.API.Models;
 using Reports.API.Services;
-using Empretimos.API.Models;
+using EmprestimoModel = Emprestimos.API.Models.Emprestimo;
 
 namespace Reports.API.Tests;
 
@@ -14,11 +14,11 @@ public class ReportServiceTests
     {
         // Arrange
         var mockDatabase = new Mock<IMongoDatabase>();
-        var mockEmprestimosCollection = new Mock<IMongoCollection<Emprestimo>>();
+        var mockEmprestimosCollection = new Mock<IMongoCollection<EmprestimoModel>>();
         var mockReportsCollection = new Mock<IMongoCollection<Report>>();
 
         mockDatabase
-            .Setup(db => db.GetCollection<Emprestimo>("emprestimos", null))
+            .Setup(db => db.GetCollection<EmprestimoModel>("emprestimos", null))
             .Returns(mockEmprestimosCollection.Object);
 
         mockDatabase
