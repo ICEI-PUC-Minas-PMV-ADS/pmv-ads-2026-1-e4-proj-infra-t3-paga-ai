@@ -95,28 +95,31 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => Results.Ok(new
+app.UseEndpoints(endpoints =>
 {
-    status = "Gateway is running",
-    timestamp = DateTime.UtcNow,
-    version = "1.0.0",
-    message = "Welcome to the PagaAi gateway"
-}))
-.WithName("Root")
-.WithOpenApi()
-.AllowAnonymous();
+    endpoints.MapGet("/", () => Results.Ok(new
+    {
+        status = "Gateway is running",
+        timestamp = DateTime.UtcNow,
+        version = "1.0.0",
+        message = "Welcome to the PagaAi gateway"
+    }))
+    .WithName("Root")
+    .WithOpenApi()
+    .AllowAnonymous();
 
-app.MapGet("/health", () => Results.Ok(new
-{
-    status = "Gateway is running",
-    timestamp = DateTime.UtcNow,
-    version = "1.0.0"
-}))
-.WithName("Health")
-.WithOpenApi()
-.AllowAnonymous();
+    endpoints.MapGet("/health", () => Results.Ok(new
+    {
+        status = "Gateway is running",
+        timestamp = DateTime.UtcNow,
+        version = "1.0.0"
+    }))
+    .WithName("Health")
+    .WithOpenApi()
+    .AllowAnonymous();
 
-app.MapControllers();
+    endpoints.MapControllers();
+});
 
 // Ocelot deve ser a última peça do pipeline
 await app.UseOcelot();
