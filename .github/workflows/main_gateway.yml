@@ -61,5 +61,5 @@ jobs:
         with:
           app-name: 'Gateway'
           slot-name: 'Production'
-          package: .
+          package: .net-app
           
