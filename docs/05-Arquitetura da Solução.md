@@ -39,6 +39,23 @@ Estrutura do Documento
 
 A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "notificacoes".
 
+###  Estrutura de Documento
+```Json
+{
+  "id": 1,
+  "clienteId": 10,
+  "clienteNome": "João",
+  "cobrador": "Maria",
+  "mensagem": "Pagamento pendente",
+  "lida": false,
+  "data": "2026-04-12",
+  "dataCriacao": "2026-04-12",
+  "tipo": "Cobranca",
+  "valor": 150.00,
+  "dataVencimento": "2026-04-15"
+}
+```
+
 ###  Exemplo do Documento Notificação
 
 - Id (int): identificador único da notificação
@@ -56,23 +73,6 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 
 ---
 
-###  Estrutura de Documento
-```Json
-{
-  "id": 1,
-  "clienteId": 10,
-  "clienteNome": "João",
-  "cobrador": "Maria",
-  "mensagem": "Pagamento pendente",
-  "lida": false,
-  "data": "2026-04-12",
-  "dataCriacao": "2026-04-12",
-  "tipo": "Cobranca",
-  "valor": 150.00,
-  "dataVencimento": "2026-04-15"
-}
-```
----
 
 #### Descrição dos Campos
 > - <strong>_id:</strong> Identificador único do produto gerado automaticamente pelo MongoDB.
