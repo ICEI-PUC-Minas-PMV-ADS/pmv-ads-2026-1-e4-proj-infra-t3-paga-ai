@@ -48,6 +48,8 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 
 ###  Estrutura do Documento Notificação
 
+```Json
+{
 > -Id (int): identificador único da notificação
 > - ClienteId (int): identificador do cliente
 > - ClienteNome (string): nome do cliente
@@ -61,7 +63,8 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 > - Valor (decimal): valor da cobrança
 > -DataVencimento (DateTime): data de vencimento
 
----
+}
+```
 
 ### 📄 Exemplo de Documento
 
