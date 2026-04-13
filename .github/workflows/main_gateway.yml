@@ -29,11 +29,14 @@ jobs:
       - name: Publish Gateway project
         run: dotnet publish src/backend/Gateway/Gateway.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
+      - name: Zip published Gateway app
+        run: cd ${{env.DOTNET_ROOT}} && zip -r myapp.zip myapp
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: myapp
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.DOTNET_ROOT}}/myapp.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,10 +50,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: myapp
-          path: myapp
+          path: ./artifact
 
       - name: List downloaded files
-        run: ls -la myapp
+        run: ls -la artifact && ls -la artifact/*.zip
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -65,5 +68,5 @@ jobs:
         with:
           app-name: 'Gateway'
           slot-name: 'Production'
-          package: ./myapp
+          package: ./artifact/myapp.zip
           
