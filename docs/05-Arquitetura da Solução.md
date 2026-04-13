@@ -58,20 +58,20 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 }
 ```
 
-###  Exemplo do Documento Notificação
+###  Descrição dos Campos Notificação
 
-- Id (int): identificador único da notificação
-- ClienteId (int): identificador do cliente
-- ClienteNome (string): nome do cliente
-- Cobrador (string): nome do cobrador responsável
-- Mensagem (string, opcional): conteúdo da notificação
-- Lida (bool): indica se a notificação foi visualizada
-- Data (DateTime): data da notificação
-- DataCriacao (DateTime): data de criação do registro
-- EmprestimoId (int, opcional): referência ao empréstimo
-- Tipo (string): tipo da notificação (ex: cobrança)
-- Valor (decimal): valor da cobrança
-- DataVencimento (DateTime): data de vencimento
+> - <strong>Id (int):</strong> identificador único da notificação
+> - <strong>ClienteId (int):</strong> identificador do cliente
+> - <strong>ClienteNome (string):</strong> nome do cliente
+> - <strong>Cobrador (string):</strong> nome do cobrador responsável
+> - <strong>Mensagem (string, opcional):</strong> conteúdo da notificação
+> - <strong>Lida (bool):</strong> indica se a notificação foi visualizada
+> - <strong>Data (DateTime):</strong> data da notificação
+> - <strong>DataCriacao (DateTime):</strong> data de criação do registro
+> - <strong>EmprestimoId (int, opcional):</strong> referência ao empréstimo
+> - <strong>Tipo (string):</strong> tipo da notificação (ex: cobrança)
+> - <strong>Valor (decimal):</strong> valor da cobrança
+> - <strong>DataVencimento (DateTime):</strong> data de vencimento
 
 ---
 
