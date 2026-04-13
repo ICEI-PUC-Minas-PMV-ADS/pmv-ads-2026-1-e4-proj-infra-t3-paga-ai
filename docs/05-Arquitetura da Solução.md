@@ -79,6 +79,7 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 
 A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "clientes".
 
+###  Estrutura de Documento
 ```Json
 {
   "id": 1,
@@ -106,7 +107,7 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 
 A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "emprestimos".
 
-
+###  Estrutura de Documento
 ```Json
 {
   "id": 1,
@@ -125,18 +126,38 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 ```
 
 ### Descrição dos Campos Empréstimo
-> -<strong>Id (int):</strong> identificador único do empréstimo
-> -<strong>ClienteId (int):</strong> identificador do cliente relacionado
-> -<strong>Cliente (string):</strong> nome do cliente
-> -<strong>Cobrador (string):</strong> nome do cobrador responsável
-> -<strong>Valor (decimal):</strong> valor inicial do empréstimo
-> -<strong>TaxaJuros (decimal):</strong> taxa de juros aplicada
-> -<strong>ValorFinal (decimal):</strong> valor total com juros
-> -<strong>DataEmprestimo (DateTime):</strong> data em que o empréstimo foi realizado
-> -<strong>DataVencimento (DateTime):</strong> data limite para pagamento
-> -<strong>Pago (bool):</strong> indica se o empréstimo foi quitado
-> -<strong>DataPagamento (DateTime, opcional):</strong> data em que o pagamento foi realizado
-> -<strong>Status (enum):</strong> status do pagamento (Pendente ou Pago)
+> - <strong>Id (int):</strong> identificador único do empréstimo
+> - <strong>ClienteId (int):</strong> identificador do cliente relacionado
+> - <strong>Cliente (string):</strong> nome do cliente
+> - <strong>Cobrador (string):</strong> nome do cobrador responsável
+> - <strong>Valor (decimal):</strong> valor inicial do empréstimo
+> - <strong>TaxaJuros (decimal):</strong> taxa de juros aplicada
+> - <strong>ValorFinal (decimal):</strong> valor total com juros
+> - <strong>DataEmprestimo (DateTime):</strong> data em que o empréstimo foi realizado
+> - <strong>DataVencimento (DateTime):</strong> data limite para pagamento
+> - <strong>Pago (bool):</strong> indica se o empréstimo foi quitado
+> - <strong>DataPagamento (DateTime, opcional):</strong> data em que o pagamento foi realizado
+> - <strong>Status (enum):</strong> status do pagamento (Pendente ou Pago)
+
+---
+
+### Coleção: reports
+
+A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "reports".
+
+###  Estrutura de Documento
+```Json
+{
+  "id": 1,
+  "dataInicio": "2026-04-01",
+  "dataFim": "2026-04-30",
+  "tipo": "Financeiro",
+  "formato": "PDF",
+  "geradoEm": "2026-04-12",
+  "cobrador": "Maria"
+}
+```
+
 
 ### Coleção: orders
 Armazena as informações dos pedidos feitos pelos usuários.
