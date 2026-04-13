@@ -37,18 +37,9 @@ Estrutura do Documento
 
 ### Coleção: notificacoes
 
-#### Descrição dos Campos
-> - <strong>_id:</strong> Identificador único do usuário gerado automaticamente pelo MongoDB.
-> - <strong>name:</strong> Nome completo do usuário.
-> - <strong>email:</strong> Endereço de email do usuário.
-> - <strong>passwordHash:</strong> Hash da senha do usuário.
-> - <strong>roles:</strong> Lista de papéis atribuídos ao usuário (por exemplo, admin, user).
-> - <strong>createdAt:</strong> Data e hora de criação do usuário.
-> - <strong>updatedAt:</strong> Data e hora da última atualização dos dados do usuário.
-
 A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "notificacoes".
 
-### 📌 Estrutura do Documento Notificação
+###  Estrutura do Documento Notificação
 
 - Id (int): identificador único da notificação
 - ClienteId (int): identificador do cliente
@@ -65,7 +56,7 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 
 ---
 
-### 📄 Exemplo de Documento
+###  Exemplo de Documento
 
 {
  - "id": 1,
