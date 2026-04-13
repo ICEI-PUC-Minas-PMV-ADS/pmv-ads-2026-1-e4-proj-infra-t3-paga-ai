@@ -35,6 +35,8 @@ Estrutura do Documento
 }
 ```
 
+
+
 ### Coleção: notificacoes
 
 A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "notificacoes".
