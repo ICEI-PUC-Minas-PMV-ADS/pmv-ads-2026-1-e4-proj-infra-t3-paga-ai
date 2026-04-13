@@ -75,6 +75,30 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 
 ---
 
+### Coleção: clientes
+
+A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "clientes".
+
+```Json
+{
+  "id": 1,
+  "nome": "João Silva",
+  "cpf": "123.456.789-00",
+  "telefone": "(31) 99999-9999",
+  "endereco": "Rua A, 123",
+  "email": "joao@email.com",
+  "descricao": "Cliente frequente"
+}
+```
+### Descrição dos Campos Cliente
+
+<strong>Id (int):</strong> identificador único do cliente
+<strong>Nome (string, obrigatório):</strong> nome do cliente
+<strong>CPF (string, opcional):</strong> CPF do cliente
+<strong>Telefone (string, opcional):</strong> telefone para contato
+<strong>Endereco (string, opcional):</strong> endereço do cliente
+<strong>Email (string, opcional):</strong> e-mail do cliente
+<strong>Descricao (string, opcional):</strong> observações ou informações adicionais
 
 ### Coleção: orders
 Armazena as informações dos pedidos feitos pelos usuários.
