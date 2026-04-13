@@ -18,24 +18,6 @@ O diagrama de classes ilustra graficamente como será a estrutura do software, e
 Este documento descreve a estrutura e o esquema do banco de dados não relacional utilizado por nosso projeto, baseado em MongoDB. O MongoDB é um banco de dados NoSQL que armazena dados em documentos JSON (ou BSON, internamente), permitindo uma estrutura flexível e escalável para armazenar e consultar dados.
 <img width="1700" height="1150" alt="DIAGRAMA DE DOCUMENTOS" src="https://github.com/user-attachments/assets/535a291d-e91b-43e6-8f29-628764437c56" />
 ## Esquema do Banco de Dados
-### Coleção: users
-Armazena as informações dos usuários do sistema.
-
-Estrutura do Documento
-
-```Json
-{
-    "_id": "ObjectId('5f7e1bbf9b2a4f1a9c38b9a1')",
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "passwordHash": "hash_da_senha",
-    "roles": ["admin", "user"],
-    "createdAt": "2024-08-29T10:00:00Z",
-    "updatedAt": "2024-08-29T12:00:00Z"
-}
-```
-
----
 
 ### Coleção: notificacoes
 
@@ -190,41 +172,6 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 > - <strong>Email (string):</strong> e-mail do usuário (utilizado para login)
 > - <strong>Senha (string):</strong> senha criptografada utilizando hash (bcrypt)
 
-
-### Coleção: orders
-Armazena as informações dos pedidos feitos pelos usuários.
-
-Estrutura do Documento
-
-```Json
-{
-    "_id": "ObjectId('5f7e1ddf9b2a4f1a9c38b9a3')",
-    "userId": "ObjectId('5f7e1bbf9b2a4f1a9c38b9a1')",
-    "products": [
-        {
-            "productId": "ObjectId('5f7e1ccf9b2a4f1a9c38b9a2')",
-            "quantity": 2,
-            "price": 99.99
-        }
-    ],
-    "totalPrice": 199.98,
-    "status": "pending",
-    "createdAt": "2024-08-29T11:00:00Z",
-    "updatedAt": "2024-08-29T11:30:00Z"
-}
-```
-
-#### Descrição dos Campos
-> - <strong>_id:</strong> Identificador único do pedido gerado automaticamente pelo MongoDB.
-> - <strong>userId:</strong> Referência ao identificador do usuário que fez o pedido.
-> - <strong>products:</strong> Lista de produtos incluídos no pedido, cada um com:
-> - <strong>productId:</strong> Identificador do produto.
-> - <strong>quantity:</strong> Quantidade do produto pedido.
-> - <strong>price:</strong> Preço unitário do produto no momento do pedido.
-> - <strong>totalPrice:</strong> Preço total do pedido (soma de todos os itens).
-> - <strong>status:</strong> Status atual do pedido (por exemplo, pending, shipped, delivered).
-> - <strong>createdAt:</strong> Data e hora de criação do pedido.
-> - <strong>updatedAt:</strong> Data e hora da última atualização dos dados do pedido.
 
 ### Boas Práticas
 
