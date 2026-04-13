@@ -172,6 +172,8 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 > - <strong>Email (string):</strong> e-mail do usuário (utilizado para login)
 > - <strong>Senha (string):</strong> senha criptografada utilizando hash (bcrypt)
 
+---
+
 
 ### Boas Práticas
 
