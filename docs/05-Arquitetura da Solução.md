@@ -46,25 +46,22 @@ Estrutura do Documento
 
 A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "notificacoes".
 
-###  Estrutura do Documento Notificação
+### 📌 Estrutura do Documento Notificação
 
-```Json
-{
- -Id (int): identificador único da notificação
- - ClienteId (int): identificador do cliente
- - ClienteNome (string): nome do cliente
- - Cobrador (string): nome do cobrador responsável
- - Mensagem (string, opcional): conteúdo da notificação
- - Lida (bool): indica se a notificação foi visualizada
- -Data (DateTime): data da notificação
- - DataCriacao (DateTime): data de criação do registro
- - EmprestimoId (int, opcional): referência ao empréstimo
- -Tipo (string): tipo da notificação (ex: cobrança)
- - Valor (decimal): valor da cobrança
- -DataVencimento (DateTime): data de vencimento
+- Id (int): identificador único da notificação
+- ClienteId (int): identificador do cliente
+- ClienteNome (string): nome do cliente
+- Cobrador (string): nome do cobrador responsável
+- Mensagem (string, opcional): conteúdo da notificação
+- Lida (bool): indica se a notificação foi visualizada
+- Data (DateTime): data da notificação
+- DataCriacao (DateTime): data de criação do registro
+- EmprestimoId (int, opcional): referência ao empréstimo
+- Tipo (string): tipo da notificação (ex: cobrança)
+- Valor (decimal): valor da cobrança
+- DataVencimento (DateTime): data de vencimento
 
-}
-```
+---
 
 ### 📄 Exemplo de Documento
 
