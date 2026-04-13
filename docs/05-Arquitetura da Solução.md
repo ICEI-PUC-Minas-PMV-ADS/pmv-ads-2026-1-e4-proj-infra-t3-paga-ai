@@ -35,7 +35,7 @@ Estrutura do Documento
 }
 ```
 
-
+---
 
 ### Coleção: notificacoes
 
