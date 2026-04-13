@@ -126,6 +126,7 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 ```
 
 ### Descrição dos Campos Empréstimo
+
 > - <strong>Id (int):</strong> identificador único do empréstimo
 > - <strong>ClienteId (int):</strong> identificador do cliente relacionado
 > - <strong>Cliente (string):</strong> nome do cliente
@@ -157,6 +158,37 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
   "cobrador": "Maria"
 }
 ```
+### Descrição dos Campos Report
+
+> - <strong>Id (int):</strong> identificador único do relatório
+> - <strong>DataInicio (DateTime):</strong> data inicial do período analisado
+> - <strong>DataFim (DateTime):</strong> data final do período analisado
+> - <strong>Tipo (string):</strong> tipo do relatório (ex: financeiro, cobranças, etc.)
+> - <strong>Formato (string):</strong> formato do relatório gerado (ex: PDF, Excel)
+> - <strong>GeradoEm (DateTime):</strong> data em que o relatório foi gerado
+> - <strong>Cobrador (string):</strong> nome do cobrador relacionado ao relatório
+
+---
+
+### Coleção: usuarios
+
+A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados em formato de documentos dentro da coleção "usuarios".
+
+### Estrutura de Documento
+
+```Json
+{
+  "id": "6618f1c2a1234b5c6789d012",
+  "nome": "Alex Junio",
+  "email": "alex@email.com",
+  "senha": "$2a$10$abcdefg123456789hashbcrypt"
+}
+```
+### Descrição dos Campos Usuario
+> - <strong>Id (string - ObjectId):</strong> identificador único do usuário gerado pelo MongoDB
+> - <strong>Nome (string):</strong> nome do usuário
+> - <strong>Email (string):</strong> e-mail do usuário (utilizado para login)
+> - <strong>Senha (string):</strong> senha criptografada utilizando hash (bcrypt)
 
 
 ### Coleção: orders
