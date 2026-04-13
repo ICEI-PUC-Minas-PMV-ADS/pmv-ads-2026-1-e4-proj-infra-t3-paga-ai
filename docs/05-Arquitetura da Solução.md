@@ -71,7 +71,7 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
  - "valor": 150.00,
  - "dataVencimento": "2026-04-15"
 }
-```
+---
 
 #### Descrição dos Campos
 > - <strong>_id:</strong> Identificador único do produto gerado automaticamente pelo MongoDB.
