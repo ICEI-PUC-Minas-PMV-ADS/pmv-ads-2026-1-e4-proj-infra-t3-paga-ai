@@ -68,17 +68,17 @@ A aplicação utiliza o MongoDB como banco de dados NoSQL, armazenando os dados 
 ### 📄 Exemplo de Documento
 
 {
-  "id": 1,
-  "clienteId": 10,
-  "clienteNome": "João",
-  "cobrador": "Maria",
-  "mensagem": "Pagamento pendente",
-  "lida": false,
-  "data": "2026-04-12",
-  "dataCriacao": "2026-04-12",
-  "tipo": "Cobranca",
-  "valor": 150.00,
-  "dataVencimento": "2026-04-15"
+ - "id": 1,
+ - "clienteId": 10,
+ - "clienteNome": "João",
+ - "cobrador": "Maria",
+ - "mensagem": "Pagamento pendente",
+ - "lida": false,
+ - "data": "2026-04-12",
+ - "dataCriacao": "2026-04-12",
+ - "tipo": "Cobranca",
+ - "valor": 150.00,
+ - "dataVencimento": "2026-04-15"
 }
 ```
 
