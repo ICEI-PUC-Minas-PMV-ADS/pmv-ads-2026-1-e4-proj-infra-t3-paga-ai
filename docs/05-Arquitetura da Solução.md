@@ -35,6 +35,8 @@ Estrutura do Documento
 }
 ```
 
+### Coleção: notificacoes
+
 #### Descrição dos Campos
 > - <strong>_id:</strong> Identificador único do usuário gerado automaticamente pelo MongoDB.
 > - <strong>name:</strong> Nome completo do usuário.
