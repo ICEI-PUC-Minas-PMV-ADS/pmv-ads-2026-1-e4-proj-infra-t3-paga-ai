@@ -42,7 +42,7 @@
       "DownstreamHostAndPorts": [
         { "Host": "notificacoe-ezdecvdvhfe8becj.eastus-01.azurewebsites.net", "Port": 443 }
       ],
-      "UpstreamPathTemplate": "/backend/Notificacoes/{everything}",
+      "UpstreamPathTemplate": "/api/Notificacoes/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     }
   ],
