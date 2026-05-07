@@ -5,7 +5,7 @@ using Reports.API.Services;
 namespace Reports.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/report")]
 public class ReportController : ControllerBase
 {
     private readonly ReportService _reportService;
