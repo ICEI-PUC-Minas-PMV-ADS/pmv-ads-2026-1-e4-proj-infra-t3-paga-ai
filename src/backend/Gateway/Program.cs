@@ -20,6 +20,7 @@ builder.Configuration
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
 
 // 3. CONFIGURAÇÃO JWT
 var jwtSettingsSection = builder.Configuration.GetSection("GatewaySettings");
@@ -78,7 +79,12 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "PagaAi Gateway V1");
+    c.SwaggerEndpoint("/swagger-proxy/usuarios", "Usuarios API");
+    c.SwaggerEndpoint("/swagger-proxy/clientes", "Clientes API");
+    c.SwaggerEndpoint("/swagger-proxy/emprestimos", "Emprestimos API");
+    c.SwaggerEndpoint("/swagger-proxy/notificacoes", "Notificacoes API");
+    c.SwaggerEndpoint("/swagger-proxy/reports", "Reports API");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gateway V1");
     c.RoutePrefix = "swagger";
 });
 
@@ -89,6 +95,30 @@ app.UseMiddleware<LoggingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Proxy para swagger.json das APIs — middleware inline antes do Ocelot
+var swaggerProxies = new Dictionary<string, string>
+{
+    ["/swagger-proxy/usuarios"]     = "http://localhost:5133/swagger/v1/swagger.json",
+    ["/swagger-proxy/clientes"]     = "http://localhost:5156/swagger/v1/swagger.json",
+    ["/swagger-proxy/emprestimos"]  = "http://localhost:5276/swagger/v1/swagger.json",
+    ["/swagger-proxy/notificacoes"] = "http://localhost:5243/swagger/v1/swagger.json",
+    ["/swagger-proxy/reports"]      = "http://localhost:5169/swagger/v1/swagger.json",
+};
+
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value ?? "";
+    if (swaggerProxies.TryGetValue(path, out var targetUrl))
+    {
+        var client = context.RequestServices.GetRequiredService<IHttpClientFactory>().CreateClient();
+        var json = await client.GetStringAsync(targetUrl);
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(json);
+        return;
+    }
+    await next();
+});
 
 // Rotas de status — antes do Ocelot
 app.MapGet("/", () => Results.Ok(new
