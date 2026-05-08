@@ -47,6 +47,9 @@ builder.Services.AddSingleton(s => {
     return client.GetDatabase(dbName);
 });
 
+// Email Service
+builder.Services.AddSingleton<Usuario.API.Services.EmailService>();
+
 // JWT 
 var chaveJwt = builder.Configuration["JwtSettings:SecretKey"]!;
 

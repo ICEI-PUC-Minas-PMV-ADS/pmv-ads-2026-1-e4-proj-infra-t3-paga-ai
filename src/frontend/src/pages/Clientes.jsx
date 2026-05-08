@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { getClientes, createCliente, updateCliente, deleteCliente } from "../services/clientesService";
+import { getToken } from "../services/authService";
  
-// ─────────────────────────────────────────────────────────────────────────────
-// TOKEN — futuramente virá do contexto de autenticação (Usuarios.API)
-// ─────────────────────────────────────────────────────────────────────────────
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjY5ZjJjNzY0ZjI3ODM3NDQ3ZjY4YmFlNSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImZsYXZpb0BlbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRmxhdmlvIFRlc3RlIiwiZXhwIjoxNzc3NTQ5NTY0LCJpc3MiOiJwYWdhaS1hcGkiLCJhdWQiOiJwYWdhaS1hcHAifQ.EZM-SRriHm0T4v1IllDAXeCgLf8JXVcdH1efVRxvN1o";
 const clienteVazio = {
   nome:      "",
   cpf:       "",
@@ -110,7 +107,8 @@ export default function Clientes() {
     setCarregando(true);
     setErro(null);
     try {
-      const dados = await getClientes(TOKEN);
+      const token = getToken();
+      const dados = await getClientes(token);
       setClientes(dados);
     } catch (e) {
       setErro(e.message);
@@ -131,7 +129,8 @@ export default function Clientes() {
   async function handleCadastrar() {
     setCarregando(true);
     try {
-      await createCliente(form, TOKEN);
+      const token = getToken();
+      await createCliente(form, token);
       await carregarClientes();
       setModalCadastro(false);
       setForm(clienteVazio);
@@ -146,7 +145,8 @@ export default function Clientes() {
   async function handleSalvarEdicao() {
     setCarregando(true);
     try {
-      await updateCliente(modalEditar.id, form, TOKEN);
+      const token = getToken();
+      await updateCliente(modalEditar.id, form, token);
       await carregarClientes();
       setModalEditar(null);
       setForm(clienteVazio);
@@ -162,7 +162,8 @@ export default function Clientes() {
     if (!window.confirm("Tem certeza que deseja excluir este cliente?")) return;
     setCarregando(true);
     try {
-      await deleteCliente(id, TOKEN);
+      const token = getToken();
+      await deleteCliente(id, token);
       await carregarClientes();
     } catch (e) {
       alert("Erro ao excluir: " + e.message);
