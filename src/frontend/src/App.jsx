@@ -1,49 +1,70 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { useLocation, Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Clientes from "./pages/Clientes";
 import Reports from "./pages/Reports";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import { isAuthenticated } from "./services/authService";
 
 export default function App() {
-    return (
-        <div style={styles.container}>
+  const location = useLocation();
+  const publicRoutes = ["/login", "/register", "/forgot-password", "/"];
+  const isPublicRoute = publicRoutes.includes(location.pathname);
+  const authenticated = isAuthenticated();
 
-            {/* Sidebar fixa — presente em todas as telas */}
-            <Sidebar activePath={window.location.pathname} />
+  return (
+    <div style={styles.container}>
+      {!isPublicRoute && authenticated && <Sidebar />}
 
-            {/* Área de conteúdo — muda conforme a rota */}
-            <div style={styles.content}>
-                <Routes>
+      <div style={styles.content}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route
+            path="/login"
+            element={authenticated ? <Navigate to="/clientes" replace /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={authenticated ? <Navigate to="/clientes" replace /> : <Register />}
+          />
+          <Route
+            path="/forgot-password"
+            element={authenticated ? <Navigate to="/clientes" replace /> : <ForgotPassword />}
+          />
+          <Route
+            path="/reset-password"
+            element={authenticated ? <Navigate to="/clientes" replace /> : <ResetPassword />}
+          />
+          <Route
+            path="/clientes"
+            element={authenticated ? <Clientes /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/relatorios"
+            element={authenticated ? <Reports /> : <Navigate to="/login" replace />}
+          />
 
-                    {/* Rota padrão: redireciona "/" para "/clientes" */}
-                    <Route path="/" element={<Navigate to="/clientes" replace />} />
-
-                    {/* Clientes */}
-                    <Route path="/clientes" element={<Clientes />} />
-
-                    {/* Relatórios */}
-                    <Route path="/relatorios" element={<Reports />} />
-
-                    {/* Rotas futuras — descomentar conforme as páginas forem criadas */}
-                    {/* <Route path="/dashboard"     element={<Dashboard />}     /> */}
-                    {/* <Route path="/emprestimos"   element={<Emprestimos />}   /> */}
-                    {/* <Route path="/configuracoes" element={<Configuracoes />} /> */}
-
-                </Routes>
-            </div>
-
-        </div>
-    );
+          {/* Rotas futuras — descomentar conforme as páginas forem criadas */}
+          {/* <Route path="/dashboard"     element={<Dashboard />}     /> */}
+          {/* <Route path="/emprestimos"   element={<Emprestimos />}   /> */}
+          {/* <Route path="/configuracoes" element={<Configuracoes />} /> */}
+        </Routes>
+      </div>
+    </div>
+  );
 }
 
 const styles = {
-    container: {
-        display: "flex",
-        height: "100vh",
-        overflow: "hidden",
-    },
-    content: {
-        flex: 1,
-        overflowY: "auto",
-        backgroundColor: "#f9fafb",
-    },
+  container: {
+    display: "flex",
+    minHeight: "100vh",
+    overflow: "hidden",
+  },
+  content: {
+    flex: 1,
+    minHeight: "100vh",
+  },
 };
+

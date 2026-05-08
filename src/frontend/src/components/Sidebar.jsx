@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../services/authService";
 
 const navItems = [
     { icon: "📊", label: "Dashboard", path: "/dashboard" },
@@ -15,7 +17,13 @@ const user = {
 };
 
 export default function Sidebar({ activePath = "/clientes" }) {
-    const [active, setActive] = useState(activePath);
+  const [active, setActive] = useState(activePath);
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
 
     return (
         <aside style={styles.sidebar}>
@@ -68,7 +76,7 @@ export default function Sidebar({ activePath = "/clientes" }) {
                     </div>
                 </div>
 
-                <button style={styles.logoutBtn}>Sair</button>
+                <button style={styles.logoutBtn} onClick={handleLogout}>Sair</button>
             </div>
         </aside>
     );
