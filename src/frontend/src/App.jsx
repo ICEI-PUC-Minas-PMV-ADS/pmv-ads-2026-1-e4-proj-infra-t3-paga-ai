@@ -10,7 +10,7 @@ import { isAuthenticated } from "./services/authService";
 
 export default function App() {
   const location = useLocation();
-  const publicRoutes = ["/login", "/register", "/forgot-password", "/"];
+  const publicRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/"];
   const isPublicRoute = publicRoutes.includes(location.pathname);
   const authenticated = isAuthenticated();
 
