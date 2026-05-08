@@ -10,7 +10,7 @@ async function request(url, options) {
       try {
         const errorData = await res.json();
         errorMsg = errorData.mensagem || errorData.message || errorData.error || `HTTP ${res.status}`;
-      } catch (e) {
+      } catch  {
         errorMsg = `HTTP ${res.status}`;
       }
       throw new Error(errorMsg);
@@ -18,7 +18,7 @@ async function request(url, options) {
     return res;
   } catch (err) {
     if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
-      throw new Error("Não foi possível conectar ao servidor. Verifique se o backend está rodando.");
+      throw new Error("Não foi possível conectar ao servidor. Verifique se o backend está rodando." ,{ cause: err });
     }
     throw err;
   }
@@ -105,4 +105,22 @@ export function getRememberedEmail() {
 
 export function isAuthenticated() {
   return Boolean(getToken());
+}
+export function getUsuarioLogado() {
+  const token = getToken();
+  if (!token) return null;
+
+  try {
+    // O token JWT tem 3 partes separadas por "."
+    // A parte do meio (índice 1) é o payload em Base64
+    const payload = token.split(".")[1];
+    const decoded = JSON.parse(atob(payload));
+
+    return {
+      nome:  decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]  ?? "Usuário",
+      email: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] ?? "",
+    };
+  } catch  {
+    return null;
+  }
 }
