@@ -95,7 +95,8 @@ public class AuthController : ControllerBase
         var resetToken = Guid.NewGuid().ToString();
         // Aqui poderia salvar o token no banco com expiração
 
-        var resetLink = $"http://localhost:5173/reset-password?token={resetToken}&email={request.Email}";
+        var frontendUrl = _config["FrontendSettings:Url"] ?? "http://localhost:5173";
+        var resetLink = $"{frontendUrl.TrimEnd('/')}/reset-password?token={Uri.EscapeDataString(resetToken)}&email={Uri.EscapeDataString(request.Email)}";
 
         var subject = "Redefinição de Senha - Paga Aí";
         var body = $@"
