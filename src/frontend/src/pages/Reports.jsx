@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { getUsuarioLogado } from "../services/authService";
 
 const API_URL = "http://localhost:5169/api/report";
 
 export default function Reports() {
+    const cobrador = getUsuarioLogado()?.nome ?? "";
     const [dataInicio, setDataInicio] = useState("");
     const [dataFim, setDataFim] = useState("");
     const [relatorio, setRelatorio] = useState(null);
@@ -31,7 +33,7 @@ export default function Reports() {
             setErro("");
 
             const response = await fetch(
-                `${API_URL}?dataInicio=${dataInicio}&dataFim=${dataFim}`
+                `${API_URL}?dataInicio=${dataInicio}&dataFim=${dataFim}&cobrador=${encodeURIComponent(cobrador)}`
             );
 
             if (!response.ok) {
@@ -63,7 +65,7 @@ export default function Reports() {
                 body: JSON.stringify({
                     dataInicio,
                     dataFim,
-                    cobrador: "",
+                    cobrador,
                 }),
             });
 
@@ -181,7 +183,7 @@ export default function Reports() {
                                     <Td>{formatMoney(item.totalEmprestado)}</Td>
                                     <Td>{formatMoney(item.recebido)}</Td>
                                     <Td>{formatMoney(item.pendente)}</Td>
-                                    <Td>{item.taxaMedia}%</Td>
+                                    <Td>{(item.taxaMedia * 100).toFixed(2)}%</Td>
                                 </tr>
                             ))
                         ) : (
