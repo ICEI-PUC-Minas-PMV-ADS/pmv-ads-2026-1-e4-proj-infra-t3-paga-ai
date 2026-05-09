@@ -1,27 +1,31 @@
-$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$root = $PSScriptRoot
+$backend = Join-Path $root "src\backend"
+$frontend = Join-Path $root "src\frontend"
 
-$apis = @(
-    "src\backend\Usuarios.API",
-    "src\backend\Clientes.API",
-    "src\backend\Emprestimos.API",
-    "src\backend\Notificacoes.API",
-    "src\backend\Reports.API",
-    "src\backend\Gateway"
+$services = @(
+    @{ Name = "Usuarios.API";    Path = Join-Path $backend "Usuarios.API";    Port = 5133 },
+    @{ Name = "Clientes.API";    Path = Join-Path $backend "Clientes.API";    Port = 5156 },
+    @{ Name = "Emprestimos.API"; Path = Join-Path $backend "Emprestimos.API"; Port = 5276 },
+    @{ Name = "Notificacoes.API";Path = Join-Path $backend "Notificacoes.API";Port = 5243 },
+    @{ Name = "Reports.API";     Path = Join-Path $backend "Reports.API";     Port = 5169 },
+    @{ Name = "Gateway";         Path = Join-Path $backend "Gateway";         Port = 5046 }
 )
 
-foreach ($api in $apis) {
-    $nome = Split-Path -Leaf $api
-    Start-Process cmd -ArgumentList "/k dotnet run --project $api" -WorkingDirectory $root -WindowStyle Normal
-    Write-Host "▶ Iniciando $nome..."
+foreach ($svc in $services) {
+    Write-Host "Iniciando $($svc.Name) na porta $($svc.Port)..." -ForegroundColor Cyan
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Set-Location '$($svc.Path)'; dotnet run --launch-profile http"
+    Start-Sleep -Seconds 4
 }
 
+Write-Host "Iniciando Frontend (Vite)..." -ForegroundColor Cyan
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "Set-Location '$frontend'; npm run dev"
+
 Write-Host ""
-Write-Host "✅ Todas as APIs iniciadas! Aguarde ~30s para subirem."
+Write-Host "Todos os servicos foram iniciados em janelas separadas." -ForegroundColor Green
 Write-Host ""
-Write-Host "URLs disponíveis:"
-Write-Host "  Usuarios.API   → http://localhost:5133"
-Write-Host "  Clientes.API   → http://localhost:5156"
-Write-Host "  Emprestimos.API → http://localhost:5276"
-Write-Host "  Notificacoes.API → http://localhost:5243"
-Write-Host "  Reports.API    → http://localhost:5169"
-Write-Host "  Gateway        → http://localhost:5046/swagger"
+Write-Host "URLs disponiveis:" -ForegroundColor Yellow
+foreach ($svc in $services) {
+    Write-Host "  $($svc.Name.PadRight(16)) -> http://localhost:$($svc.Port)" -ForegroundColor White
+}
+Write-Host "  Frontend         -> http://localhost:5173" -ForegroundColor White
+Write-Host "  Gateway (Swagger)-> http://localhost:5046/swagger" -ForegroundColor White
