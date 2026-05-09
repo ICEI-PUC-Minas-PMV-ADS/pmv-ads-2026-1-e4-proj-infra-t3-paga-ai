@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getUsuarioLogado } from "../services/authService";
 import { getNotificacoes, marcarLida, deletarNotif } from "../services/NotificacoesService";
 
+
 const fmt = (v) =>
   Number(v ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
@@ -16,7 +17,8 @@ const TIPO_CONFIG = {
 };
 
 export default function Notificacoes() {
-  const cobrador = getUsuarioLogado()?.nome ?? "";
+    const cobrador = getUsuarioLogado()?.nome ?? "";
+    
 
   const [lista,   setLista]   = useState([]);
   const [loading, setLoading] = useState(true);
@@ -132,31 +134,180 @@ export default function Notificacoes() {
 }
 
 const s = {
-  page:          { padding: "2rem", background: "#F5F3FF", minHeight: "100vh" },
-  header:        { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.25rem" },
-  titulo:        { margin: 0, fontSize: "1.8rem", fontWeight: 700, color: "#1F2937", display: "flex", alignItems: "center", gap: 10 },
-  badge:         { background: "#7C3AED", color: "#fff", borderRadius: 20, padding: "2px 10px", fontSize: "0.85rem", fontWeight: 700 },
-  sub:           { margin: "0.25rem 0 0", color: "#6B7280", fontSize: "0.9rem" },
-  btnMarcar:     { background: "#7C3AED", color: "#fff", border: "none", borderRadius: 8, padding: "0.5rem 1.1rem", cursor: "pointer", fontWeight: 600, fontSize: "0.85rem" },
-  filtros:       { display: "flex", gap: 8, marginBottom: "1.25rem" },
-  filtroBtn:     { background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "0.4rem 1rem", cursor: "pointer", fontSize: "0.85rem", color: "#6B7280" },
-  filtroBtnAtivo:{ background: "#7C3AED", color: "#fff", border: "1px solid #7C3AED" },
-  lista:         { display: "flex", flexDirection: "column", gap: 10 },
-  card:          { background: "#fff", borderRadius: 12, padding: "1rem 1.25rem", display: "flex", alignItems: "flex-start", gap: "1rem", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", position: "relative" },
-  iconBox:       { fontSize: "1.4rem", borderRadius: 10, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
-  cardBody:      { flex: 1, minWidth: 0 },
-  cardTop:       { display: "flex", alignItems: "center", gap: 8, marginBottom: 4 },
-  cardNome:      { fontWeight: 700, fontSize: "0.95rem", color: "#1F2937" },
-  tipoBadge:     { fontSize: "0.72rem", fontWeight: 600, borderRadius: 20, padding: "2px 8px" },
-  cardMsg:       { margin: "0 0 6px", fontSize: "0.85rem", color: "#4B5563" },
-  cardBottom:    { display: "flex", gap: 12, alignItems: "center" },
-  cardData:      { fontSize: "0.75rem", color: "#9CA3AF" },
-  cardValor:     { fontSize: "0.85rem", fontWeight: 700, color: "#7C3AED" },
-  acoes:         { display: "flex", flexDirection: "column", gap: 6, flexShrink: 0 },
-  btnLer:        { background: "#D1FAE5", color: "#16A34A", border: "none", borderRadius: 6, padding: "4px 8px", cursor: "pointer", fontSize: 13 },
-  btnDel:        { background: "#FEE2E2", color: "#DC2626", border: "none", borderRadius: 6, padding: "4px 8px", cursor: "pointer", fontSize: 13 },
-  ponto:         { position: "absolute", top: 12, right: 12, width: 8, height: 8, background: "#7C3AED", borderRadius: "50%" },
-  vazio:         { textAlign: "center", color: "#9CA3AF", padding: "3rem 0" },
-  vazioBox:      { display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "3rem 0" },
-  vazioTexto:    { color: "#9CA3AF", fontSize: "0.95rem" },
+    page: {
+        padding: "2rem",
+        background: "#F5F3FF",
+        minHeight: "100vh"
+    },
+    header: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: "1.25rem"
+    },
+    titulo: {
+        margin: 0,
+        fontSize: "1.8rem",
+        fontWeight: 700,
+        color: "#1F2937",
+        display: "flex",
+        alignItems: "center",
+        gap: 10
+    },
+    badge: {
+        background: "#7C3AED",
+        color: "#fff",
+        borderRadius: 20,
+        padding: "2px 10px",
+        fontSize: "0.85rem",
+        fontWeight: 700
+    },
+    sub: {
+        margin: "0.25rem 0 0",
+        color: "#6B7280",
+        fontSize: "0.9rem"
+    },
+    btnMarcar: {
+        background: "#7C3AED",
+        color: "#fff",
+        border: "none",
+        borderRadius: 8,
+        padding: "0.5rem 1.1rem",
+        cursor: "pointer",
+        fontWeight: 600,
+        fontSize: "0.85rem"
+    },
+    filtros: {
+        display: "flex",
+        gap: 8,
+        marginBottom: "1.25rem"
+    },
+    filtroBtn: {
+        background: "#fff",
+        border: "1px solid #E5E7EB",
+        borderRadius: 8,
+        padding: "0.4rem 1rem",
+        cursor: "pointer",
+        fontSize: "0.85rem",
+        color: "#6B7280"
+    },
+    filtroBtnAtivo: {
+        background: "#7C3AED",
+        color: "#fff",
+        border: "1px solid #7C3AED"
+    },
+    lista: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 10
+    },
+    card: {
+        background: "#fff",
+        borderRadius: 12,
+        padding: "1rem 1.25rem",
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "1rem",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+        position: "relative"
+    },
+    iconBox: {
+        fontSize: "1.4rem",
+        borderRadius: 10,
+        width: 44,
+        height: 44,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0
+    },
+    cardBody: {
+        flex: 1,
+        minWidth: 0
+    },
+    cardTop: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        marginBottom: 4
+    },
+    cardNome: {
+        fontWeight: 700,
+        fontSize: "0.95rem",
+        color: "#1F2937"
+    },
+    tipoBadge: {
+        fontSize: "0.72rem",
+        fontWeight: 600,
+        borderRadius: 20,
+        padding: "2px 8px"
+    },
+    cardMsg: {
+        margin: "0 0 6px",
+        fontSize: "0.85rem",
+        color: "#4B5563"
+    },
+    cardBottom: {
+        display: "flex",
+        gap: 12,
+        alignItems: "center"
+    },
+    cardData: {
+        fontSize: "0.75rem",
+        color: "#9CA3AF"
+    },
+    cardValor: {
+        fontSize: "0.85rem",
+        fontWeight: 700,
+        color: "#7C3AED"
+    },
+    acoes: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 6,
+        flexShrink: 0
+    },
+    btnLer: {
+        background: "#D1FAE5",
+        color: "#16A34A",
+        border: "none",
+        borderRadius: 6,
+        padding: "4px 8px",
+        cursor: "pointer",
+        fontSize: 13
+    },
+    btnDel: {
+        background: "#FEE2E2",
+        color: "#DC2626",
+        border: "none",
+        borderRadius: 6,
+        padding: "4px 8px",
+        cursor: "pointer",
+        fontSize: 13
+    },
+    ponto: {
+        position: "absolute",
+        top: 12,
+        right: 12,
+        width: 8,
+        height: 8,
+        background: "#7C3AED",
+        borderRadius: "50%"
+    },
+    vazio: {
+        textAlign: "center",
+        color: "#9CA3AF",
+        padding: "3rem 0"
+    },
+    vazioBox: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 12,
+        padding: "3rem 0"
+    },
+    vazioTexto: {
+        color: "#9CA3AF",
+        fontSize: "0.95rem"
+    },
 };

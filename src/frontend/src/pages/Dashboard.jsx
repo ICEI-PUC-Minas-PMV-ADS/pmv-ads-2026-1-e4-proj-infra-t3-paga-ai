@@ -12,6 +12,7 @@ const acoes = [
   { icon: "💳", label: "Empréstimos",    path: "/emprestimos",   desc: "Controle de empréstimos",  cor: "#2563EB" },
   { icon: "📈", label: "Relatórios",     path: "/relatorios",    desc: "Visualizar relatórios",    cor: "#16A34A" },
   { icon: "⚙️", label: "Configurações", path: "/configuracoes", desc: "Ajustes do sistema",       cor: "#F59E0B" },
+  { icon: "🔔", label: "Notificações", path: "/notificacoes", desc: "Notificacoes", cor: "#F59E0B" },
 ];
 
 function calcularStatus(e) {

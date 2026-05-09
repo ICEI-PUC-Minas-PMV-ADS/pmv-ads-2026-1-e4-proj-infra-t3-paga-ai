@@ -7,6 +7,7 @@ const navItems = [
   { icon: "💳", label: "Empréstimos",  path: "/emprestimos"  },
   { icon: "📈", label: "Relatórios",   path: "/relatorios"   },
   { icon: "⚙️", label: "Configurações", path: "/configuracoes" },
+
 ];
 
 export default function Sidebar() {
@@ -25,7 +26,7 @@ export default function Sidebar() {
     navigate("/login");
   }
 
-    const navigate = useNavigate();
+    
 
     return (
         <aside style={styles.sidebar}>
