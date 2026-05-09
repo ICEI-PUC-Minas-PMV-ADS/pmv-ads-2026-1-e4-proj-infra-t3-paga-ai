@@ -1,6 +1,6 @@
 // authService.js
 // Serviço de autenticação para o frontend
-const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5133/api/Auth";
+const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5046/backend/Usuarios";
 
 async function request(url, options) {
   try {

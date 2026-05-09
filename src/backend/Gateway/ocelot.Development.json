@@ -1,14 +1,16 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/Auth/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5133 }
-      ],
-      "UpstreamPathTemplate": "/backend/Usuarios/{everything}",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
+  
+  "DownstreamPathTemplate": "/api/Auth/{everything}",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [
+    { "Host": "localhost", "Port": 5133 }
+  ],
+  "UpstreamPathTemplate": "/backend/Usuarios/{everything}",
+  "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+
+},
     {
       "DownstreamPathTemplate": "/api/Clientes/{everything}",
       "DownstreamScheme": "http",
