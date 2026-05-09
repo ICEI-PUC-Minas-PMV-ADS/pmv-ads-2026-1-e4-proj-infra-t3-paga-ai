@@ -7,6 +7,8 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { isAuthenticated } from "./services/authService";
+import Dashboard from "./pages/Dashboard";
+import Emprestimos from "./pages/Emprestimos";
 
 export default function App() {
   const location = useLocation();
@@ -20,10 +22,10 @@ export default function App() {
 
       <div style={styles.content}>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route
             path="/login"
-            element={authenticated ? <Navigate to="/clientes" replace /> : <Login />}
+            element={authenticated ? <Navigate to="/dashboard" replace /> : <Login />}
           />
           <Route
             path="/register"
@@ -46,11 +48,14 @@ export default function App() {
             element={authenticated ? <Reports /> : <Navigate to="/login" replace />}
           />
 
-
-
-          {/* Rotas futuras — descomentar conforme as páginas forem criadas */}
-          {/* <Route path="/dashboard"     element={<Dashboard />}     /> */}
-          {/* <Route path="/emprestimos"   element={<Emprestimos />}   /> */}
+          <Route
+            path="/dashboard"
+            element={authenticated ? <Dashboard /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/emprestimos"
+            element={authenticated ? <Emprestimos /> : <Navigate to="/login" replace />}
+          />
           {/* <Route path="/configuracoes" element={<Configuracoes />} /> */}
         </Routes>
       </div>
@@ -62,11 +67,11 @@ const styles = {
   container: {
     display: "flex",
     minHeight: "100vh",
-    overflow: "hidden",
   },
   content: {
     flex: 1,
     minHeight: "100vh",
+    marginLeft: "256px",
   },
 };
 
