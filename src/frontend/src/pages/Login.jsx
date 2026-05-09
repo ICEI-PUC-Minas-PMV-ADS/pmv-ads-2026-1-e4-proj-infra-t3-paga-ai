@@ -39,7 +39,7 @@ export default function Login() {
     try {
       setLoading(true);
       await login(email, senha, rememberMe);
-      navigate("/clientes");
+      navigate("/dashboard");
     } catch (e) {
       setErro(e.message || "Falha ao realizar login.");
     } finally {
