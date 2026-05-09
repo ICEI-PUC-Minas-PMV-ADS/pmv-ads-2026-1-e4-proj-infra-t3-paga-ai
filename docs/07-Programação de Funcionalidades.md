@@ -15,6 +15,7 @@ Para cada requisito funcional, pode ser entregue um artefato desse tipo
 |RF-005| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | Tela de Notificações, API de Notificações | Alex |
 |RF-006| Deve ser possível marcar as dívidas como "Pendente" e "Pago"   | Tela de Emprestimos | Luan |
 |RF-007| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | Alex |
+|RF-008| O sistema deve permitir que o usuário gere relatórios e os exporte no formato PDF | Tela de Reports, API de Reports | Cristina |
 
 > **Links Úteis**:
 >
