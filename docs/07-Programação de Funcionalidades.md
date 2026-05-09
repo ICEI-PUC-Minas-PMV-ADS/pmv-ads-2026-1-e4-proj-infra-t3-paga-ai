@@ -6,6 +6,8 @@ Implementação do sistema descritas por meio dos requisitos funcionais e/ou nã
 
 Para cada requisito funcional, pode ser entregue um artefato desse tipo
 
+## ✅ Requisitos Funcionais
+
 |ID    | Descrição do Requisito  | Artefatos | Responsável |
 |------|-----------------------------------------|----|----|
 |RF-001| O sistema deve permitir cadrastar e registrar, nome, contato e adicionar  cada devedor, com sincronização em nuvem entre Web e Mobile.| Tela de Clientes, API de Clientes | Flávio |
@@ -19,6 +21,9 @@ Para cada requisito funcional, pode ser entregue um artefato desse tipo
 |RF-009| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | Tela de Emprestimos, API de Emprestimos| Luan|
 |RF-010| O sistema deve permitir que o usuário gere relatórios e os exporte no formato PDF | Tela de Reports, API de Reports | Cristina |
 
+---
+
+## ⚙️ Requisitos Não Funcionais
 
 |ID    | Descrição do Requisito  | Prioridade | Responsável |
 |------|-----------------------------------------|----|----|
