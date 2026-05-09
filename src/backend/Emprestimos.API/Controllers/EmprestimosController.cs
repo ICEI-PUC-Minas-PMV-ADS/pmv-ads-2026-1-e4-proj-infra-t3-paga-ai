@@ -80,9 +80,10 @@ public class EmprestimosController : ControllerBase
         if (novo.TaxaJuros > 1) novo.TaxaJuros = novo.TaxaJuros / 100;
         if (novo.TaxaJuros == 0) novo.TaxaJuros = 0.30m;
 
-        novo.ValorFinal = novo.Valor * (1 + novo.TaxaJuros);   
-        novo.DataEmprestimo = DateTime.UtcNow; 
-        novo.DataVencimento = DateTime.UtcNow.AddDays(30);
+        novo.ValorFinal = novo.Valor * (1 + novo.TaxaJuros);
+        novo.DataEmprestimo = DateTime.UtcNow;
+        if (novo.DataVencimento == default)
+            novo.DataVencimento = DateTime.UtcNow.AddDays(30);
         novo.Pago = false;
         
         await _emprestimos.InsertOneAsync(novo);
