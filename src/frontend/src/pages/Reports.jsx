@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { getUsuarioLogado } from "../services/authService";
-
-const API_URL = "http://localhost:5169/api/report";
+import { getRelatorio, exportarPdf } from "../services/ReportsService";
 
 export default function Reports() {
     const cobrador = getUsuarioLogado()?.nome ?? "";
@@ -32,15 +31,7 @@ export default function Reports() {
             setLoading(true);
             setErro("");
 
-            const response = await fetch(
-                `${API_URL}?dataInicio=${dataInicio}&dataFim=${dataFim}&cobrador=${encodeURIComponent(cobrador)}`
-            );
-
-            if (!response.ok) {
-                throw new Error("Erro ao buscar relatório.");
-            }
-
-            const data = await response.json();
+            const data = await getRelatorio(dataInicio, dataFim, cobrador);
             setRelatorio(data);
         } catch (error) {
             console.error(error);
@@ -57,18 +48,7 @@ export default function Reports() {
         }
 
         try {
-            const response = await fetch(`${API_URL}/export-pdf`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    dataInicio,
-                    dataFim,
-                    cobrador,
-                }),
-            });
-
+            const response = await exportarPdf(dataInicio, dataFim, cobrador);
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
 
