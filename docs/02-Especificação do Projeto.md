@@ -142,7 +142,7 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 |RF-007| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | MÉDIA | Thiago |
 |RF-008| Deve ser possível marcar as dívidas como "Pendente" e "Pago"   | MÉDIA | Flávio |
 |RF-009| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | Alex |
-|RF-010| O sistema deve permitir que o usuário gere relatórios e os exporte no formato PDF | BAIXA |
+|RF-010| O sistema deve permitir que o usuário gere relatórios e os exporte no formato PDF | BAIXA | Cristina |
 
 ### Requisitos não Funcionais
 
