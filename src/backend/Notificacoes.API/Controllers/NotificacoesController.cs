@@ -4,7 +4,7 @@ using Notificacoes.API.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Notificacoes.API.Controllers;
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class NotificacoesController : ControllerBase

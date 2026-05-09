@@ -7,6 +7,7 @@ const navItems = [
   { icon: "💳", label: "Empréstimos",  path: "/emprestimos"  },
   { icon: "📈", label: "Relatórios",   path: "/relatorios"   },
   { icon: "⚙️", label: "Configurações", path: "/configuracoes" },
+
 ];
 
 export default function Sidebar() {
@@ -25,13 +26,15 @@ export default function Sidebar() {
     navigate("/login");
   }
 
-  return (
-    <aside style={styles.sidebar}>
-      {/* Logo */}
-      <div style={styles.logoWrapper}>
-        <div style={styles.logoIcon}>💰</div>
-        <span style={styles.logoText}>Paga Aí</span>
-      </div>
+    
+
+    return (
+        <aside style={styles.sidebar}>
+            {/* Logo */}
+            <div style={styles.logoWrapper}>
+                <div style={styles.logoIcon}>💰</div>
+                <span style={styles.logoText}>Paga Aí</span>
+            </div>
 
       {/* Nav */}
       <nav style={styles.nav}>
