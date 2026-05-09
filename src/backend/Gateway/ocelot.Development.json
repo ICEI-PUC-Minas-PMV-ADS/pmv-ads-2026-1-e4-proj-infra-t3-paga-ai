@@ -1,101 +1,54 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/backend/Usuarios/{catchAll}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5133 }
-      ],
-      "UpstreamPathTemplate": "/backend/Usuarios/{catchAll}",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
+  
+  "DownstreamPathTemplate": "/api/Auth/{everything}",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [
+    { "Host": "localhost", "Port": 5133 }
+  ],
+  "UpstreamPathTemplate": "/backend/Usuarios/{everything}",
+  "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+
+},
     {
-      "DownstreamPathTemplate": "/backend/Usuarios",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5133 }
-      ],
-      "UpstreamPathTemplate": "/backend/Usuarios",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/backend/Clientes/{catchAll}",
+      "DownstreamPathTemplate": "/api/Clientes/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5156 }
       ],
-      "UpstreamPathTemplate": "/backend/Clientes/{catchAll}",
+      "UpstreamPathTemplate": "/backend/Clientes/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/backend/Clientes",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5156 }
-      ],
-      "UpstreamPathTemplate": "/backend/Clientes",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/backend/Emprestimos/{catchAll}",
+      "DownstreamPathTemplate": "/api/Emprestimos/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5276 }
       ],
-      "UpstreamPathTemplate": "/backend/Emprestimos/{catchAll}",
+      "UpstreamPathTemplate": "/backend/Emprestimos/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/backend/Emprestimos",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5276 }
-      ],
-      "UpstreamPathTemplate": "/backend/Emprestimos",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/backend/Notificacoes/{catchAll}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5243 }
-      ],
-      "UpstreamPathTemplate": "/backend/Notificacoes/{catchAll}",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/backend/Notificacoes",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5243 }
-      ],
-      "UpstreamPathTemplate": "/backend/Notificacoes",
-      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
-    },
-    {
-      "DownstreamPathTemplate": "/backend/Report/{catchAll}",
+      "DownstreamPathTemplate": "/api/report/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5169 }
       ],
-      "UpstreamPathTemplate": "/backend/Report/{catchAll}",
+      "UpstreamPathTemplate": "/backend/Report/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/backend/Report",
+      "DownstreamPathTemplate": "/api/Notificacoes/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5169 }
+        { "Host": "localhost", "Port": 5243 }
       ],
-      "UpstreamPathTemplate": "/backend/Report",
+      "UpstreamPathTemplate": "/backend/Notificacoes/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5046",
-    "UnauthorizedResponse": {
-      "statusCode": 401,
-      "message": "Unauthorized. Please provide a valid token."
-    }
+    "BaseUrl": "http://localhost:5046"
   }
 }
