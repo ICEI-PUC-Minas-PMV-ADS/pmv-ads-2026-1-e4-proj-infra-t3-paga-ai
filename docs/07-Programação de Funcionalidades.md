@@ -12,11 +12,11 @@ Para cada requisito funcional, pode ser entregue um artefato desse tipo
 |RF-002| O sistema deve permitir a criação (cadastro), leitura (visualização) e exclusão (remoção) de informações relevantes dos dados do usuário| Tela de Cadastro, API de Cadastro |Renata|
 |RF-003| O sistema deve permitir que o usuário faça login utilizando seu e-mail e senha cadastrados | Tela de Login, API de Login | Thiago |
 |RF-004| O usuário deve inserir o valor principal, a taxa de juros/acréscimo e a data, permitindo edição em ambas as plataformas.   | Tela de Emprestimos, API de Emprestimos| Luan |
-|RF-005| O sistema deve calcular automaticamente o valor total (Principal + Lucro) usando a mesma lógica de cálculo no servidor.   | ALTA | Renata |
-|RF-006| O usuário deve definir uma data de vencimento para cada dívida cadastrada.   | MÉDIA | Cristina |
+|RF-005| O sistema deve calcular automaticamente o valor total (Principal + Lucro) usando a mesma lógica de cálculo no servidor.   | Tela de Emprestimos, API de Emprestimos| Luan |
+|RF-006| O usuário deve definir uma data de vencimento para cada dívida cadastrada.   | Tela de Emprestimos, API de Emprestimos| Renata |
 |RF-007| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | Tela de Notificações, API de Notificações | Alex |
 |RF-008| Deve ser possível marcar as dívidas como "Pendente" e "Pago"   | Tela de Emprestimos | Luan |
-|RF-009| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | Alex |
+|RF-009| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | Tela de Emprestimos, API de Emprestimos| Luan|
 |RF-010| O sistema deve permitir que o usuário gere relatórios e os exporte no formato PDF | Tela de Reports, API de Reports | Cristina |
 
 > **Links Úteis**:
