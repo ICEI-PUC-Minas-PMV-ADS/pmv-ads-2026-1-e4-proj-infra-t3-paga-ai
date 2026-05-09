@@ -21,13 +21,13 @@ Este documento apresenta a programação das funcionalidades do sistema, com bas
 
 ## ⚙️ Requisitos Não Funcionais
 
-|ID     | Descrição do Requisito  |Prioridade |
-|-------|-------------------------|----|
-|RNF-001| Por ser focado em pequenos comerciantes, o design deve ser intuitivo e fácil de usar em dispositivos móveis. | MÉDIA | 
-|RNF-002| O acesso deve ser protegido por biometria (no Mobile) e senha forte com 2FA (na Web). |  ALTA |
-|RNF-003| O sistema deve permitir o registro offline no Mobile e sincronizar assim que detectar conexão com a internet. |  MÉDIA |
-|RNF-004| O carregamento da lista de devedores e cálculos de juros deve ocorrer em menos de 2 segundos. |  MÉDIA |
-|RNF-005| O sistema deve garantir que os dados dos devedores não sejam compartilhados com terceiros, seguindo as diretrizes da LGPD (Lei Geral de Proteção de Dados). |  ALTA |
-|RNF-006| A aplicação deve ser responsiva, funcionando perfeitamente em sistemas Android e iOS. |  BAIXA |
-|RNF-007| O sistema deve realizar cópias de segurança em nuvem (ex: Google Drive) para evitar perda de dados em caso de troca de aparelho. |  MÉDIA |
+|ID     | Descrição do Requisito  | Artefatos | Responsável |
+|-------|-------------------------|----|----|
+|RNF-001| Por ser focado em pequenos comerciantes, o design deve ser intuitivo e fácil de usar em dispositivos móveis. | MÉDIA | Renata |
+|RNF-002| O acesso deve ser protegido por biometria (no Mobile) e senha forte com 2FA (na Web). |  ALTA | Renata |
+|RNF-003| O sistema deve permitir o registro offline no Mobile e sincronizar assim que detectar conexão com a internet. |  MÉDIA | Luan |
+|RNF-004| O carregamento da lista de devedores e cálculos de juros deve ocorrer em menos de 2 segundos. |  MÉDIA | Alex |
+|RNF-005| O sistema deve garantir que os dados dos devedores não sejam compartilhados com terceiros, seguindo as diretrizes da LGPD (Lei Geral de Proteção de Dados). |  ALTA | Flávio |
+|RNF-006| A aplicação deve ser responsiva, funcionando perfeitamente em sistemas Android e iOS. |  BAIXA | Thiago |
+|RNF-007| O sistema deve realizar cópias de segurança em nuvem (ex: Google Drive) para evitar perda de dados em caso de troca de aparelho. |  MÉDIA | Cristina |
 
