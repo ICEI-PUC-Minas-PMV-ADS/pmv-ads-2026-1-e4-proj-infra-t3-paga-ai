@@ -46,6 +46,8 @@ export default function App() {
             element={authenticated ? <Reports /> : <Navigate to="/login" replace />}
           />
 
+
+
           {/* Rotas futuras — descomentar conforme as páginas forem criadas */}
           {/* <Route path="/dashboard"     element={<Dashboard />}     /> */}
           {/* <Route path="/emprestimos"   element={<Emprestimos />}   /> */}
