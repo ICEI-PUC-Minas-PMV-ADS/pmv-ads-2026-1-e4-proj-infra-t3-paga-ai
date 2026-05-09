@@ -1,6 +1,7 @@
 {
   "Routes": [
     {
+<<<<<<< HEAD
       "DownstreamPathTemplate": "/backend/Usuarios/{catchAll}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -20,10 +21,25 @@
     },
     {
       "DownstreamPathTemplate": "/backend/Clientes/{catchAll}",
+=======
+  
+  "DownstreamPathTemplate": "/api/Auth/{everything}",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [
+    { "Host": "localhost", "Port": 5133 }
+  ],
+  "UpstreamPathTemplate": "/backend/Usuarios/{everything}",
+  "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+
+},
+    {
+      "DownstreamPathTemplate": "/api/Clientes/{everything}",
+>>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5156 }
       ],
+<<<<<<< HEAD
       "UpstreamPathTemplate": "/backend/Clientes/{catchAll}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
@@ -38,10 +54,18 @@
     },
     {
       "DownstreamPathTemplate": "/backend/Emprestimos/{catchAll}",
+=======
+      "UpstreamPathTemplate": "/backend/Clientes/{everything}",
+      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Emprestimos/{everything}",
+>>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5276 }
       ],
+<<<<<<< HEAD
       "UpstreamPathTemplate": "/backend/Emprestimos/{catchAll}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
@@ -74,10 +98,18 @@
     },
     {
       "DownstreamPathTemplate": "/backend/Report/{catchAll}",
+=======
+      "UpstreamPathTemplate": "/backend/Emprestimos/{everything}",
+      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/report/{everything}",
+>>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5169 }
       ],
+<<<<<<< HEAD
       "UpstreamPathTemplate": "/backend/Report/{catchAll}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
@@ -88,10 +120,23 @@
         { "Host": "localhost", "Port": 5169 }
       ],
       "UpstreamPathTemplate": "/backend/Report",
+=======
+      "UpstreamPathTemplate": "/backend/Report/{everything}",
+      "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Notificacoes/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        { "Host": "localhost", "Port": 5243 }
+      ],
+      "UpstreamPathTemplate": "/backend/Notificacoes/{everything}",
+>>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     }
   ],
   "GlobalConfiguration": {
+<<<<<<< HEAD
     "BaseUrl": "http://localhost:5046",
     "UnauthorizedResponse": {
       "statusCode": 401,
@@ -99,3 +144,8 @@
     }
   }
 }
+=======
+    "BaseUrl": "http://localhost:5046"
+  }
+}
+>>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
