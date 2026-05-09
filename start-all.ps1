@@ -28,3 +28,4 @@ foreach ($svc in $services) {
     Write-Host "  $($svc.Name.PadRight(16)) -> http://localhost:$($svc.Port)" -ForegroundColor White
 }
 Write-Host "  Frontend         -> http://localhost:5173" -ForegroundColor White
+Write-Host "  Gateway (Swagger)-> http://localhost:5046/swagger" -ForegroundColor White
