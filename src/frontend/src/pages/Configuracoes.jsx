@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { getUsuarioLogado } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Configuracoes() {
-  const usuario = getUsuarioLogado();
+    const usuario = getUsuarioLogado();
+    const navigate = useNavigate();
 
   const [notif, setNotif] = useState({
     emailVencimento: true,
@@ -85,14 +88,6 @@ export default function Configuracoes() {
             style={s.input}
           />
         </div>
-
-        <div style={s.fieldRow}>
-          <label style={s.label}>Moeda</label>
-          <select value={sistema.moeda} onChange={e => setSistema(p => ({ ...p, moeda: e.target.value }))} style={s.input}>
-            <option value="BRL">R$ — Real Brasileiro</option>
-            <option value="USD">$ — Dólar Americano</option>
-          </select>
-        </div>
       </section>
 
       <div style={s.rodape}>
@@ -105,23 +100,127 @@ export default function Configuracoes() {
 }
 
 const s = {
-  page:       { padding: "2rem", background: "#F5F3FF", minHeight: "100vh" },
-  header:     { marginBottom: "1.5rem" },
-  titulo:     { margin: 0, fontSize: "1.8rem", fontWeight: 700, color: "#1F2937" },
-  sub:        { margin: "0.25rem 0 0", color: "#6B7280", fontSize: "0.9rem" },
-  card:       { background: "#fff", borderRadius: 12, padding: "1.5rem", marginBottom: "1rem", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" },
-  cardTitulo: { margin: "0 0 1.25rem", fontSize: "1rem", fontWeight: 700, color: "#1F2937" },
-  perfilRow:  { display: "flex", alignItems: "center", gap: "1rem" },
-  avatar:     { width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(143deg,#7C3AED,#6D28D9)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: "1.1rem", flexShrink: 0 },
-  perfilNome: { margin: 0, fontWeight: 700, fontSize: "1rem", color: "#1F2937" },
-  perfilEmail:{ margin: "2px 0 0", fontSize: "0.85rem", color: "#6B7280" },
-  toggleRow:  { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.6rem 0", borderBottom: "1px solid #F3F4F6" },
-  toggleLabel:{ fontSize: "0.9rem", color: "#374151" },
-  toggle:     { width: 44, height: 24, borderRadius: 12, border: "none", cursor: "pointer", position: "relative", transition: "background 0.2s", flexShrink: 0 },
-  toggleDot:  { position: "absolute", top: 3, width: 18, height: 18, background: "#fff", borderRadius: "50%", transition: "transform 0.2s" },
-  fieldRow:   { marginBottom: "1rem" },
-  label:      { display: "block", fontSize: "0.85rem", fontWeight: 600, color: "#374151", marginBottom: 6 },
-  input:      { width: "100%", padding: "0.5rem 0.75rem", borderRadius: 8, border: "1px solid #D1D5DB", fontSize: "0.95rem", boxSizing: "border-box" },
-  rodape:     { display: "flex", justifyContent: "flex-end" },
-  btnSalvar:  { background: "#7C3AED", color: "#fff", border: "none", borderRadius: 8, padding: "0.65rem 1.5rem", cursor: "pointer", fontWeight: 600, fontSize: "0.95rem" },
+    page: {
+        padding: "2rem",
+        background: "#F5F3FF",
+        minHeight: "100vh"
+    },
+    header: {
+        marginBottom: "1.5rem"
+    },
+    titulo: {
+        margin: 0,
+        fontSize: "1.8rem",
+        fontWeight: 700,
+        color: "#1F2937"
+    },
+    sub: {
+        margin: "0.25rem 0 0",
+        color: "#6B7280",
+        fontSize: "0.9rem"
+    },
+    card: {
+        background: "#fff",
+        borderRadius: 12,
+        padding: "1.5rem",
+        marginBottom: "1rem",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.06)"
+    },
+    cardTitulo: {
+        margin: "0 0 1.25rem",
+        fontSize: "1rem",
+        fontWeight: 700,
+        color: "#1F2937"
+    },
+    perfilRow: {
+        display: "flex",
+        alignItems: "center",
+        gap: "1rem"
+    },
+    avatar: {
+        width: 52,
+        height: 52,
+        borderRadius: "50%",
+        background: "linear-gradient(143deg,#7C3AED,#6D28D9)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        fontWeight: 700,
+        fontSize: "1.1rem",
+        flexShrink: 0
+    },
+    perfilNome: {
+        margin: 0,
+        fontWeight: 700,
+        fontSize: "1rem",
+        color: "#1F2937"
+    },
+    perfilEmail: {
+        margin: "2px 0 0",
+        fontSize: "0.85rem",
+        color: "#6B7280"
+    },
+    toggleRow: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0.6rem 0",
+        borderBottom: "1px solid #F3F4F6"
+    },
+    toggleLabel: {
+        fontSize: "0.9rem",
+        color: "#374151"
+    },
+    toggle: {
+        width: 44,
+        height: 24,
+        borderRadius: 12,
+        border: "none",
+        cursor: "pointer",
+        position: "relative",
+        transition: "background 0.2s",
+        flexShrink: 0
+    },
+    toggleDot: {
+        position: "absolute",
+        top: 3,
+        width: 18,
+        height: 18,
+        background: "#fff",
+        borderRadius: "50%",
+        transition: "transform 0.2s"
+    },
+    fieldRow: {
+        marginBottom: "1rem"
+    },
+    label: {
+        display: "block",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        color: "#374151",
+        marginBottom: 6
+    },
+    input: {
+        width: "100%",
+        padding: "0.5rem 0.75rem",
+        borderRadius: 8,
+        border: "1px solid #D1D5DB",
+        fontSize: "0.95rem",
+        boxSizing: "border-box"
+    },
+    rodape: {
+        display: "flex",
+        justifyContent: "flex-end"
+    },
+    btnSalvar: {
+        background: "#7C3AED",
+        color: "#fff",
+        border: "none",
+        borderRadius: 8,
+        padding: "0.65rem 1.5rem",
+        cursor: "pointer",
+        fontWeight: 600,
+        fontSize: "0.95rem"
+    },
 };
