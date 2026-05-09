@@ -82,9 +82,11 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     flexShrink: 0,
-    position: "sticky",
+    position: "fixed",
     top: 0,
+    left: 0,
     overflowY: "auto",
+    zIndex: 100,
   },
   logoWrapper: {
     display: "flex",
