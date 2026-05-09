@@ -4,7 +4,7 @@
 // Base URL: ajuste a constante abaixo conforme o ambiente
 // ─────────────────────────────────────────────────────────────────────────────
 
-const BASE_URL = "http://localhost:5156/api/Clientes"; // <- trocar pela URL do Azure em produção
+const BASE_URL = "http://localhost:5046/backend/Clientes"; // <- trocar pela URL do Azure em produção
 
 // Helper interno: lança erro com a mensagem da API se a resposta não for ok
 async function checarResposta(res) {

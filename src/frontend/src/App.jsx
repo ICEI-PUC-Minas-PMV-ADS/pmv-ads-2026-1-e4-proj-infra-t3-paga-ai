@@ -22,7 +22,7 @@ export default function App() {
     <div style={styles.container}>
       {!isPublicRoute && authenticated && <Sidebar />}
 
-      <div style={styles.content}>
+      <div style={{ ...styles.content, marginLeft: (!isPublicRoute && authenticated) ? "256px" : "0" }}>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route
@@ -49,7 +49,6 @@ export default function App() {
             path="/relatorios"
             element={authenticated ? <Reports /> : <Navigate to="/login" replace />}
           />
-
           <Route
             path="/dashboard"
             element={authenticated ? <Dashboard /> : <Navigate to="/login" replace />}
@@ -83,7 +82,5 @@ const styles = {
   content: {
     flex: 1,
     minHeight: "100vh",
-    marginLeft: "256px",
   },
 };
-
