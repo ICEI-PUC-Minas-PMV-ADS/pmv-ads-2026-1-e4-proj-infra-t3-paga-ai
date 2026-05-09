@@ -9,6 +9,7 @@ import ResetPassword from "./pages/ResetPassword";
 import { isAuthenticated } from "./services/authService";
 import Dashboard from "./pages/Dashboard";
 import Emprestimos from "./pages/Emprestimos";
+import Notificacoes from "./pages/Notificacoes";
 
 export default function App() {
   const location = useLocation();
@@ -55,6 +56,10 @@ export default function App() {
           <Route
             path="/emprestimos"
             element={authenticated ? <Emprestimos /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/notificacoes"
+            element={authenticated ? <Notificacoes /> : <Navigate to="/login" replace />}
           />
           {/* <Route path="/configuracoes" element={<Configuracoes />} /> */}
         </Routes>

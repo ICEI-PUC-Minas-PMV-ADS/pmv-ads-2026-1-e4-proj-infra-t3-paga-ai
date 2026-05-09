@@ -1,17 +1,21 @@
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUsuarioLogado, logout } from "../services/authService";
+import { getNotificacoes } from "../services/NotificacoesService";
 
 const navItems = [
-  { icon: "📊", label: "Dashboard",    path: "/dashboard"    },
-  { icon: "👥", label: "Clientes",     path: "/clientes"     },
-  { icon: "💳", label: "Empréstimos",  path: "/emprestimos"  },
-  { icon: "📈", label: "Relatórios",   path: "/relatorios"   },
+  { icon: "📊", label: "Dashboard",     path: "/dashboard"     },
+  { icon: "👥", label: "Clientes",      path: "/clientes"      },
+  { icon: "💳", label: "Empréstimos",   path: "/emprestimos"   },
+  { icon: "📈", label: "Relatórios",    path: "/relatorios"    },
+  { icon: "🔔", label: "Notificações",  path: "/notificacoes"  },
   { icon: "⚙️", label: "Configurações", path: "/configuracoes" },
 ];
 
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [naoLidas, setNaoLidas] = useState(0);
 
   const usuario = getUsuarioLogado();
   const user = {
@@ -19,6 +23,13 @@ export default function Sidebar() {
     name:     usuario?.nome  ?? "Usuário",
     email:    usuario?.email ?? "",
   };
+
+  useEffect(() => {
+    if (!usuario?.nome) return;
+    getNotificacoes(usuario.nome)
+      .then((lista) => setNaoLidas(Array.isArray(lista) ? lista.filter((n) => !n.lida).length : 0))
+      .catch(() => {});
+  }, [usuario?.nome]);
 
   function handleLogout() {
     logout();
@@ -53,6 +64,9 @@ export default function Sidebar() {
               }}>
                 {item.label}
               </span>
+              {item.path === "/notificacoes" && naoLidas > 0 && (
+                <span style={styles.notifBadge}>{naoLidas}</span>
+              )}
             </button>
           );
         })}
@@ -196,6 +210,15 @@ const styles = {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
+  },
+  notifBadge: {
+    marginLeft: "auto",
+    background: "#7C3AED",
+    color: "#fff",
+    borderRadius: 20,
+    padding: "1px 7px",
+    fontSize: 11,
+    fontWeight: 700,
   },
   logoutBtn: {
     width: "100%",
