@@ -6,14 +6,14 @@ Implementação do sistema descritas por meio dos requisitos funcionais e/ou nã
 
 Para cada requisito funcional, pode ser entregue um artefato desse tipo
 
-|ID    | Descrição do Requisito  | Prioridade | Responsável |
+|ID    | Descrição do Requisito  | Artefatos | Responsável |
 |------|-----------------------------------------|----|----|
-|RF-001| O sistema deve permitir cadrastar e registrar, nome, contato e adicionar  cada devedor, com sincronização em nuvem entre Web e Mobile.  | ALTA | Alex |
-|RF-002| O usuário deve inserir o valor principal, a taxa de juros/acréscimo e a data, permitindo edição em ambas as plataformas.   | ALTA | Luan |
+|RF-001| O sistema deve permitir cadrastar e registrar, nome, contato e adicionar  cada devedor, com sincronização em nuvem entre Web e Mobile.  | Tela de Clientes, API de Clientes | Flávio |
+|RF-002| O usuário deve inserir o valor principal, a taxa de juros/acréscimo e a data, permitindo edição em ambas as plataformas.   | Tela de Emprestimos, API de Emprestimos| Luan |
 |RF-003| O sistema deve calcular automaticamente o valor total (Principal + Lucro) usando a mesma lógica de cálculo no servidor.   | ALTA | Renata |
 |RF-004| O usuário deve definir uma data de vencimento para cada dívida cadastrada.   | MÉDIA | Cristina |
-|RF-005| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | MÉDIA | Thiago |
-|RF-006| Deve ser possível marcar as dívidas como "Pendente" e "Pago"   | MÉDIA | Flávio |
+|RF-005| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | Tela de Notificações, API de Notificações | Alex |
+|RF-006| Deve ser possível marcar as dívidas como "Pendente" e "Pago"   | Tela de Emprestimos | Luan |
 |RF-007| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | Alex |
 
 > **Links Úteis**:
