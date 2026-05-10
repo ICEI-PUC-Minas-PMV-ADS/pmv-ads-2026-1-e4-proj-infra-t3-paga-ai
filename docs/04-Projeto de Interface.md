@@ -20,6 +20,7 @@ Protótipo web do sistema Paga Aí, focado na gestão de empréstimos pessoais.
 Permite cadastrar devedores, acompanhar valores em aberto, pagamentos e atrasos.
 
 > - [Protótipo]([Paga Aí.pdf](https://github.com/user-attachments/files/26334763/Paga.Ai.pdf))
+> - Link: https://www.figma.com/design/YckzBDg4YeZmN70CtyeZCp/Paga-A%C3%AD?node-id=0-1&p=f&t=yvlnUEIvaVlpP2J8-0
 
 
 
