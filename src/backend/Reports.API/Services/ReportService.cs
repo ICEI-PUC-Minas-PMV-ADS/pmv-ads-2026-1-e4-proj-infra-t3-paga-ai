@@ -1,14 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using Reports.API.Models;
 using MongoDB.Driver;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
 namespace Reports.API.Services;
 
 public class ReportService
@@ -24,8 +20,6 @@ public class ReportService
 
     public Report GerarRelatorio(DateTime dataInicio, DateTime dataFim, string? cobrador = null)
     {
-<<<<<<< HEAD
-=======
         var dataInicioAjustada = DateTime.SpecifyKind(dataInicio.Date, DateTimeKind.Utc);
         var dataFimAjustada = DateTime.SpecifyKind(dataFim.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
 
@@ -68,7 +62,6 @@ public class ReportService
             })
             .ToList();
 
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
         return new Report
         {
             Id = new Random().Next(1, 100000),
@@ -77,19 +70,13 @@ public class ReportService
             Tipo = "Relatório por período",
             Formato = "PDF",
             GeradoEm = DateTime.Now,
-<<<<<<< HEAD
-            Cobrador = cobrador ?? string.Empty
-=======
             Cobrador = cobrador ?? string.Empty,
-
             TotalEmprestado = totalEmprestado,
             TotalRecebido = totalRecebido,
             TotalPendente = totalPendente,
             LucroTotal = lucroTotal,
-
             EmprestimosPorDevedor = emprestimosPorDevedor,
             PagamentosRecentes = pagamentosRecentes
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
         };
     }
 
@@ -97,40 +84,6 @@ public class ReportService
     {
         QuestPDF.Settings.License = LicenseType.Community;
 
-<<<<<<< HEAD
-        var dataInicioAjustada = dataInicio.Date;
-        var dataFimAjustada = dataFim.Date.AddDays(1).AddTicks(-1);
-
-        var filtro = Builders<Emprestimo>.Filter.Empty;
-
-        // Versão temporária para TESTE:
-        // traz registros pelo período usando DataPagamento OU DataEmprestimo
-        var filtroPeriodo =
-            Builders<Emprestimo>.Filter.Or(
-                Builders<Emprestimo>.Filter.And(
-                    Builders<Emprestimo>.Filter.Ne(x => x.DataPagamento, null),
-                    Builders<Emprestimo>.Filter.Gte(x => x.DataPagamento, dataInicioAjustada),
-                    Builders<Emprestimo>.Filter.Lte(x => x.DataPagamento, dataFimAjustada)
-                ),
-                Builders<Emprestimo>.Filter.And(
-                    Builders<Emprestimo>.Filter.Gte(x => x.DataEmprestimo, dataInicioAjustada),
-                    Builders<Emprestimo>.Filter.Lte(x => x.DataEmprestimo, dataFimAjustada)
-                )
-            );
-
-        filtro &= filtroPeriodo;
-
-        if (!string.IsNullOrWhiteSpace(cobrador))
-        {
-            filtro &= Builders<Emprestimo>.Filter.Eq(x => x.Cobrador, cobrador);
-        }
-
-        var registros = _emprestimosCollection
-            .Find(filtro)
-            .ToList();
-
-        var totalRecebido = registros.Sum(x => x.ValorFinal);
-=======
         var dataInicioAjustada = DateTime.SpecifyKind(dataInicio.Date, DateTimeKind.Utc);
         var dataFimAjustada = DateTime.SpecifyKind(dataFim.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
 
@@ -145,7 +98,6 @@ public class ReportService
         var totalRecebido = pagos.Sum(x => x.ValorFinal);
         var totalPendente = pendentes.Sum(x => x.ValorFinal);
         var lucroTotal = pagos.Sum(x => x.ValorFinal - x.Valor);
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
 
         var pdf = Document.Create(container =>
         {
@@ -154,11 +106,7 @@ public class ReportService
                 page.Margin(30);
 
                 page.Header()
-<<<<<<< HEAD
-                    .Text("Relatório de Pagamentos")
-=======
                     .Text("Relatório Financeiro")
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
                     .FontSize(20)
                     .Bold()
                     .FontColor(Colors.Blue.Darken2);
@@ -167,40 +115,13 @@ public class ReportService
                 {
                     col.Spacing(10);
 
-<<<<<<< HEAD
-                    col.Item()
-                        .Text($"Período: {dataInicio:dd/MM/yyyy} até {dataFim:dd/MM/yyyy}")
-                        .FontSize(12);
-
-                    if (!string.IsNullOrWhiteSpace(cobrador))
-                    {
-                        col.Item()
-                            .Text($"Cobrador: {cobrador}")
-                            .FontSize(12);
-=======
                     col.Item().Text($"Período: {dataInicio:dd/MM/yyyy} até {dataFim:dd/MM/yyyy}").FontSize(12);
 
                     if (!string.IsNullOrWhiteSpace(cobrador))
-                    {
                         col.Item().Text($"Cobrador: {cobrador}").FontSize(12);
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
-                    }
 
                     col.Item().LineHorizontal(1);
 
-<<<<<<< HEAD
-                    col.Item()
-                        .Text("Resumo")
-                        .Bold()
-                        .FontSize(14);
-
-                    if (registros.Any())
-                    {
-                        col.Item()
-                            .Text($"Foram encontrados {registros.Count} registro(s) no período.");
-
-                        col.Item().PaddingTop(10).Table(table =>
-=======
                     col.Item().Text("Resumo Geral").Bold().FontSize(14);
                     col.Item().Text($"Total emprestado: R$ {totalEmprestado:N2}");
                     col.Item().Text($"Total recebido: R$ {totalRecebido:N2}");
@@ -212,7 +133,6 @@ public class ReportService
                     if (pagos.Any())
                     {
                         col.Item().Table(table =>
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
                         {
                             table.ColumnsDefinition(columns =>
                             {
@@ -224,29 +144,6 @@ public class ReportService
                             table.Header(header =>
                             {
                                 header.Cell().Text("Cliente").Bold();
-<<<<<<< HEAD
-                                header.Cell().Text("Data").Bold();
-                                header.Cell().Text("Valor").Bold();
-                            });
-
-                            foreach (var item in registros.OrderBy(x => x.DataPagamento ?? x.DataEmprestimo))
-                            {
-                                table.Cell().Text(item.Cliente ?? "-");
-                                table.Cell().Text((item.DataPagamento ?? item.DataEmprestimo).ToString("dd/MM/yyyy"));
-                                table.Cell().Text($"R$ {item.ValorFinal:N2}");
-                            }
-                        });
-
-                        col.Item()
-                            .PaddingTop(10)
-                            .Text($"Total no período: R$ {totalRecebido:N2}")
-                            .Bold();
-                    }
-                    else
-                    {
-                        col.Item()
-                            .Text("Nenhum registro encontrado no período informado.");
-=======
                                 header.Cell().Text("Data Pagamento").Bold();
                                 header.Cell().Text("Valor").Bold();
                             });
@@ -295,7 +192,6 @@ public class ReportService
                     else
                     {
                         col.Item().Text("Nenhum empréstimo pendente encontrado no período.");
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
                     }
                 });
 
@@ -311,8 +207,6 @@ public class ReportService
 
         return pdf.GeneratePdf();
     }
-<<<<<<< HEAD
-=======
 
     private static FilterDefinition<Emprestimo> CriarFiltroRelatorioCompleto(
         DateTime dataInicio,
@@ -334,11 +228,8 @@ public class ReportService
         var filtro = Builders<Emprestimo>.Filter.Or(filtroPagos, filtroPendentes);
 
         if (!string.IsNullOrWhiteSpace(cobrador))
-        {
             filtro &= Builders<Emprestimo>.Filter.Eq(x => x.Cobrador, cobrador);
-        }
 
         return filtro;
     }
->>>>>>> 70f559d076e9b20e675a271cfb76afd57b2413f0
 }
