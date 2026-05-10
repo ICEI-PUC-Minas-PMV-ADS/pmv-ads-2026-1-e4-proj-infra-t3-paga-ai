@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Emprestimos.API\Emprestimos.API.csproj" />
+    <ProjectReference Include="..\..\src\backend\Emprestimos.API\Emprestimos.API.csproj" />
   </ItemGroup>
 
 </Project>
