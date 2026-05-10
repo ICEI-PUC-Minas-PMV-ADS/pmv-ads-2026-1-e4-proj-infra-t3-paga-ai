@@ -1,6 +1,6 @@
 import { getToken } from "./authService";
 
-const BASE_URL = "http://localhost:5243/api/Notificacoes";
+const BASE_URL = import.meta.env.VITE_NOTIFICACOES_URL ?? "http://localhost:5046/backend/Notificacoes";
 
 function headers() {
   return {
