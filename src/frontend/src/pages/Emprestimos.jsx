@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUsuarioLogado, getToken } from "../services/authService";
-import { getClientes } from "../services/clientesService";
+import { getClientes } from "../services/ClientesService";
 import {
   getCarteira, getRelatorioLucro, criarEmprestimo,
   marcarComoPago, deletarEmprestimo,

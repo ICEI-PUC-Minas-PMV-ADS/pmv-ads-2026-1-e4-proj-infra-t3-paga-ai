@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getClientes, createCliente, updateCliente, deleteCliente } from "../services/clientesService";
+import { getClientes, createCliente, updateCliente, deleteCliente } from "../services/ClientesService";
 import { getToken } from "../services/authService";
  
 const clienteVazio = {

@@ -7,4 +7,5 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
+    base: '/pmv-ads-2026-1-e4-proj-infra-t3-paga-ai/',
 })
