@@ -13,10 +13,6 @@ O diagrama apresenta o estudo do fluxo de interação do usuário com o sistema 
 <img width="1536" height="1024" alt="90ddc317-112f-4a24-925e-709f4b30d725" src="https://github.com/user-attachments/assets/81b82d1d-4ca0-45c4-9fb9-c7caedd54112" />
 
 
-As referências abaixo irão auxiliá-lo na geração do artefato “Diagramas de Fluxo”.
-
-> **Links Úteis**:
-> - [Fluxograma online: seis sites para fazer gráfico sem instalar nada | Produtividade | TechTudo](https://www.techtudo.com.br/listas/2019/03/fluxograma-online-seis-sites-para-fazer-grafico-sem-instalar-nada.ghtml)
 
 ## Wireframes  
 
