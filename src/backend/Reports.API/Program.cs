@@ -7,7 +7,12 @@ using System.Text; // Adicionado
 var builder = WebApplication.CreateBuilder(args);
 
 // --- SERVIÇOS BÁSICOS ---
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.DefaultIgnoreCondition = 
+            System.Text.Json.Serialization.JsonIgnoreCondition.Never;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
