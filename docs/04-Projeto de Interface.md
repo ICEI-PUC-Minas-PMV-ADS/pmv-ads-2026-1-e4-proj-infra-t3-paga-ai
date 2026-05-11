@@ -10,15 +10,9 @@ Visão geral da interação do usuário pelas telas do sistema e protótipo inte
 ## Diagrama de Fluxo
 
 O diagrama apresenta o estudo do fluxo de interação do usuário com o sistema interativo e  muitas vezes sem a necessidade do desenho do design das telas da interface. Isso permite que o design das interações seja bem planejado e gere impacto na qualidade no design do wireframe interativo que será desenvolvido logo em seguida.
+<img width="1536" height="1024" alt="90ddc317-112f-4a24-925e-709f4b30d725" src="https://github.com/user-attachments/assets/81b82d1d-4ca0-45c4-9fb9-c7caedd54112" />
 
-O diagrama de fluxo pode ser desenvolvido com “boxes” que possuem internamente a indicação dos principais elementos de interface - tais como menus e acessos - e funcionalidades, tais como editar, pesquisar, filtrar, configurar - e a conexão entre esses boxes a partir do processo de interação. Você pode ver mais explicações e exemplos https://www.lucidchart.com/blog/how-to-make-a-user-flow-diagram.
 
-![Exemplo de Diagrama de Fluxo](img/diagramafluxo2.jpg)
-
-As referências abaixo irão auxiliá-lo na geração do artefato “Diagramas de Fluxo”.
-
-> **Links Úteis**:
-> - [Fluxograma online: seis sites para fazer gráfico sem instalar nada | Produtividade | TechTudo](https://www.techtudo.com.br/listas/2019/03/fluxograma-online-seis-sites-para-fazer-grafico-sem-instalar-nada.ghtml)
 
 ## Wireframes  
 
@@ -26,6 +20,7 @@ Protótipo web do sistema Paga Aí, focado na gestão de empréstimos pessoais.
 Permite cadastrar devedores, acompanhar valores em aberto, pagamentos e atrasos.
 
 > - [Protótipo]([Paga Aí.pdf](https://github.com/user-attachments/files/26334763/Paga.Ai.pdf))
+> - Link: https://www.figma.com/design/YckzBDg4YeZmN70CtyeZCp/Paga-A%C3%AD?node-id=0-1&p=f&t=yvlnUEIvaVlpP2J8-0
 
 
 
