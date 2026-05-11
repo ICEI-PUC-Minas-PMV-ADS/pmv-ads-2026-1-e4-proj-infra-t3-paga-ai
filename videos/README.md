@@ -15,6 +15,7 @@ Etapa 1 Paga Aí: https://youtu.be/tJlg-4TEQhQ
 Etapa 2 Paga Aí: https://youtu.be/L280Cw6IjjM?si=ccAPt5WaUaSvfDKh
 
 Etapa 3 Paga AÍ: https://youtu.be/SSXpMMTVIL8
+
 Etapa 3 Renata: https://github.com/user-attachments/assets/0fa93e00-3154-4029-936a-031bdcc07dc5
 
 
