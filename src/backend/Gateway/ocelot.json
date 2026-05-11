@@ -37,6 +37,15 @@
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
+  "DownstreamPathTemplate": "/api/Report/{everything}",
+  "DownstreamScheme": "https",
+  "DownstreamHostAndPorts": [
+    { "Host": "reportss-g9hzg2g6akcxc3fu.eastus-01.azurewebsites.net", "Port": 443 }
+  ],
+  "UpstreamPathTemplate": "/backend/Report/{everything}",
+  "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+},
+    {
       "DownstreamPathTemplate": "/api/Notificacoes/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
