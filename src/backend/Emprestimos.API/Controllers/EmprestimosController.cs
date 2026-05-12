@@ -72,44 +72,52 @@ public class EmprestimosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Emprestimo novo)
+public async Task<IActionResult> Post(Emprestimo novo)
+{
+    var ultimoEmprestimo = await _emprestimos.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
+    novo.Id = (ultimoEmprestimo == null) ? 1 : ultimoEmprestimo.Id + 1;
+
+    if (novo.TaxaJuros > 1) novo.TaxaJuros = novo.TaxaJuros / 100;
+    if (novo.TaxaJuros == 0) novo.TaxaJuros = 0.30m;
+
+    if (novo.NumeroParcelas <= 0) novo.NumeroParcelas = 1;
+
+    // Juros simples: ValorFinal = Valor * (1 + TaxaJuros)
+    novo.ValorFinal = novo.Valor * (1 + novo.TaxaJuros);
+    novo.ValorParcela = novo.ValorFinal / novo.NumeroParcelas;
+
+    novo.DataEmprestimo = DateTime.UtcNow;
+
+    // Se não informou data de vencimento, assume 30 dias
+    if (novo.DataVencimento == default)
+        novo.DataVencimento = DateTime.UtcNow.AddDays(30);
+
+    novo.Pago = false;
+
+    await _emprestimos.InsertOneAsync(novo);
+
+    // NOTIFICAÇÃO DE NOVO EMPRÉSTIMO
+    var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
+    var ultima = await colNotificacoes.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
+
+    var novaNotif = new Notificacao 
     {
-        var ultimoEmprestimo = await _emprestimos.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
-        novo.Id = (ultimoEmprestimo == null) ? 1 : ultimoEmprestimo.Id + 1;
+        Id = (ultima == null) ? 1 : ultima.Id + 1,
+        ClienteId = novo.ClienteId,
+        ClienteNome = novo.Cliente,
+        Cobrador = novo.Cobrador,
+        Valor = novo.ValorFinal,
+        DataVencimento = novo.DataVencimento,
+        Tipo = "Cobrança",
+        DataCriacao = DateTime.UtcNow,
+        Lida = false,
+        Mensagem = $"Novo empréstimo criado para {novo.Cliente} — {novo.NumeroParcelas}x de {novo.ValorParcela:C}"
+    };
 
-        if (novo.TaxaJuros > 1) novo.TaxaJuros = novo.TaxaJuros / 100;
-        if (novo.TaxaJuros == 0) novo.TaxaJuros = 0.30m;
-
-        novo.ValorFinal = novo.Valor * (1 + novo.TaxaJuros);
-        novo.DataEmprestimo = DateTime.UtcNow;
-        if (novo.DataVencimento == default)
-            novo.DataVencimento = DateTime.UtcNow.AddDays(30);
-        novo.Pago = false;
-        
-        await _emprestimos.InsertOneAsync(novo);
-
-        // NOTIFICAÇÃO DE NOVO EMPRÉSTIMO
-        var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
-        var ultima = await colNotificacoes.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
-
-        var novaNotif = new Notificacao 
-        {
-            Id = (ultima == null) ? 1 : ultima.Id + 1,
-            ClienteId = novo.ClienteId,
-            ClienteNome = novo.Cliente,
-            Cobrador = novo.Cobrador,
-            Valor = novo.ValorFinal,
-            DataVencimento = novo.DataVencimento,
-            Tipo = "Cobrança",
-            DataCriacao = DateTime.UtcNow,
-            Lida = false,
-            Mensagem = $"Novo empréstimo criado para {novo.Cliente}"
-        };
-
-        await colNotificacoes.InsertOneAsync(novaNotif);
-      
-        return CreatedAtAction(nameof(Get), new { id = novo.Id, nomeCobrador = novo.Cobrador }, novo);
-    }
+    await colNotificacoes.InsertOneAsync(novaNotif);
+  
+    return CreatedAtAction(nameof(Get), new { id = novo.Id, nomeCobrador = novo.Cobrador }, novo);
+}
 
     [HttpPatch("{id:int}/pagar/{nomeCobrador}")]
     public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)

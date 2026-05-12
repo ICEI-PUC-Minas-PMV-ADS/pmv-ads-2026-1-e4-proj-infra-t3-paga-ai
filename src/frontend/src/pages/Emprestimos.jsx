@@ -33,7 +33,7 @@ const TABS = [
   { label: "Pagos",     key: "pagos",     statuses: ["Pago"]      },
 ];
 
-const formVazio = { Cliente: "", Valor: "", TaxaJuros: "30", ClienteId: "" };
+const formVazio = { Cliente: "", Valor: "", TaxaJuros: "30", ClienteId: "", NumeroParcelas: "1", DataVencimento: "" };
 
 export default function Emprestimos() {
   const usuario     = getUsuarioLogado();
@@ -97,12 +97,14 @@ export default function Emprestimos() {
     setSalvando(true);
     try {
       await criarEmprestimo({
-        Cliente:   form.Cliente,
-        Valor:     parseFloat(form.Valor),
-        TaxaJuros: parseFloat(form.TaxaJuros) / 100,
-        Cobrador:  cobrador,
-        ClienteId: parseInt(form.ClienteId) || Math.floor(Math.random() * 9000) + 1000,
-      });
+  Cliente:        form.Cliente,
+  Valor:          parseFloat(form.Valor),
+  TaxaJuros:      parseFloat(form.TaxaJuros) / 100,
+  Cobrador:       cobrador,
+  ClienteId:      parseInt(form.ClienteId) || Math.floor(Math.random() * 9000) + 1000,
+  NumeroParcelas: parseInt(form.NumeroParcelas) || 1,
+  DataVencimento: form.DataVencimento ? new Date(form.DataVencimento).toISOString() : "",
+});
       setModal(false);
       setForm(formVazio);
       carregar();
@@ -201,20 +203,31 @@ export default function Emprestimos() {
             </div>
 
             {[
-              { label: "Valor (R$)", key: "Valor",     type: "number", placeholder: "Ex: 500" },
-              { label: "Juros (%)",  key: "TaxaJuros", type: "number", placeholder: "Ex: 30"  },
-            ].map(({ label, key, type, placeholder }) => (
-              <div key={key} style={{ marginBottom: "1rem" }}>
-                <label style={s.label}>{label}</label>
-                <input
-                  type={type}
-                  value={form[key]}
-                  placeholder={placeholder}
-                  onChange={(ev) => setForm((f) => ({ ...f, [key]: ev.target.value }))}
-                  style={s.input}
-                />
-              </div>
-            ))}
+  { label: "Valor (R$)", key: "Valor",          type: "number", placeholder: "Ex: 500" },
+  { label: "Juros (%)",  key: "TaxaJuros",       type: "number", placeholder: "Ex: 30"  },
+  { label: "Parcelas",   key: "NumeroParcelas",  type: "number", placeholder: "Ex: 1"   },
+].map(({ label, key, type, placeholder }) => (
+  <div key={key} style={{ marginBottom: "1rem" }}>
+    <label style={s.label}>{label}</label>
+    <input
+      type={type}
+      value={form[key]}
+      placeholder={placeholder}
+      onChange={(ev) => setForm((f) => ({ ...f, [key]: ev.target.value }))}
+      style={s.input}
+    />
+  </div>
+))}
+
+<div style={{ marginBottom: "1rem" }}>
+  <label style={s.label}>Data de Vencimento</label>
+  <input
+    type="date"
+    value={form.DataVencimento}
+    onChange={(ev) => setForm((f) => ({ ...f, DataVencimento: ev.target.value }))}
+    style={s.input}
+  />
+</div>
             <div style={s.modalBtns}>
               <button style={s.btnCancelar} onClick={() => { setModal(false); setForm(formVazio); }}>
                 Cancelar
@@ -253,6 +266,9 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
       <div style={s.cardInfos}>
         <Info label="VALOR"      valor={fmt(valor)} />
         <Info label="JUROS"      valor={e.taxaJuros ? `${(e.taxaJuros * 100).toFixed(1)}%` : "—"} />
+        {e.numeroParcelas > 1 && (
+        <Info label="PARCELAS" valor={`${e.numeroParcelas}x de ${fmt(e.valorParcela)}`} />
+)}
         <Info label="A RECEBER"  valor={pago ? "—" : fmt(receber)} destaque={!pago} />
         <Info label={pago ? "PAGO EM" : "VENCIMENTO"}
               valor={pago ? fmtDate(e.dataPagamento) : fmtDate(e.dataVencimento)} />

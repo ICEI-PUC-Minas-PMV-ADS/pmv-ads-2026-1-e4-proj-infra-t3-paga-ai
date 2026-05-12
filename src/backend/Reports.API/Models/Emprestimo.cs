@@ -19,6 +19,11 @@ public class Emprestimo
     [BsonRepresentation(BsonType.Decimal128)]
     public decimal ValorFinal { get; set; }
 
+    [BsonRepresentation(BsonType.Decimal128)]
+     public decimal ValorParcela { get; set; }
+
+    public int NumeroParcelas { get; set; } = 1;
+
     public DateTime DataEmprestimo { get; set; } = DateTime.UtcNow;
 
     public DateTime DataVencimento { get; set; }

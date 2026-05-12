@@ -23,16 +23,19 @@ namespace Emprestimos.API.Models
         [BsonRepresentation(BsonType.Decimal128)]
         public decimal ValorFinal { get; set; }
 
+        [BsonRepresentation(BsonType.Decimal128)]
+        public decimal ValorParcela { get; set; }
+
+        public int NumeroParcelas { get; set; } = 1;
+
         public DateTime DataEmprestimo { get; set; } = DateTime.UtcNow;
 
         public DateTime DataVencimento { get; set; }
 
         public bool Pago { get; set; } = false;
 
-        // Data de quando o cliente pagou de fato
         public DateTime? DataPagamento { get; set; }
 
-        // Status usando o Enum abaixo
         public StatusPagamento Status { get; set; } = StatusPagamento.Pendente;
     }
 
