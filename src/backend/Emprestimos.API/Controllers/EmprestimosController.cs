@@ -71,7 +71,7 @@ public class EmprestimosController : ControllerBase
         });
     }
 
-    [HttpPost]
+[HttpPost]
 public async Task<IActionResult> Post(Emprestimo novo)
 {
     var ultimoEmprestimo = await _emprestimos.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
@@ -84,23 +84,40 @@ public async Task<IActionResult> Post(Emprestimo novo)
 
     // Juros simples: ValorFinal = Valor * (1 + TaxaJuros)
     novo.ValorFinal = novo.Valor * (1 + novo.TaxaJuros);
-    novo.ValorParcela = novo.ValorFinal / novo.NumeroParcelas;
+    novo.ValorParcela = Math.Round(novo.ValorFinal / novo.NumeroParcelas, 2);
 
     novo.DataEmprestimo = DateTime.UtcNow;
 
-    // Se não informou data de vencimento, assume 30 dias
+    // Se não informou primeiro vencimento, assume 30 dias
     if (novo.DataVencimento == default)
         novo.DataVencimento = DateTime.UtcNow.AddDays(30);
+
+    // Gera as parcelas a cada 30 dias a partir do primeiro vencimento
+    novo.Parcelas = new List<Parcela>();
+    for (int i = 0; i < novo.NumeroParcelas; i++)
+    {
+        novo.Parcelas.Add(new Parcela
+        {
+            Numero = i + 1,
+            Valor = novo.ValorParcela,
+            DataVencimento = novo.DataVencimento.AddDays(30 * i),
+            Pago = false
+        });
+    }
 
     novo.Pago = false;
 
     await _emprestimos.InsertOneAsync(novo);
 
-    // NOTIFICAÇÃO DE NOVO EMPRÉSTIMO
+    // NOTIFICAÇÃO ÚNICA DE NOVO EMPRÉSTIMO
     var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
     var ultima = await colNotificacoes.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
 
-    var novaNotif = new Notificacao 
+    var mensagem = novo.NumeroParcelas == 1
+        ? $"Novo empréstimo criado para {novo.Cliente} — vence em {novo.DataVencimento:dd/MM/yyyy}"
+        : $"Novo empréstimo criado para {novo.Cliente} — {novo.NumeroParcelas}x de {novo.ValorParcela:C}, primeiro vencimento em {novo.DataVencimento:dd/MM/yyyy}";
+
+    var novaNotif = new Notificacao
     {
         Id = (ultima == null) ? 1 : ultima.Id + 1,
         ClienteId = novo.ClienteId,
@@ -111,56 +128,96 @@ public async Task<IActionResult> Post(Emprestimo novo)
         Tipo = "Cobrança",
         DataCriacao = DateTime.UtcNow,
         Lida = false,
-        Mensagem = $"Novo empréstimo criado para {novo.Cliente} — {novo.NumeroParcelas}x de {novo.ValorParcela:C}"
+        Mensagem = mensagem
     };
 
     await colNotificacoes.InsertOneAsync(novaNotif);
-  
+
     return CreatedAtAction(nameof(Get), new { id = novo.Id, nomeCobrador = novo.Cobrador }, novo);
 }
+[HttpPatch("{id:int}/pagar/{nomeCobrador}")]
+public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
+{
+    var emprestimo = await _emprestimos
+        .Find(x => x.Id == id && x.Cobrador == nomeCobrador)
+        .FirstOrDefaultAsync();
 
-    [HttpPatch("{id:int}/pagar/{nomeCobrador}")]
-    public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
+    if (emprestimo is null)
+        return NotFound(new { mensagem = "Empréstimo não encontrado." });
+
+    // Encontra a próxima parcela pendente
+    var parcelaPendente = emprestimo.Parcelas
+        .Where(p => !p.Pago)
+        .OrderBy(p => p.Numero)
+        .FirstOrDefault();
+
+    if (parcelaPendente != null)
     {
-        var filter = Builders<Emprestimo>.Filter.And(
-            Builders<Emprestimo>.Filter.Eq(x => x.Id, id),
-            Builders<Emprestimo>.Filter.Eq(x => x.Cobrador, nomeCobrador)
-        );
-
-        var update = Builders<Emprestimo>.Update
-            .Set(x => x.Pago, true)
-            .Set(x => x.DataPagamento, DateTime.UtcNow); 
-
-        var emprestimoAtualizado = await _emprestimos.FindOneAndUpdateAsync(
-            filter, 
-            update, 
-            new FindOneAndUpdateOptions<Emprestimo> { ReturnDocument = ReturnDocument.After }
-        );
-
-        if (emprestimoAtualizado is null) 
-            return NotFound(new { mensagem = "Empréstimo não encontrado." });
-
-        // NOTIFICAÇÃO DE PAGAMENTO RECEBIDO
-        var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
-        var ultima = await colNotificacoes.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
-
-        var notificacaoPagamento = new Notificacao 
-        {
-            Id = (ultima == null) ? 1 : ultima.Id + 1,
-            ClienteId = emprestimoAtualizado.ClienteId,
-            ClienteNome = emprestimoAtualizado.Cliente,
-            Cobrador = nomeCobrador,
-            Valor = emprestimoAtualizado.ValorFinal,
-            Tipo = "Pagamento",
-            Data = DateTime.UtcNow,
-            Lida = false,
-            Mensagem = $"💰 RECEBIDO: {emprestimoAtualizado.Cliente} pagou {emprestimoAtualizado.ValorFinal:C} hoje!"
-        };
-
-        await colNotificacoes.InsertOneAsync(notificacaoPagamento);
-
-        return Ok(new { mensagem = "Pagamento registrado com sucesso!", dados = emprestimoAtualizado });
+        parcelaPendente.Pago = true;
+        parcelaPendente.DataPagamento = DateTime.UtcNow;
     }
+
+    // Verifica se todas as parcelas foram pagas
+    bool todasPagas = emprestimo.Parcelas.All(p => p.Pago);
+
+    var filter = Builders<Emprestimo>.Filter.And(
+        Builders<Emprestimo>.Filter.Eq(x => x.Id, id),
+        Builders<Emprestimo>.Filter.Eq(x => x.Cobrador, nomeCobrador)
+    );
+
+    var update = Builders<Emprestimo>.Update
+        .Set(x => x.Parcelas, emprestimo.Parcelas)
+        .Set(x => x.Pago, todasPagas)
+        .Set(x => x.Status, todasPagas ? StatusPagamento.Pago : StatusPagamento.Pendente)
+        .Set(x => x.DataPagamento, todasPagas ? DateTime.UtcNow : (DateTime?)null);
+
+    var emprestimoAtualizado = await _emprestimos.FindOneAndUpdateAsync(
+        filter,
+        update,
+        new FindOneAndUpdateOptions<Emprestimo> { ReturnDocument = ReturnDocument.After }
+    );
+
+    if (emprestimoAtualizado is null)
+        return NotFound(new { mensagem = "Empréstimo não encontrado." });
+
+    // NOTIFICAÇÃO DE PAGAMENTO
+    var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
+    var ultima = await colNotificacoes.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
+
+    var parcelasPagas = emprestimoAtualizado.Parcelas.Count(p => p.Pago);
+    var totalParcelas = emprestimoAtualizado.NumeroParcelas;
+
+    var mensagem = todasPagas
+        ? $"💰 RECEBIDO: {emprestimoAtualizado.Cliente} quitou o empréstimo!"
+        : $"💰 RECEBIDO: {emprestimoAtualizado.Cliente} pagou parcela {parcelasPagas}/{totalParcelas} — {emprestimoAtualizado.ValorParcela:C}";
+
+    var notificacaoPagamento = new Notificacao
+    {
+        Id = (ultima == null) ? 1 : ultima.Id + 1,
+        ClienteId = emprestimoAtualizado.ClienteId,
+        ClienteNome = emprestimoAtualizado.Cliente,
+        Cobrador = nomeCobrador,
+        Valor = emprestimoAtualizado.ValorParcela,
+        Tipo = "Pagamento",
+        Data = DateTime.UtcNow,
+        Lida = false,
+        Mensagem = mensagem
+    };
+
+    await colNotificacoes.InsertOneAsync(notificacaoPagamento);
+
+    var parcelasPendentes = emprestimoAtualizado.Parcelas.Count(p => !p.Pago);
+    var saldoPendente = parcelasPendentes * emprestimoAtualizado.ValorParcela;
+
+    return Ok(new
+    {
+        mensagem = todasPagas ? "Empréstimo quitado!" : $"Parcela {parcelasPagas}/{totalParcelas} registrada.",
+        parcelasPagas,
+        parcelasPendentes,
+        saldoPendente,
+        dados = emprestimoAtualizado
+    });
+}
 
     [HttpDelete("{id:int}/{nomeCobrador}")]
     public async Task<IActionResult> Delete(int id, string nomeCobrador)

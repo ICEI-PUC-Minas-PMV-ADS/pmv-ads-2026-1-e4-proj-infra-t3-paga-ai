@@ -3,6 +3,20 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Reports.API.Models;
 
+public class Parcela
+{
+    public int Numero { get; set; }
+
+    [BsonRepresentation(BsonType.Decimal128)]
+    public decimal Valor { get; set; }
+
+    public DateTime DataVencimento { get; set; }
+
+    public bool Pago { get; set; } = false;
+
+    public DateTime? DataPagamento { get; set; }
+}
+
 public class Emprestimo
 {
     [BsonId] 
@@ -23,6 +37,8 @@ public class Emprestimo
      public decimal ValorParcela { get; set; }
 
     public int NumeroParcelas { get; set; } = 1;
+
+    public List<Parcela> Parcelas { get; set; } = new();
 
     public DateTime DataEmprestimo { get; set; } = DateTime.UtcNow;
 

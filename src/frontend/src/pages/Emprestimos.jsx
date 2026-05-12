@@ -251,7 +251,7 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
   const receber = e.valorFinal ?? e.valorComJuros ?? 0;
   const id      = String(e.id ?? 0).padStart(3, "0");
 
-  return (
+ return (
     <div style={s.card}>
       <div style={s.cardTop}>
         <span style={s.cardNome}>{e.cliente ?? e.devedor ?? "—"} <span style={s.cardId}>#{id}</span></span>
@@ -267,16 +267,35 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
         <Info label="VALOR"      valor={fmt(valor)} />
         <Info label="JUROS"      valor={e.taxaJuros ? `${(e.taxaJuros * 100).toFixed(1)}%` : "—"} />
         {e.numeroParcelas > 1 && (
-        <Info label="PARCELAS" valor={`${e.numeroParcelas}x de ${fmt(e.valorParcela)}`} />
-)}
+          <Info label="PARCELAS" valor={`${e.numeroParcelas}x de ${fmt(e.valorParcela)}`} />
+        )}
         <Info label="A RECEBER"  valor={pago ? "—" : fmt(receber)} destaque={!pago} />
         <Info label={pago ? "PAGO EM" : "VENCIMENTO"}
               valor={pago ? fmtDate(e.dataPagamento) : fmtDate(e.dataVencimento)} />
       </div>
+
+      {e.parcelas?.length > 1 && (
+        <div style={{ marginTop: 12, borderTop: "1px solid #F3F4F6", paddingTop: 10 }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: "#9CA3AF", letterSpacing: 1, marginBottom: 6 }}>PARCELAS</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {e.parcelas.map((p) => (
+              <div key={p.numero} style={{
+                fontSize: 12,
+                padding: "3px 8px",
+                borderRadius: 6,
+                background: p.pago ? "#D1FAE5" : "#EDE9FE",
+                color: p.pago ? "#059669" : "#7C3AED",
+                fontWeight: 600
+              }}>
+                {p.numero}ª {fmt(p.valor)} — {fmtDate(p.dataVencimento)} {p.pago ? "✔" : ""}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
 function Info({ label, valor, destaque }) {
   return (
     <div>
@@ -296,6 +315,8 @@ function CardResumo({ label, valor, cor }) {
 }
 
 const s = {
+
+
   page:       { padding: "2rem", background: "#F5F3FF", minHeight: "100vh" },
   header:     { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" },
   titulo:     { margin: 0, fontSize: "1.8rem", fontWeight: 700, color: "#1F2937" },
