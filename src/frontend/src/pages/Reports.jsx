@@ -41,28 +41,31 @@ export default function Reports() {
         }
     }
 
-    async function exportarPdf() {
-        if (!dataInicio || !dataFim) {
-            alert("Selecione a data inicial e a data final.");
-            return;
-        }
-
-        try {
-            const response = await exportarPdf(dataInicio, dataFim, cobrador);
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "relatorio.pdf";
-            a.click();
-
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error("Erro ao exportar PDF:", error);
-            alert("Não foi possível exportar o PDF.");
-        }
+    async function exportarPdfHandler() {
+    if (!dataInicio || !dataFim) {
+        setErro("Selecione a data inicial e a data final.");
+        return;
     }
+
+    try {
+        setLoading(true);
+        setErro("");
+        const response = await exportarPdf(dataInicio, dataFim, cobrador);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "relatorio.pdf";
+        a.click();
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error("Erro ao exportar PDF:", error);
+        setErro("Não foi possível exportar o PDF.");
+    } finally {
+        setLoading(false);
+    }
+}
 
     return (
         <main style={styles.page}>
@@ -74,7 +77,7 @@ export default function Reports() {
                     </p>
                 </div>
 
-                <button style={styles.primaryButton} onClick={exportarPdf}>
+                <button style={styles.primaryButton} onClick={exportarPdfHandler}>
                     📄 Exportar PDF
                 </button>
             </div>

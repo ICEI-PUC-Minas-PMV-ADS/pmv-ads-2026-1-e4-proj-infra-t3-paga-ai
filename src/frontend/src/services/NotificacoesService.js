@@ -1,7 +1,6 @@
 import { getToken } from "./authService";
 
-const BASE_URL = import.meta.env.VITE_NOTIFICACOES_URL ?? "http://localhost:5046/backend/Notificacoes";
-
+const BASE_URL = `${import.meta.env.VITE_GATEWAY_URL ?? "http://localhost:5046"}/backend/Notificacoes`;
 function headers() {
   return {
     "Content-Type": "application/json",

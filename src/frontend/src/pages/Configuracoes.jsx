@@ -7,13 +7,24 @@ export default function Configuracoes() {
     const usuario = getUsuarioLogado();
     const navigate = useNavigate();
 
-  const [notif, setNotif] = useState({
+  const STORAGE_KEY = `pagai_config_${usuario?.email ?? "default"}`;
+
+  const carregarConfig = () => {
+    try {
+      const salvo = localStorage.getItem(STORAGE_KEY);
+      return salvo ? JSON.parse(salvo) : null;
+    } catch { return null; }
+  };
+
+  const configSalva = carregarConfig();
+
+  const [notif, setNotif] = useState(configSalva?.notif ?? {
     emailVencimento: true,
     emailPagamento:  true,
     pushNovos:       false,
   });
 
-  const [sistema, setSistema] = useState({
+  const [sistema, setSistema] = useState(configSalva?.sistema ?? {
     diasAviso:   5,
     taxaPadrao:  30,
     moeda:       "BRL",
@@ -22,6 +33,7 @@ export default function Configuracoes() {
   const [salvo, setSalvo] = useState(false);
 
   function salvar() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ notif, sistema }));
     setSalvo(true);
     setTimeout(() => setSalvo(false), 2500);
   }
