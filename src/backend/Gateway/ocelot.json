@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/backend/Auth/{everything}",
+      "DownstreamPathTemplate": "/api/Auth/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         { "Host": "usuario-cyajcbadamgcabhk.eastus-01.azurewebsites.net", "Port": 443 }
@@ -10,7 +10,7 @@
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/backend/Clientes/{everything}",
+      "DownstreamPathTemplate": "/api/Clientes/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         { "Host": "clientes-bdezc9cvekduebee.eastus-01.azurewebsites.net", "Port": 443 }
@@ -19,7 +19,7 @@
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/backend/Emprestimos/{everything}",
+      "DownstreamPathTemplate": "/api/Emprestimos/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         { "Host": "emprestimos-fra0habvh3cvf7ee.eastus-01.azurewebsites.net", "Port": 443 }
@@ -28,21 +28,30 @@
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/backend/Report/{everything}",
+      "DownstreamPathTemplate": "/api/Report",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         { "Host": "reportss-g9hzg2g6akcxc3fu.eastus-01.azurewebsites.net", "Port": 443 }
       ],
-      "UpstreamPathTemplate": "/backend/Report/{everything}",
+      "UpstreamPathTemplate": "/backend/Report",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     },
     {
-      "DownstreamPathTemplate": "/backend/Notificacoes/{everything}",
+  "DownstreamPathTemplate": "/api/Report/{everything}",
+  "DownstreamScheme": "https",
+  "DownstreamHostAndPorts": [
+    { "Host": "reportss-g9hzg2g6akcxc3fu.eastus-01.azurewebsites.net", "Port": 443 }
+  ],
+  "UpstreamPathTemplate": "/backend/Report/{everything}",
+  "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
+},
+    {
+      "DownstreamPathTemplate": "/api/Notificacoes/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         { "Host": "notificacoe-ezdecvdvhfe8becj.eastus-01.azurewebsites.net", "Port": 443 }
       ],
-      "UpstreamPathTemplate": "/api/Notificacoes/{everything}",
+      "UpstreamPathTemplate": "/backend/Notificacoes/{everything}",
       "UpstreamHttpMethod": ["Get", "Post", "Put", "Delete", "Patch", "Options"]
     }
   ],

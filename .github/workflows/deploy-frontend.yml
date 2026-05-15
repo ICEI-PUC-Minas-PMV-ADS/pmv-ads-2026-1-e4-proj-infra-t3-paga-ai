@@ -1,0 +1,60 @@
+name: Deploy Frontend para GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/frontend/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependências
+        working-directory: src/frontend
+        run: npm install --legacy-peer-deps
+
+      - name: Build
+        working-directory: src/frontend
+        env:
+          VITE_API_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net/backend/Usuarios
+          VITE_EMPRESTIMOS_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net/backend/Emprestimos
+          VITE_CLIENTES_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net/backend/Clientes
+          VITE_NOTIFICACOES_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net/backend/Notificacoes
+          VITE_REPORTS_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net/backend/Report
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: src/frontend/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

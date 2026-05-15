@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsuarioLogado, getToken } from "../services/authService";
-import { getClientes } from "../services/clientesService";
+import { getClientes } from "../services/ClientesService";
 import { getCarteira, getRelatorioLucro } from "../services/EmprestimosService";
 
 const fmt = (v) =>

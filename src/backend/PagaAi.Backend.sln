@@ -14,9 +14,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.API", "Reports.API\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Usuarios.API", "Usuarios.API\Usuarios.API.csproj", "{D5D802BE-7CAB-402E-B0AD-CCEB9DEBD805}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clientes.API.Tests", "Clientes.API.Tests\Clientes.API.Tests.csproj", "{072ABEA0-165F-445B-BB4F-1769C0F55B6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clientes.API.Tests", "..\..\tests\Clientes.API.Tests\Clientes.API.Tests.csproj", "{072ABEA0-165F-445B-BB4F-1769C0F55B6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Usuarios.Tests", "Usuarios.Tests\Usuarios.Tests.csproj", "{F2AAE6FB-F4AD-454B-87D6-99FE7F1F1DA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Usuarios.Tests", "..\..\tests\Usuarios.Tests\Usuarios.Tests.csproj", "{F2AAE6FB-F4AD-454B-87D6-99FE7F1F1DA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emprestimos.IntegrationTests", "..\..\tests\Emprestimos.IntegrationTests\Emprestimos.IntegrationTests.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notificacoes.Tests", "..\..\tests\Notificacoes.Tests\Notificacoes.Tests.csproj", "{B2C3D4E5-F6A7-8901-BCDE-F12345678901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.API.Tests", "..\..\tests\Reports.API.Tests\Reports.API.Tests.csproj", "{C3D4E5F6-A7B8-9012-CDEF-123456789012}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

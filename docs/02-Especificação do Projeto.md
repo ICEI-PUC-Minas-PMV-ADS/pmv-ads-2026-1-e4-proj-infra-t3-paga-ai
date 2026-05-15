@@ -133,13 +133,16 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 
 |ID    | Descrição do Requisito  | Prioridade | Responsável |
 |------|-----------------------------------------|----|----|
-|RF-001| O sistema deve permitir cadrastar e registrar, nome, contato e adicionar  cada devedor, com sincronização em nuvem entre Web e Mobile.  | ALTA | Alex |
-|RF-002| O usuário deve inserir o valor principal, a taxa de juros/acréscimo e a data, permitindo edição em ambas as plataformas.   | ALTA | Luan |
-|RF-003| O sistema deve calcular automaticamente o valor total (Principal + Lucro) usando a mesma lógica de cálculo no servidor.   | ALTA | Renata |
-|RF-004| O usuário deve definir uma data de vencimento para cada dívida cadastrada.   | MÉDIA | Cristina |
-|RF-005| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | MÉDIA | Thiago |
-|RF-006| Deve ser possível marcar as dívidas como "Pendente" e "Pago"   | MÉDIA | Flávio |
-|RF-007| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | Alex |
+|RF-001| O sistema deve permitir cadrastar e registrar, nome, contato e adicionar  cada devedor, com sincronização em nuvem entre Web e Mobile.  | ALTA | Flávio |
+|RF-002| O sistema deve permitir a criação (cadastro), leitura (visualização) e exclusão (remoção) de informações relevantes dos dados do usuário| ALTA |Renata|
+|RF-003| O sistema deve permitir que o usuário faça login utilizando seu e-mail e senha cadastrados | ALTA | Thiago |
+|RF-004| O usuário deve inserir o valor principal, a taxa de juros/acréscimo e a data, permitindo edição em ambas as plataformas.   | ALTA | Luan |
+|RF-005| O sistema deve calcular automaticamente o valor total (Principal + Lucro) usando a mesma lógica de cálculo no servidor.   | ALTA | Luan |
+|RF-006| O usuário deve definir uma data de vencimento para cada dívida cadastrada.   | MÉDIA | Renata |
+|RF-007| O sistema deve enviar Notificações Push (Mobile) e Alertas Visuais (Web) na data de vencimento   | MÉDIA | Alex |
+|RF-008| Deve ser possível marcar as dívidas como "Pendente" e "Pago"   | MÉDIA | Luan |
+|RF-009| A aplicação deve gerar um resumo do total de dinheiro "na rua" e o lucro total previsto para o mês.   | MÉDIA | Luan |
+|RF-010| O sistema deve permitir que o usuário gere relatórios e os exporte no formato PDF | BAIXA | Cristina |
 
 ### Requisitos não Funcionais
 

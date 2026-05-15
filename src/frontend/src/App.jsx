@@ -39,8 +39,8 @@ export default function App() {
           />
           <Route
             path="/reset-password"
-            element={authenticated ? <Navigate to="/clientes" replace /> : <ResetPassword />}
-          />
+            element={<ResetPassword />}
+/>
           <Route
             path="/clientes"
             element={authenticated ? <Clientes /> : <Navigate to="/login" replace />}
