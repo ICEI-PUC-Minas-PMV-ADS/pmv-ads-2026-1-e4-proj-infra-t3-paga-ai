@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUsuarioLogado } from "../services/authService";
-import { getNotificacoes, marcarLida, deletarNotif } from "../services/NotificacoesService";
+import { getNotificacoes, marcarLida, marcarTodasLidas, deletarNotif } from "../services/NotificacoesService";
 
 
 const fmt = (v) =>
@@ -54,10 +54,11 @@ export default function Notificacoes() {
   }
 
   async function marcarTodas() {
-    const naoLidas = lista.filter((n) => !n.lida);
-    await Promise.all(naoLidas.map((n) => marcarLida(n.id)));
+  try {
+    await marcarTodasLidas(cobrador);
     setLista((prev) => prev.map((n) => ({ ...n, lida: true })));
-  }
+  } catch { }
+}
 
   const naoLidas = lista.filter((n) => !n.lida).length;
 

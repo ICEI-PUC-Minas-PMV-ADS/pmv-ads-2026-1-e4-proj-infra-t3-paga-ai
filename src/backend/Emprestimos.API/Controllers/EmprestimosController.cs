@@ -201,8 +201,11 @@ public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
         Tipo = "Pagamento",
         Data = DateTime.UtcNow,
         Lida = false,
-        Mensagem = mensagem
-    };
+        Mensagem = mensagem,
+        NumeroParcela = parcelasPagas,      
+        TotalParcelas = totalParcelas        
+};
+    
 
     await colNotificacoes.InsertOneAsync(notificacaoPagamento);
 

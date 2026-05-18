@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using Notificacoes.API.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Notificacoes.API.Controllers;
-//[Authorize]
+
 [ApiController]
 [Route("api/[controller]")]
 public class NotificacoesController : ControllerBase
@@ -16,7 +15,6 @@ public class NotificacoesController : ControllerBase
         _notificacoes = database.GetCollection<Notificacao>("notificacoes");
     }
 
-    
     [HttpGet("cobrador/{nomeCobrador}")]
     public async Task<ActionResult<IEnumerable<Notificacao>>> GetPorCobrador(string nomeCobrador)
     {
@@ -28,16 +26,35 @@ public class NotificacoesController : ControllerBase
         return Ok(lista);
     }
 
-    // 3. Marca como lida (PATCH é melhor que PUT aqui)
+    [HttpGet("cobrador/{nomeCobrador}/nao-lidas")]
+    public async Task<IActionResult> GetNaoLidas(string nomeCobrador)
+    {
+        var count = await _notificacoes
+            .CountDocumentsAsync(x => x.Cobrador == nomeCobrador && !x.Lida);
+
+        return Ok(new { total = count });
+    }
+
     [HttpPatch("{id:int}/lida")]
     public async Task<IActionResult> MarcarComoLida(int id)
     {
         var result = await _notificacoes.UpdateOneAsync(
-            x => x.Id == id, 
+            x => x.Id == id,
             Builders<Notificacao>.Update.Set(x => x.Lida, true)
         );
 
         if (result.MatchedCount == 0) return NotFound();
+        return NoContent();
+    }
+
+    [HttpPatch("cobrador/{nomeCobrador}/marcar-todas-lidas")]
+    public async Task<IActionResult> MarcarTodasLidas(string nomeCobrador)
+    {
+        await _notificacoes.UpdateManyAsync(
+            x => x.Cobrador == nomeCobrador && !x.Lida,
+            Builders<Notificacao>.Update.Set(x => x.Lida, true)
+        );
+
         return NoContent();
     }
 
@@ -48,5 +65,4 @@ public class NotificacoesController : ControllerBase
         if (resultado.DeletedCount == 0) return NotFound();
         return NoContent();
     }
-
 }
