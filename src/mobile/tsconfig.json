@@ -5,11 +5,11 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["components/*"],
-      "@services/*": ["services/*"],
-      "@hooks/*": ["hooks/*"],
-      "@types/*": ["types/*"],
-      "@constants/*": ["constants/*"],
-      "@contexts/*": ["contexts/*"]
+      "@services/*":   ["services/*"],
+      "@hooks/*":      ["hooks/*"],
+      "@modelos/*":    ["types/*"],
+      "@constants/*":  ["constants/*"],
+      "@contexts/*":   ["contexts/*"]
     }
   }
 }

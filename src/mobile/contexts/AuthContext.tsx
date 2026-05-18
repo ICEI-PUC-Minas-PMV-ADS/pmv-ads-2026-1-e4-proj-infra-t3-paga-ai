@@ -4,7 +4,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TOKEN_KEY } from '@services/api';
-import type { Usuario } from '@types/usuario';
+import type { Usuario } from '@modelos/usuario';
 
 interface AuthContextData {
   user: Usuario | null;

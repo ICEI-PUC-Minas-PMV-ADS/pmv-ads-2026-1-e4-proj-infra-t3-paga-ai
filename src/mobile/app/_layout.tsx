@@ -1,7 +1,4 @@
-// Layout raiz da aplicação. Envolve toda a árvore com AuthProvider e redireciona
-// o usuário para login ou para as abas conforme o estado de autenticação.
-
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { AuthProvider } from '@contexts/AuthContext';
 import { useAuth } from '@hooks/useAuth';
@@ -10,8 +7,15 @@ function RootRedirect() {
   const { isAuthenticated } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const inAuthGroup = segments[0] === '(auth)';
 
     if (!isAuthenticated && !inAuthGroup) {
@@ -19,7 +23,7 @@ function RootRedirect() {
     } else if (isAuthenticated && inAuthGroup) {
       router.replace('/(tabs)');
     }
-  }, [isAuthenticated, segments]);
+  }, [isAuthenticated, segments, mounted]);
 
   return <Slot />;
 }
