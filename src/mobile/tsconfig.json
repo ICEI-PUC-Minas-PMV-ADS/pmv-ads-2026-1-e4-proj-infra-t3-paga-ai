@@ -1,6 +1,8 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "ignoreDeprecations": "6.0",
     "strict": true,
     "baseUrl": ".",
     "paths": {
@@ -9,7 +11,8 @@
       "@hooks/*": ["hooks/*"],
       "@types/*": ["types/*"],
       "@constants/*": ["constants/*"],
-      "@contexts/*": ["contexts/*"]
+      "@contexts/*": ["contexts/*"],
+      "emprestimo": ["types/emprestimo"]
     }
   }
 }
