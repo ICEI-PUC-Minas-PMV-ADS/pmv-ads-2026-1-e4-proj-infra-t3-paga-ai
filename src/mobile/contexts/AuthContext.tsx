@@ -9,7 +9,7 @@ import type { Usuario } from '@modelos/usuario';
 interface AuthContextData {
   user: Usuario | null;
   token: string | null;
-  login: (user: Usuario, token: string) => Promise<void>;
+  login: (user: Usuario | null, token: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadStoredAuth();
   }, []);
 
-  async function login(userData: Usuario, userToken: string) {
+  async function login(userData: Usuario | null, userToken: string) {
     await AsyncStorage.setItem(TOKEN_KEY, userToken);
     await AsyncStorage.setItem('@pagaai:user', JSON.stringify(userData));
     setUser(userData);

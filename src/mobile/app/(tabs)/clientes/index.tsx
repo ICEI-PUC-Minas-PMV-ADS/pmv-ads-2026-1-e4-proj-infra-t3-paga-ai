@@ -2,7 +2,7 @@
 // Responsabilidade: tela principal do módulo Clientes.
 // Exibe a lista de todos os clientes e permite navegar para detalhe,
 // editar e remover. O botão "Novo" abre a tela de criação.
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from "react";
 import {
   View,
@@ -95,7 +95,7 @@ export default function ClientesScreen() {
 
   // ── Tela principal ─────────────────────────────────────────────────────────
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
       {/* Cabeçalho */}
       <View style={styles.header}>
@@ -141,7 +141,7 @@ export default function ClientesScreen() {
         }
       />
 
-    </View>
+    </SafeAreaView>
   );
 }
 

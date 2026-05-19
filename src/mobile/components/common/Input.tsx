@@ -1,10 +1,8 @@
-// Campo de texto reutilizável com suporte a label, senha e mensagem de erro.
-
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 interface InputProps {
-  label: string;
+  label?: string;
   value: string;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
@@ -12,50 +10,37 @@ interface InputProps {
   placeholder?: string;
 }
 
-export function Input({ label, value, onChangeText, secureTextEntry = false, error, placeholder }: InputProps) {
+export function Input({ label, value, onChangeText, secureTextEntry, error, placeholder }: InputProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={[styles.input, error ? styles.inputError : null]}
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
         placeholder={placeholder}
-        placeholderTextColor="#aaa"
+        placeholderTextColor="#999"
         autoCapitalize="none"
       />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#333',
-    marginBottom: 6,
-  },
+  container: { gap: 4 },
+  label: { fontSize: 14, color: '#444', fontWeight: '500' },
   input: {
     height: 48,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     paddingHorizontal: 12,
-    fontSize: 16,
+    fontSize: 15,
     color: '#222',
-    backgroundColor: '#fafafa',
+    backgroundColor: '#fff',
   },
-  inputError: {
-    borderColor: '#e53935',
-  },
-  error: {
-    marginTop: 4,
-    fontSize: 12,
-    color: '#e53935',
-  },
+  inputError: { borderColor: '#e53935' },
+  error: { fontSize: 12, color: '#e53935' },
 });

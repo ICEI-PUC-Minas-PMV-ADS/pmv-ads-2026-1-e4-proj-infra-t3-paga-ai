@@ -3,19 +3,11 @@
     "name": "PagaAI",
     "slug": "paga-ai",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "scheme": "paga-ai",
     "platforms": ["ios", "android"],
-    "scheme": "pagaai",
-    "userInterfaceStyle": "automatic",
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
     },
     "plugins": ["expo-router"]
   }
