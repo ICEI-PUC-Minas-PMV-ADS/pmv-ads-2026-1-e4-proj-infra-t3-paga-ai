@@ -45,7 +45,7 @@ export async function login(
     // Decodificar JWT para extrair dados do usuário
     const user = decodeToken(token);
 
-    return { token, user };
+    return { token, user: user ?? undefined };
   } catch (error: any) {
     const message =
       error.response?.data?.mensagem ||
@@ -184,7 +184,7 @@ function decodeToken(
 ): { nome: string; email: string } | null {
   try {
     const payload = token.split('.')[1];
-    const decoded = JSON.parse(Buffer.from(payload, 'base64').toString());
+    const decoded = JSON.parse(atob(payload));
 
     return {
       nome:

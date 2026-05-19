@@ -9,15 +9,14 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native';
-import { Link, useRouter, useSearchParams } from 'expo-router';
+import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { resetPassword } from '@services/authService';
-
+ 
 export default function ResetPasswordScreen() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-
+  const { email, token } = useLocalSearchParams<{ email: string; token: string }>();
+ 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -25,43 +24,40 @@ export default function ResetPasswordScreen() {
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
-
-  const email = searchParams.get('email');
-  const token = searchParams.get('token');
-
+ 
   useEffect(() => {
     if (!email || !token) {
       setErro('Link inválido ou expirado.');
     }
   }, [email, token]);
-
+ 
   const handleSubmit = async () => {
     setErro('');
     setSucesso('');
-
+ 
     if (!newPassword || !confirmPassword) {
       setErro('Preencha todos os campos.');
       return;
     }
-
+ 
     if (newPassword.length < 6) {
       setErro('A senha deve ter ao menos 6 caracteres.');
       return;
     }
-
+ 
     if (newPassword !== confirmPassword) {
       setErro('As senhas não coincidem.');
       return;
     }
-
+ 
     if (!email || !token) {
       setErro('Link inválido ou expirado.');
       return;
     }
-
+ 
     try {
       setLoading(true);
-      await resetPassword(email, token, newPassword);
+      await resetPassword(email as string, token as string, newPassword);
       setSucesso('Senha redefinida com sucesso! Redirecionando para login...');
       setTimeout(() => router.push('/(auth)/login'), 2000);
     } catch (error: any) {
@@ -70,7 +66,7 @@ export default function ResetPasswordScreen() {
       setLoading(false);
     }
   };
-
+ 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -89,7 +85,7 @@ export default function ResetPasswordScreen() {
             Defina uma nova senha para sua conta.
           </Text>
         </View>
-
+ 
         <View style={styles.formContainer}>
           <Text style={styles.label}>Nova senha</Text>
           <View style={styles.passwordContainer}>
@@ -111,7 +107,7 @@ export default function ResetPasswordScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-
+ 
           <Text style={[styles.label, { marginTop: 16 }]}>Confirmar senha</Text>
           <View style={styles.passwordContainer}>
             <TextInput
@@ -132,10 +128,10 @@ export default function ResetPasswordScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-
-          {erro && <Text style={styles.errorMessage}>{erro}</Text>}
-          {sucesso && <Text style={styles.successMessage}>{sucesso}</Text>}
-
+ 
+          {erro ? <Text style={styles.errorMessage}>{erro}</Text> : null}
+          {sucesso ? <Text style={styles.successMessage}>{sucesso}</Text> : null}
+ 
           <TouchableOpacity
             style={[
               styles.resetButton,
@@ -150,13 +146,13 @@ export default function ResetPasswordScreen() {
               <Text style={styles.resetButtonText}>Redefinir senha</Text>
             )}
           </TouchableOpacity>
-
+ 
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>ou</Text>
             <View style={styles.dividerLine} />
           </View>
-
+ 
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Lembrou sua senha?</Text>
             <Link href="/(auth)/login" asChild>
@@ -170,7 +166,7 @@ export default function ResetPasswordScreen() {
     </KeyboardAvoidingView>
   );
 }
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
