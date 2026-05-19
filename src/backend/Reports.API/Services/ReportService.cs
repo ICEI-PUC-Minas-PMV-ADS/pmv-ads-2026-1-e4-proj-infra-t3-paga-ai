@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Reports.API.Models;
 using MongoDB.Driver;
 using QuestPDF.Fluent;
@@ -19,198 +19,209 @@ public class ReportService
     }
 
     public Report GerarRelatorio(DateTime dataInicio, DateTime dataFim, string? cobrador = null)
-    {
-        var dataInicioAjustada = DateTime.SpecifyKind(dataInicio.Date, DateTimeKind.Utc);
-        var dataFimAjustada = DateTime.SpecifyKind(dataFim.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+{
+    var dataInicioAjustada = DateTime.SpecifyKind(dataInicio.Date, DateTimeKind.Utc);
+    var dataFimAjustada = DateTime.SpecifyKind(dataFim.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
 
-        var filtro = CriarFiltroRelatorioCompleto(dataInicioAjustada, dataFimAjustada, cobrador);
+    var filtro = CriarFiltroRelatorioCompleto(dataInicioAjustada, dataFimAjustada, cobrador);
+    var registros = _emprestimosCollection.Find(filtro).ToList();
 
-        var registros = _emprestimosCollection.Find(filtro).ToList();
+    // Calcula totais considerando parcelas
+    var totalEmprestado = registros.Sum(x => x.Valor);
 
-        var pagos = registros.Where(x => x.DataPagamento != null).ToList();
-        var pendentes = registros.Where(x => x.DataPagamento == null).ToList();
+    var totalRecebido = registros.Sum(x =>
+        x.Parcelas.Any()
+            ? x.Parcelas.Where(p => p.Pago).Sum(p => p.Valor)
+            : (x.DataPagamento != null ? x.ValorFinal : 0));
 
-        var totalEmprestado = registros.Sum(x => x.Valor);
-        var totalRecebido = pagos.Sum(x => x.ValorFinal);
-        var totalPendente = pendentes.Sum(x => x.ValorFinal);
-        var lucroTotal = pagos.Sum(x => x.ValorFinal - x.Valor);
+    var totalPendente = registros.Sum(x =>
+        x.Parcelas.Any()
+            ? x.Parcelas.Where(p => !p.Pago).Sum(p => p.Valor)
+            : (x.DataPagamento == null ? x.ValorFinal : 0));
 
-        var emprestimosPorDevedor = registros
-            .GroupBy(x => x.Cliente ?? "Não informado")
-            .Select(g => new RelatorioDevedor
+    var lucroTotal = registros.Sum(x =>
+        x.Parcelas.Any()
+            ? x.Parcelas.Where(p => p.Pago).Sum(p => p.Valor) - (x.Valor / x.NumeroParcelas * x.Parcelas.Count(p => p.Pago))
+            : (x.DataPagamento != null ? x.ValorFinal - x.Valor : 0));
+
+    // Empréstimos por devedor
+    var emprestimosPorDevedor = registros
+        .GroupBy(x => x.Cliente ?? "Não informado")
+        .Select(g => new RelatorioDevedor
+        {
+            Devedor = g.Key,
+            Quantidade = g.Count(),
+            TotalEmprestado = g.Sum(x => x.Valor),
+            Recebido = g.Sum(x =>
+                x.Parcelas.Any()
+                    ? x.Parcelas.Where(p => p.Pago).Sum(p => p.Valor)
+                    : (x.DataPagamento != null ? x.ValorFinal : 0)),
+            Pendente = g.Sum(x =>
+                x.Parcelas.Any()
+                    ? x.Parcelas.Where(p => !p.Pago).Sum(p => p.Valor)
+                    : (x.DataPagamento == null ? x.ValorFinal : 0)),
+            TaxaMedia = g.Any() ? g.Average(x => x.TaxaJuros) : 0
+        })
+        .ToList();
+
+    // Pagamentos recentes — considera parcelas pagas individualmente
+    var pagamentosRecentes = registros
+        .SelectMany(x => x.Parcelas.Any()
+            ? x.Parcelas.Where(p => p.Pago).Select(p => new PagamentoRecente
             {
-                Devedor = g.Key,
-                Quantidade = g.Count(),
-                TotalEmprestado = g.Sum(x => x.Valor),
-                Recebido = g.Where(x => x.DataPagamento != null).Sum(x => x.ValorFinal),
-                Pendente = g.Where(x => x.DataPagamento == null).Sum(x => x.ValorFinal),
-                TaxaMedia = g.Any() ? g.Average(x => x.TaxaJuros) : 0
-            })
-            .ToList();
-
-        var pagamentosRecentes = pagos
-            .OrderByDescending(x => x.DataPagamento)
-            .Take(10)
-            .Select(x => new PagamentoRecente
-            {
-                Data = x.DataPagamento ?? x.DataEmprestimo,
+                Data = p.DataPagamento ?? x.DataEmprestimo,
                 Devedor = x.Cliente ?? "Não informado",
-                Valor = x.ValorFinal,
+                Valor = p.Valor,
                 Metodo = "PIX",
-                Referencia = $"Empréstimo #{x.Id}",
+                Referencia = $"Empréstimo #{x.Id} — Parcela {p.Numero}/{x.NumeroParcelas}",
                 Status = "Recebido"
             })
-            .ToList();
+            : x.DataPagamento != null
+                ? new[] { new PagamentoRecente
+                {
+                    Data = x.DataPagamento ?? x.DataEmprestimo,
+                    Devedor = x.Cliente ?? "Não informado",
+                    Valor = x.ValorFinal,
+                    Metodo = "PIX",
+                    Referencia = $"Empréstimo #{x.Id}",
+                    Status = "Recebido"
+                }}
+                : Array.Empty<PagamentoRecente>())
+        .OrderByDescending(p => p.Data)
+        .Take(10)
+        .ToList();
 
-        return new Report
-        {
-            Id = new Random().Next(1, 100000),
-            DataInicio = dataInicio,
-            DataFim = dataFim,
-            Tipo = "Relatório por período",
-            Formato = "PDF",
-            GeradoEm = DateTime.Now,
-            Cobrador = cobrador ?? string.Empty,
-
-            TotalEmprestado = totalEmprestado,
-            TotalRecebido = totalRecebido,
-            TotalPendente = totalPendente,
-            LucroTotal = lucroTotal,
-
-            EmprestimosPorDevedor = emprestimosPorDevedor,
-            PagamentosRecentes = pagamentosRecentes
-        };
-    }
+    return new Report
+    {
+        Id = new Random().Next(1, 100000),
+        DataInicio = dataInicio,
+        DataFim = dataFim,
+        Tipo = "Relatório por período",
+        Formato = "PDF",
+        GeradoEm = DateTime.Now,
+        Cobrador = cobrador ?? string.Empty,
+        TotalEmprestado = totalEmprestado,
+        TotalRecebido = totalRecebido,
+        TotalPendente = totalPendente,
+        LucroTotal = lucroTotal,
+        EmprestimosPorDevedor = emprestimosPorDevedor,
+        PagamentosRecentes = pagamentosRecentes
+    };
+}
 
     public byte[] GerarPdf(DateTime dataInicio, DateTime dataFim, string? cobrador = null)
+{
+    QuestPDF.Settings.License = LicenseType.Community;
+
+    var dataInicioAjustada = DateTime.SpecifyKind(dataInicio.Date, DateTimeKind.Utc);
+    var dataFimAjustada = DateTime.SpecifyKind(dataFim.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+
+    var filtro = CriarFiltroRelatorioCompleto(dataInicioAjustada, dataFimAjustada, cobrador);
+    var registros = _emprestimosCollection.Find(filtro).ToList();
+
+    var totalEmprestado = registros.Sum(x => x.Valor);
+
+    var totalRecebido = registros.Sum(x =>
+        x.Parcelas.Any()
+            ? x.Parcelas.Where(p => p.Pago).Sum(p => p.Valor)
+            : (x.DataPagamento != null ? x.ValorFinal : 0));
+
+    var totalPendente = registros.Sum(x =>
+        x.Parcelas.Any()
+            ? x.Parcelas.Where(p => !p.Pago).Sum(p => p.Valor)
+            : (x.DataPagamento == null ? x.ValorFinal : 0));
+
+    var lucroTotal = registros.Sum(x =>
+        x.Parcelas.Any()
+            ? x.Parcelas.Where(p => p.Pago).Sum(p => p.Valor) - (x.Valor / x.NumeroParcelas * x.Parcelas.Count(p => p.Pago))
+            : (x.DataPagamento != null ? x.ValorFinal - x.Valor : 0));
+
+    var pdf = Document.Create(container =>
     {
-        QuestPDF.Settings.License = LicenseType.Community;
-
-        var dataInicioAjustada = DateTime.SpecifyKind(dataInicio.Date, DateTimeKind.Utc);
-        var dataFimAjustada = DateTime.SpecifyKind(dataFim.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
-
-        var filtro = CriarFiltroRelatorioCompleto(dataInicioAjustada, dataFimAjustada, cobrador);
-
-        var registros = _emprestimosCollection.Find(filtro).ToList();
-
-        var pagos = registros.Where(x => x.DataPagamento != null).ToList();
-        var pendentes = registros.Where(x => x.DataPagamento == null).ToList();
-
-        var totalEmprestado = registros.Sum(x => x.Valor);
-        var totalRecebido = pagos.Sum(x => x.ValorFinal);
-        var totalPendente = pendentes.Sum(x => x.ValorFinal);
-        var lucroTotal = pagos.Sum(x => x.ValorFinal - x.Valor);
-
-        var pdf = Document.Create(container =>
+        container.Page(page =>
         {
-            container.Page(page =>
+            page.Margin(30);
+
+            page.Header()
+                .Text("Relatório Financeiro")
+                .FontSize(20)
+                .Bold()
+                .FontColor(Colors.Blue.Darken2);
+
+            page.Content().Column(col =>
             {
-                page.Margin(30);
+                col.Spacing(10);
 
-                page.Header()
-                    .Text("Relatório Financeiro")
-                    .FontSize(20)
-                    .Bold()
-                    .FontColor(Colors.Blue.Darken2);
+                col.Item().Text($"Período: {dataInicio:dd/MM/yyyy} até {dataFim:dd/MM/yyyy}").FontSize(12);
 
-                page.Content().Column(col =>
+                if (!string.IsNullOrWhiteSpace(cobrador))
+                    col.Item().Text($"Cobrador: {cobrador}").FontSize(12);
+
+                col.Item().LineHorizontal(1);
+
+                col.Item().Text("Resumo Geral").Bold().FontSize(14);
+                col.Item().Text($"Total emprestado: R$ {totalEmprestado:N2}");
+                col.Item().Text($"Total recebido: R$ {totalRecebido:N2}");
+                col.Item().Text($"Total pendente: R$ {totalPendente:N2}");
+                col.Item().Text($"Lucro total: R$ {lucroTotal:N2}");
+
+                col.Item().PaddingTop(10).Text("Empréstimos").Bold().FontSize(14);
+
+                foreach (var emp in registros.OrderBy(x => x.Cliente))
                 {
-                    col.Spacing(10);
+                    col.Item().PaddingTop(6).Text($"{emp.Cliente ?? "-"} — Empréstimo #{emp.Id}").Bold();
+                    col.Item().Text($"Valor: R$ {emp.Valor:N2} | Juros: {emp.TaxaJuros * 100:N1}% | Total: R$ {emp.ValorFinal:N2}");
 
-                    col.Item().Text($"Período: {dataInicio:dd/MM/yyyy} até {dataFim:dd/MM/yyyy}").FontSize(12);
-
-                    if (!string.IsNullOrWhiteSpace(cobrador))
-                    {
-                        col.Item().Text($"Cobrador: {cobrador}").FontSize(12);
-                    }
-
-                    col.Item().LineHorizontal(1);
-
-                    col.Item().Text("Resumo Geral").Bold().FontSize(14);
-                    col.Item().Text($"Total emprestado: R$ {totalEmprestado:N2}");
-                    col.Item().Text($"Total recebido: R$ {totalRecebido:N2}");
-                    col.Item().Text($"Total pendente: R$ {totalPendente:N2}");
-                    col.Item().Text($"Lucro total: R$ {lucroTotal:N2}");
-
-                    col.Item().PaddingTop(10).Text("Pagamentos Recebidos").Bold().FontSize(14);
-
-                    if (pagos.Any())
+                    if (emp.Parcelas.Any())
                     {
                         col.Item().Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
                             {
-                                columns.RelativeColumn(3);
+                                columns.RelativeColumn(1);
+                                columns.RelativeColumn(2);
                                 columns.RelativeColumn(2);
                                 columns.RelativeColumn(2);
                             });
 
                             table.Header(header =>
                             {
-                                header.Cell().Text("Cliente").Bold();
-                                header.Cell().Text("Data Pagamento").Bold();
+                                header.Cell().Text("Parcela").Bold();
+                                header.Cell().Text("Vencimento").Bold();
                                 header.Cell().Text("Valor").Bold();
+                                header.Cell().Text("Status").Bold();
                             });
 
-                            foreach (var item in pagos.OrderBy(x => x.DataPagamento))
+                            foreach (var p in emp.Parcelas.OrderBy(p => p.Numero))
                             {
-                                table.Cell().Text(item.Cliente ?? "-");
-                                table.Cell().Text(item.DataPagamento?.ToString("dd/MM/yyyy") ?? "-");
-                                table.Cell().Text($"R$ {item.ValorFinal:N2}");
+                                table.Cell().Text($"{p.Numero}/{emp.NumeroParcelas}");
+                                table.Cell().Text(p.DataVencimento.ToString("dd/MM/yyyy"));
+                                table.Cell().Text($"R$ {p.Valor:N2}");
+                                table.Cell().Text(p.Pago ? $"Pago em {p.DataPagamento:dd/MM/yyyy}" : "Pendente");
                             }
                         });
                     }
                     else
                     {
-                        col.Item().Text("Nenhum pagamento encontrado no período.");
+                        col.Item().Text($"Vencimento: {emp.DataVencimento:dd/MM/yyyy} | Status: {(emp.DataPagamento != null ? $"Pago em {emp.DataPagamento:dd/MM/yyyy}" : "Pendente")}");
                     }
 
-                    col.Item().PaddingTop(10).Text("Empréstimos Pendentes").Bold().FontSize(14);
-
-                    if (pendentes.Any())
-                    {
-                        col.Item().Table(table =>
-                        {
-                            table.ColumnsDefinition(columns =>
-                            {
-                                columns.RelativeColumn(3);
-                                columns.RelativeColumn(2);
-                                columns.RelativeColumn(2);
-                            });
-
-                            table.Header(header =>
-                            {
-                                header.Cell().Text("Cliente").Bold();
-                                header.Cell().Text("Data Empréstimo").Bold();
-                                header.Cell().Text("Valor Pendente").Bold();
-                            });
-
-                            foreach (var item in pendentes.OrderBy(x => x.DataEmprestimo))
-                            {
-                                table.Cell().Text(item.Cliente ?? "-");
-                                table.Cell().Text(item.DataEmprestimo.ToString("dd/MM/yyyy"));
-                                table.Cell().Text($"R$ {item.ValorFinal:N2}");
-                            }
-                        });
-                    }
-                    else
-                    {
-                        col.Item().Text("Nenhum empréstimo pendente encontrado no período.");
-                    }
-                });
-
-                page.Footer()
-                    .AlignCenter()
-                    .Text(x =>
-                    {
-                        x.Span("Gerado em ");
-                        x.Span($"{DateTime.Now:dd/MM/yyyy HH:mm}");
-                    });
+                    col.Item().LineHorizontal(0.5f);
+                }
             });
-        });
 
-        return pdf.GeneratePdf();
-    }
+            page.Footer()
+                .AlignCenter()
+                .Text(x =>
+                {
+                    x.Span("Gerado em ");
+                    x.Span($"{DateTime.Now:dd/MM/yyyy HH:mm}");
+                });
+        });
+    });
+
+    return pdf.GeneratePdf();
+}
 
     private static FilterDefinition<Emprestimo> CriarFiltroRelatorioCompleto(
         DateTime dataInicio,
@@ -232,9 +243,7 @@ public class ReportService
         var filtro = Builders<Emprestimo>.Filter.Or(filtroPagos, filtroPendentes);
 
         if (!string.IsNullOrWhiteSpace(cobrador))
-        {
             filtro &= Builders<Emprestimo>.Filter.Eq(x => x.Cobrador, cobrador);
-        }
 
         return filtro;
     }

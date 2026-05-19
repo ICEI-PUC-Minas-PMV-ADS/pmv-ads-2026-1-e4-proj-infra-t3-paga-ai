@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUsuarioLogado, getToken } from "../services/authService";
-import { getClientes } from "../services/clientesService";
+import { getClientes } from "../services/ClientesService";
 import {
   getCarteira, getRelatorioLucro, criarEmprestimo,
   marcarComoPago, deletarEmprestimo,
@@ -33,7 +33,7 @@ const TABS = [
   { label: "Pagos",     key: "pagos",     statuses: ["Pago"]      },
 ];
 
-const formVazio = { Cliente: "", Valor: "", TaxaJuros: "30", ClienteId: "" };
+const formVazio = { Cliente: "", Valor: "", TaxaJuros: "30", ClienteId: "", NumeroParcelas: "1", DataVencimento: "" };
 
 export default function Emprestimos() {
   const usuario     = getUsuarioLogado();
@@ -97,12 +97,14 @@ export default function Emprestimos() {
     setSalvando(true);
     try {
       await criarEmprestimo({
-        Cliente:   form.Cliente,
-        Valor:     parseFloat(form.Valor),
-        TaxaJuros: parseFloat(form.TaxaJuros) / 100,
-        Cobrador:  cobrador,
-        ClienteId: parseInt(form.ClienteId) || Math.floor(Math.random() * 9000) + 1000,
-      });
+  Cliente:        form.Cliente,
+  Valor:          parseFloat(form.Valor),
+  TaxaJuros:      parseFloat(form.TaxaJuros) / 100,
+  Cobrador:       cobrador,
+  ClienteId:      parseInt(form.ClienteId) || Math.floor(Math.random() * 9000) + 1000,
+  NumeroParcelas: parseInt(form.NumeroParcelas) || 1,
+  DataVencimento: form.DataVencimento ? new Date(form.DataVencimento).toISOString() : "",
+});
       setModal(false);
       setForm(formVazio);
       carregar();
@@ -201,20 +203,31 @@ export default function Emprestimos() {
             </div>
 
             {[
-              { label: "Valor (R$)", key: "Valor",     type: "number", placeholder: "Ex: 500" },
-              { label: "Juros (%)",  key: "TaxaJuros", type: "number", placeholder: "Ex: 30"  },
-            ].map(({ label, key, type, placeholder }) => (
-              <div key={key} style={{ marginBottom: "1rem" }}>
-                <label style={s.label}>{label}</label>
-                <input
-                  type={type}
-                  value={form[key]}
-                  placeholder={placeholder}
-                  onChange={(ev) => setForm((f) => ({ ...f, [key]: ev.target.value }))}
-                  style={s.input}
-                />
-              </div>
-            ))}
+  { label: "Valor (R$)", key: "Valor",          type: "number", placeholder: "Ex: 500" },
+  { label: "Juros (%)",  key: "TaxaJuros",       type: "number", placeholder: "Ex: 30"  },
+  { label: "Parcelas",   key: "NumeroParcelas",  type: "number", placeholder: "Ex: 1"   },
+].map(({ label, key, type, placeholder }) => (
+  <div key={key} style={{ marginBottom: "1rem" }}>
+    <label style={s.label}>{label}</label>
+    <input
+      type={type}
+      value={form[key]}
+      placeholder={placeholder}
+      onChange={(ev) => setForm((f) => ({ ...f, [key]: ev.target.value }))}
+      style={s.input}
+    />
+  </div>
+))}
+
+<div style={{ marginBottom: "1rem" }}>
+  <label style={s.label}>Data de Vencimento</label>
+  <input
+    type="date"
+    value={form.DataVencimento}
+    onChange={(ev) => setForm((f) => ({ ...f, DataVencimento: ev.target.value }))}
+    style={s.input}
+  />
+</div>
             <div style={s.modalBtns}>
               <button style={s.btnCancelar} onClick={() => { setModal(false); setForm(formVazio); }}>
                 Cancelar
@@ -238,7 +251,7 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
   const receber = e.valorFinal ?? e.valorComJuros ?? 0;
   const id      = String(e.id ?? 0).padStart(3, "0");
 
-  return (
+ return (
     <div style={s.card}>
       <div style={s.cardTop}>
         <span style={s.cardNome}>{e.cliente ?? e.devedor ?? "—"} <span style={s.cardId}>#{id}</span></span>
@@ -253,14 +266,36 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
       <div style={s.cardInfos}>
         <Info label="VALOR"      valor={fmt(valor)} />
         <Info label="JUROS"      valor={e.taxaJuros ? `${(e.taxaJuros * 100).toFixed(1)}%` : "—"} />
+        {e.numeroParcelas > 1 && (
+          <Info label="PARCELAS" valor={`${e.numeroParcelas}x de ${fmt(e.valorParcela)}`} />
+        )}
         <Info label="A RECEBER"  valor={pago ? "—" : fmt(receber)} destaque={!pago} />
         <Info label={pago ? "PAGO EM" : "VENCIMENTO"}
               valor={pago ? fmtDate(e.dataPagamento) : fmtDate(e.dataVencimento)} />
       </div>
+
+      {e.parcelas?.length > 1 && (
+        <div style={{ marginTop: 12, borderTop: "1px solid #F3F4F6", paddingTop: 10 }}>
+          <div style={{ fontSize: 10, fontWeight: 600, color: "#9CA3AF", letterSpacing: 1, marginBottom: 6 }}>PARCELAS</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {e.parcelas.map((p) => (
+              <div key={p.numero} style={{
+                fontSize: 12,
+                padding: "3px 8px",
+                borderRadius: 6,
+                background: p.pago ? "#D1FAE5" : "#EDE9FE",
+                color: p.pago ? "#059669" : "#7C3AED",
+                fontWeight: 600
+              }}>
+                {p.numero}ª {fmt(p.valor)} — {fmtDate(p.dataVencimento)} {p.pago ? "✔" : ""}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
 function Info({ label, valor, destaque }) {
   return (
     <div>
@@ -280,6 +315,8 @@ function CardResumo({ label, valor, cor }) {
 }
 
 const s = {
+
+
   page:       { padding: "2rem", background: "#F5F3FF", minHeight: "100vh" },
   header:     { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" },
   titulo:     { margin: 0, fontSize: "1.8rem", fontWeight: 700, color: "#1F2937" },

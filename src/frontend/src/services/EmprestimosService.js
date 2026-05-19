@@ -1,7 +1,6 @@
 import { getToken } from "./authService";
 
-const BASE_URL = import.meta.env.VITE_EMPRESTIMOS_URL ?? "http://localhost:5046/backend/Emprestimos";
-
+const BASE_URL = `${import.meta.env.VITE_GATEWAY_URL ?? "http://localhost:5046"}/backend/Emprestimos`;
 function authHeaders() {
   const token = getToken();
   return {

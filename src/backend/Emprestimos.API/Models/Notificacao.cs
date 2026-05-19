@@ -17,7 +17,9 @@ public class Notificacao
     public DateTime Data { get; set; } = DateTime.UtcNow;
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
     public int? EmprestimoId { get; set; }
-    public string Tipo { get; set; } = "Cobranca";
+    public string Tipo { get; set; } = "Cobrança";  // ← com acento
+    public int NumeroParcela { get; set; } = 0;
+    public int TotalParcelas { get; set; } = 0;
     public decimal Valor { get; set; }
     public DateTime DataVencimento { get; set; }
 }

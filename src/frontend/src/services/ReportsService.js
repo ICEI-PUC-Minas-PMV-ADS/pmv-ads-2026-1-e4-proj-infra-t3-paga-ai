@@ -1,6 +1,6 @@
 import { getToken } from "./authService";
 
-const BASE_URL = "http://localhost:5046/backend/Report";
+const BASE_URL = `${import.meta.env.VITE_GATEWAY_URL ?? "http://localhost:5046"}/backend/Report`;
 
 function headers() {
   return {
