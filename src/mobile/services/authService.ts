@@ -1,14 +1,13 @@
 // Serviço de autenticação para o mobile
 // Espelha a implementação do web, mas usa axios em vez de fetch
 import api from './api';
-import { DEV_BASE_URL } from '@constants/endpoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TOKEN_KEY = '@pagaai:token';
 const REMEMBERED_EMAIL_KEY = '@pagaai:remembered_email';
 
-// URL base da API de usuários — ajusta entre dev e produção
-const USUARIOS_BASE_URL = DEV_BASE_URL + '/backend/Usuarios';
+// URL base da API de usuários via gateway compartilhado
+const USUARIOS_BASE_URL = '/backend/Usuarios';
 
 function validarEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -43,9 +42,9 @@ export async function login(
     }
 
     // Decodificar JWT para extrair dados do usuário
-    const user = decodeToken(token);
+    const user = decodeToken(token) ?? { nome: 'Usuário', email };
 
-    return { token, user: user ?? undefined };
+    return { token, user };
   } catch (error: any) {
     const message =
       error.response?.data?.mensagem ||
@@ -179,12 +178,55 @@ export async function isAuthenticated(): Promise<boolean> {
  * O token JWT tem 3 partes separadas por "."
  * A parte do meio (índice 1) é o payload em Base64
  */
+function base64UrlDecode(value: string): string {
+  const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
+
+  if (typeof globalThis.atob === 'function') {
+    return globalThis.atob(padded);
+  }
+
+  if (typeof Buffer !== 'undefined') {
+    return Buffer.from(padded, 'base64').toString('utf-8');
+  }
+
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  let str = '';
+  let i = 0;
+
+  while (i < padded.length) {
+    const enc1 = chars.indexOf(padded.charAt(i++));
+    const enc2 = chars.indexOf(padded.charAt(i++));
+    const enc3 = chars.indexOf(padded.charAt(i++));
+    const enc4 = chars.indexOf(padded.charAt(i++));
+
+    const chr1 = (enc1 << 2) | (enc2 >> 4);
+    const chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+    const chr3 = ((enc3 & 3) << 6) | enc4;
+
+    str += String.fromCharCode(chr1);
+    if (enc3 !== 64) str += String.fromCharCode(chr2);
+    if (enc4 !== 64) str += String.fromCharCode(chr3);
+  }
+
+  try {
+    return decodeURIComponent(
+      str
+        .split('')
+        .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+        .join('')
+    );
+  } catch {
+    return str;
+  }
+}
+
 function decodeToken(
   token: string
 ): { nome: string; email: string } | null {
   try {
     const payload = token.split('.')[1];
-    const decoded = JSON.parse(atob(payload));
+    const decoded = JSON.parse(base64UrlDecode(payload));
 
     return {
       nome:

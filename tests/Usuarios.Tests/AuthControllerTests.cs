@@ -30,7 +30,7 @@ public class AuthControllerTests
         _mockDatabase.Setup(d => d.GetCollection<UserEntity>("usuarios", null))
             .Returns(_mockCollection.Object);
 
-        _controller = new AuthController(_mockDatabase.Object, _mockConfig.Object);
+        _controller = new AuthController(_mockDatabase.Object, _mockConfig.Object, null, null);
     }
 
     [Fact]
