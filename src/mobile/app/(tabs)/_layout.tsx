@@ -28,6 +28,7 @@ export default function TabsLayout() {
         const tab = TABS.find((t) => t.name === route.name);
         return {
           headerShown: false,
+          title: tab?.title,
           tabBarActiveTintColor: '#1a73e8',
           tabBarInactiveTintColor: '#888',
           tabBarIcon: ({ focused, color, size }) => {
@@ -36,10 +37,6 @@ export default function TabsLayout() {
           },
         };
       }}
-    >
-      {TABS.map((tab) => (
-        <Tabs.Screen key={tab.name} name={tab.name} options={{ title: tab.title }} />
-      ))}
-    </Tabs>
+    />
   );
 }
