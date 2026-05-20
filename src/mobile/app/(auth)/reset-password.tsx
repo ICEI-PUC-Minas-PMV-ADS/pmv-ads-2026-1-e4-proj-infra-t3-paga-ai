@@ -7,71 +7,66 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Link, useRouter } from 'expo-router';
-import { login, getRememberedEmail } from '@services/authService';
-import { useAuth } from '@hooks/useAuth';
-
-export default function LoginScreen() {
+import { Link, useRouter, useLocalSearchParams } from 'expo-router';
+import { resetPassword } from '@services/authService';
+ 
+export default function ResetPasswordScreen() {
   const router = useRouter();
-  const { login: authLogin } = useAuth();
-
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const { email, token } = useLocalSearchParams<{ email: string; token: string }>();
+ 
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
-
+  const [sucesso, setSucesso] = useState('');
+ 
   useEffect(() => {
-    const loadRememberedEmail = async () => {
-      const savedEmail = await getRememberedEmail();
-      if (savedEmail) {
-        setEmail(savedEmail);
-        setRememberMe(true);
-      }
-    };
-    loadRememberedEmail();
-  }, []);
-
+    if (!email || !token) {
+      setErro('Link inválido ou expirado.');
+    }
+  }, [email, token]);
+ 
   const handleSubmit = async () => {
     setErro('');
-
-    if (!email || !senha) {
-      setErro('Por favor, preencha e-mail e senha.');
+    setSucesso('');
+ 
+    if (!newPassword || !confirmPassword) {
+      setErro('Preencha todos os campos.');
       return;
     }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErro('Informe um e-mail válido.');
+ 
+    if (newPassword.length < 6) {
+      setErro('A senha deve ter ao menos 6 caracteres.');
       return;
     }
-
+ 
+    if (newPassword !== confirmPassword) {
+      setErro('As senhas não coincidem.');
+      return;
+    }
+ 
+    if (!email || !token) {
+      setErro('Link inválido ou expirado.');
+      return;
+    }
+ 
     try {
       setLoading(true);
-      const { token, user } = await login(email, senha, rememberMe);
-
-      if (token && user) {
-        await authLogin(
-          {
-            id: 1,
-            nome: user.nome,
-            email: user.email,
-          },
-          token
-        );
-        router.replace('/(tabs)');
-      }
+      await resetPassword(email as string, token as string, newPassword);
+      setSucesso('Senha redefinida com sucesso! Redirecionando para login...');
+      setTimeout(() => router.push('/(auth)/login'), 2000);
     } catch (error: any) {
-      setErro(error.message || 'Falha ao realizar login.');
+      setErro(error.message || 'Falha ao redefinir senha.');
     } finally {
       setLoading(false);
     }
   };
-
+ 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -85,30 +80,21 @@ export default function LoginScreen() {
           <View style={styles.icon}>
             <Text style={styles.iconText}>💰</Text>
           </View>
-          <Text style={styles.title}>Paga Aí</Text>
-          <Text style={styles.subtitle}>Gestão de Empréstimos Pessoais</Text>
+          <Text style={styles.title}>Redefinir senha</Text>
+          <Text style={styles.subtitle}>
+            Defina uma nova senha para sua conta.
+          </Text>
         </View>
-
+ 
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="seu@email.com"
-            placeholderTextColor="#999"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            editable={!loading}
-          />
-
-          <Text style={[styles.label, { marginTop: 16 }]}>Senha</Text>
+          <Text style={styles.label}>Nova senha</Text>
           <View style={styles.passwordContainer}>
             <TextInput
               style={styles.passwordInput}
               placeholder="••••••••"
               placeholderTextColor="#999"
-              value={senha}
-              onChangeText={setSenha}
+              value={newPassword}
+              onChangeText={setNewPassword}
               secureTextEntry={!showPassword}
               editable={!loading}
             />
@@ -121,49 +107,56 @@ export default function LoginScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-
-          <View style={styles.optionsContainer}>
-            <View style={styles.rememberContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.checkbox,
-                  rememberMe && styles.checkboxChecked,
-                ]}
-                onPress={() => setRememberMe(!rememberMe)}
-              >
-                {rememberMe && <Text style={styles.checkmark}>✓</Text>}
-              </TouchableOpacity>
-              <Text style={styles.rememberText}>Lembrar-me</Text>
-            </View>
-            <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
-              Esqueci a senha
-            </Link>
+ 
+          <Text style={[styles.label, { marginTop: 16 }]}>Confirmar senha</Text>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="••••••••"
+              placeholderTextColor="#999"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={!showConfirmPassword}
+              editable={!loading}
+            />
+            <TouchableOpacity
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={styles.toggleButton}
+            >
+              <Text style={styles.toggleText}>
+                {showConfirmPassword ? 'Ocultar' : 'Mostrar'}
+              </Text>
+            </TouchableOpacity>
           </View>
-
-          {erro && <Text style={styles.errorMessage}>{erro}</Text>}
-
+ 
+          {erro ? <Text style={styles.errorMessage}>{erro}</Text> : null}
+          {sucesso ? <Text style={styles.successMessage}>{sucesso}</Text> : null}
+ 
           <TouchableOpacity
-            style={[styles.loginButton, loading && styles.buttonDisabled]}
+            style={[
+              styles.resetButton,
+              (loading || !email || !token) && styles.buttonDisabled,
+            ]}
             onPress={handleSubmit}
-            disabled={loading}
+            disabled={loading || !email || !token}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.loginButtonText}>Entrar</Text>
+              <Text style={styles.resetButtonText}>Redefinir senha</Text>
             )}
           </TouchableOpacity>
-
+ 
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>ou</Text>
             <View style={styles.dividerLine} />
           </View>
-
-          <View style={styles.registerContainer}>
-            <Text style={styles.registerText}>Não tem conta?</Text>
-            <Link href="/(auth)/register" style={styles.registerLink}>
-              Criar conta
+ 
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Lembrou sua senha?</Text>
+            <Link href="/(auth)/login" style={styles.loginLink}>
+              Entrar
             </Link>
           </View>
         </View>
@@ -171,7 +164,7 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   );
 }
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -214,6 +207,8 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: '#6b7280',
+    textAlign: 'center',
+    paddingHorizontal: 12,
   },
   formContainer: {
     width: '100%',
@@ -224,22 +219,12 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginBottom: 8,
   },
-  input: {
-    width: '100%',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#f8fafc',
-    fontSize: 14,
-    color: '#111827',
-  },
   passwordContainer: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
+    marginBottom: 20,
   },
   passwordInput: {
     flex: 1,
@@ -261,44 +246,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
   },
-  optionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 16,
-  },
-  rememberContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkbox: {
-    width: 18,
-    height: 18,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: '#7c3aed',
-    marginRight: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkboxChecked: {
-    backgroundColor: '#7c3aed',
-  },
-  checkmark: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  rememberText: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  forgotLink: {
-    color: '#7c3aed',
-    fontSize: 14,
-    fontWeight: '600',
-  },
   errorMessage: {
     backgroundColor: '#fee2e2',
     color: '#991b1b',
@@ -308,7 +255,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 16,
   },
-  loginButton: {
+  successMessage: {
+    backgroundColor: '#dcfce7',
+    color: '#166534',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    fontSize: 13,
+    marginBottom: 16,
+  },
+  resetButton: {
     width: '100%',
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -316,12 +272,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#7c3aed',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 16,
     marginBottom: 16,
   },
   buttonDisabled: {
     opacity: 0.6,
   },
-  loginButtonText: {
+  resetButtonText: {
     color: '#fff',
     fontSize: 15,
     fontWeight: '700',
@@ -342,17 +299,17 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
     marginHorizontal: 12,
   },
-  registerContainer: {
+  loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 6,
   },
-  registerText: {
+  loginText: {
     color: '#6b7280',
     fontSize: 14,
   },
-  registerLink: {
+  loginLink: {
     color: '#7c3aed',
     fontSize: 14,
     fontWeight: '700',

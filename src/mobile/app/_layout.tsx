@@ -1,20 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { AuthProvider } from '@contexts/AuthContext';
 import { useAuth } from '@hooks/useAuth';
 
 function RootRedirect() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
+    if (isLoading) return; // aguarda carregar o token do storage
 
     const inAuthGroup = segments[0] === '(auth)';
 
@@ -23,7 +18,7 @@ function RootRedirect() {
     } else if (isAuthenticated && inAuthGroup) {
       router.replace('/(tabs)');
     }
-  }, [isAuthenticated, segments, mounted]);
+  }, [isAuthenticated, isLoading, segments]);
 
   return <Slot />;
 }

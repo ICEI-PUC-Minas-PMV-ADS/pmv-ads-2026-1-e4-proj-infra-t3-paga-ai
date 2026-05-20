@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -7,41 +7,26 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { login, getRememberedEmail } from '@services/authService';
-import { useAuth } from '@hooks/useAuth';
+import { forgotPassword } from '@services/authService';
 
-export default function LoginScreen() {
+export default function ForgotPasswordScreen() {
   const router = useRouter();
-  const { login: authLogin } = useAuth();
 
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
-
-  useEffect(() => {
-    const loadRememberedEmail = async () => {
-      const savedEmail = await getRememberedEmail();
-      if (savedEmail) {
-        setEmail(savedEmail);
-        setRememberMe(true);
-      }
-    };
-    loadRememberedEmail();
-  }, []);
+  const [sucesso, setSucesso] = useState('');
 
   const handleSubmit = async () => {
     setErro('');
+    setSucesso('');
 
-    if (!email || !senha) {
-      setErro('Por favor, preencha e-mail e senha.');
+    if (!email) {
+      setErro('Por favor, informe o e-mail de recuperação.');
       return;
     }
 
@@ -52,21 +37,11 @@ export default function LoginScreen() {
 
     try {
       setLoading(true);
-      const { token, user } = await login(email, senha, rememberMe);
-
-      if (token && user) {
-        await authLogin(
-          {
-            id: 1,
-            nome: user.nome,
-            email: user.email,
-          },
-          token
-        );
-        router.replace('/(tabs)');
-      }
+      await forgotPassword(email);
+      setSucesso('Se o e-mail existir, você receberá instruções em breve.');
+      setEmail('');
     } catch (error: any) {
-      setErro(error.message || 'Falha ao realizar login.');
+      setErro(error.message || 'Falha ao enviar instruções.');
     } finally {
       setLoading(false);
     }
@@ -85,8 +60,10 @@ export default function LoginScreen() {
           <View style={styles.icon}>
             <Text style={styles.iconText}>💰</Text>
           </View>
-          <Text style={styles.title}>Paga Aí</Text>
-          <Text style={styles.subtitle}>Gestão de Empréstimos Pessoais</Text>
+          <Text style={styles.title}>Recuperar senha</Text>
+          <Text style={styles.subtitle}>
+            Digite o e-mail cadastrado para receber instruções.
+          </Text>
         </View>
 
         <View style={styles.formContainer}>
@@ -101,56 +78,18 @@ export default function LoginScreen() {
             editable={!loading}
           />
 
-          <Text style={[styles.label, { marginTop: 16 }]}>Senha</Text>
-          <View style={styles.passwordContainer}>
-            <TextInput
-              style={styles.passwordInput}
-              placeholder="••••••••"
-              placeholderTextColor="#999"
-              value={senha}
-              onChangeText={setSenha}
-              secureTextEntry={!showPassword}
-              editable={!loading}
-            />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.toggleButton}
-            >
-              <Text style={styles.toggleText}>
-                {showPassword ? 'Ocultar' : 'Mostrar'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.optionsContainer}>
-            <View style={styles.rememberContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.checkbox,
-                  rememberMe && styles.checkboxChecked,
-                ]}
-                onPress={() => setRememberMe(!rememberMe)}
-              >
-                {rememberMe && <Text style={styles.checkmark}>✓</Text>}
-              </TouchableOpacity>
-              <Text style={styles.rememberText}>Lembrar-me</Text>
-            </View>
-            <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
-              Esqueci a senha
-            </Link>
-          </View>
-
           {erro && <Text style={styles.errorMessage}>{erro}</Text>}
+          {sucesso && <Text style={styles.successMessage}>{sucesso}</Text>}
 
           <TouchableOpacity
-            style={[styles.loginButton, loading && styles.buttonDisabled]}
+            style={[styles.sendButton, loading && styles.buttonDisabled]}
             onPress={handleSubmit}
             disabled={loading}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.loginButtonText}>Entrar</Text>
+              <Text style={styles.sendButtonText}>Enviar instruções</Text>
             )}
           </TouchableOpacity>
 
@@ -160,10 +99,10 @@ export default function LoginScreen() {
             <View style={styles.dividerLine} />
           </View>
 
-          <View style={styles.registerContainer}>
-            <Text style={styles.registerText}>Não tem conta?</Text>
-            <Link href="/(auth)/register" style={styles.registerLink}>
-              Criar conta
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Lembrou sua senha?</Text>
+            <Link href="/(auth)/login" style={styles.loginLink}>
+              Entrar
             </Link>
           </View>
         </View>
@@ -214,6 +153,8 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: '#6b7280',
+    textAlign: 'center',
+    paddingHorizontal: 12,
   },
   formContainer: {
     width: '100%',
@@ -234,70 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
     fontSize: 14,
     color: '#111827',
-  },
-  passwordContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  passwordInput: {
-    flex: 1,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#f8fafc',
-    fontSize: 14,
-    color: '#111827',
-  },
-  toggleButton: {
-    position: 'absolute',
-    right: 12,
-  },
-  toggleText: {
-    color: '#666',
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  optionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 16,
     marginBottom: 16,
-  },
-  rememberContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkbox: {
-    width: 18,
-    height: 18,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: '#7c3aed',
-    marginRight: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkboxChecked: {
-    backgroundColor: '#7c3aed',
-  },
-  checkmark: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  rememberText: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  forgotLink: {
-    color: '#7c3aed',
-    fontSize: 14,
-    fontWeight: '600',
   },
   errorMessage: {
     backgroundColor: '#fee2e2',
@@ -308,7 +186,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 16,
   },
-  loginButton: {
+  successMessage: {
+    backgroundColor: '#dcfce7',
+    color: '#166534',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    fontSize: 13,
+    marginBottom: 16,
+  },
+  sendButton: {
     width: '100%',
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -321,7 +208,7 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.6,
   },
-  loginButtonText: {
+  sendButtonText: {
     color: '#fff',
     fontSize: 15,
     fontWeight: '700',
@@ -342,17 +229,17 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
     marginHorizontal: 12,
   },
-  registerContainer: {
+  loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 6,
   },
-  registerText: {
+  loginText: {
     color: '#6b7280',
     fontSize: 14,
   },
-  registerLink: {
+  loginLink: {
     color: '#7c3aed',
     fontSize: 14,
     fontWeight: '700',

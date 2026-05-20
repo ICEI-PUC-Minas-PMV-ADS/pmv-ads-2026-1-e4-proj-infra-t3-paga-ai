@@ -1,15 +1,13 @@
-// Provedor global de autenticação. Persiste o JWT no AsyncStorage e expõe
-// user, token, login() e logout() para toda a árvore de componentes.
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TOKEN_KEY } from '@services/api';
-import type { Usuario } from '@modelos/usuario';
+import type { Usuario } from '@types/usuario';
 
 interface AuthContextData {
   user: Usuario | null;
   token: string | null;
-  login: (user: Usuario | null, token: string) => Promise<void>;
+  isLoading: boolean;
+  login: (user: Usuario, token: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -18,6 +16,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadStoredAuth() {
@@ -27,11 +26,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
       }
+      setIsLoading(false);
     }
     loadStoredAuth();
   }, []);
 
-  async function login(userData: Usuario | null, userToken: string) {
+  async function login(userData: Usuario, userToken: string) {
     await AsyncStorage.setItem(TOKEN_KEY, userToken);
     await AsyncStorage.setItem('@pagaai:user', JSON.stringify(userData));
     setUser(userData);
@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

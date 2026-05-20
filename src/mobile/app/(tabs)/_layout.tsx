@@ -1,90 +1,42 @@
+// Layout de abas principal. Define as 5 seções da aplicação com nome e ícone.
+// Cada aba aponta para o index.tsx da sua pasta — implemente as telas lá.
+
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { TouchableOpacity, Text } from 'react-native';
-import { useAuth } from '@hooks/useAuth';
+
+type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
+
+interface TabConfig {
+  name: string;
+  title: string;
+  icon: IoniconName;
+  iconFocused: IoniconName;
+}
+
+const TABS: TabConfig[] = [
+  { name: 'index',        title: 'Dashboard',    icon: 'home-outline',          iconFocused: 'home' },
+  { name: 'clientes',     title: 'Clientes',     icon: 'people-outline',        iconFocused: 'people' },
+  { name: 'emprestimos',  title: 'Empréstimos',  icon: 'cash-outline',          iconFocused: 'cash' },
+  { name: 'notificacoes', title: 'Notificações', icon: 'notifications-outline', iconFocused: 'notifications' },
+  { name: 'relatorios',   title: 'Relatórios',   icon: 'bar-chart-outline',     iconFocused: 'bar-chart' },
+];
 
 export default function TabsLayout() {
-  const { logout } = useAuth();
-
   return (
     <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: '#1a73e8',
-        tabBarInactiveTintColor: '#888',
+      screenOptions={({ route }) => {
+        const tab = TABS.find((t) => t.name === route.name);
+        return {
+          headerShown: false,
+          title: tab?.title,
+          tabBarActiveTintColor: '#1a73e8',
+          tabBarInactiveTintColor: '#888',
+          tabBarIcon: ({ focused, color, size }) => {
+            const iconName = focused ? tab?.iconFocused : tab?.icon;
+            return <Ionicons name={iconName ?? 'ellipse-outline'} size={size} color={color} />;
+          },
+        };
       }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="clientes/index"
-        options={{
-          title: 'Clientes',
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? 'people' : 'people-outline'} size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="emprestimos/index"
-        options={{
-          title: 'Empréstimos',
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? 'cash' : 'cash-outline'} size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="notificacoes/index"
-        options={{
-          title: 'Notificações',
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? 'notifications' : 'notifications-outline'} size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="relatorios/index"
-        options={{
-          title: 'Relatórios',
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? 'bar-chart' : 'bar-chart-outline'} size={size} color={color} />
-          ),
-        }}
-      />
-
-      {/* Esconde rotas dinâmicas da Tab Bar */}
-      <Tabs.Screen
-        name="clientes/[id]"
-        options={{ href: null }}
-      />
-
-      {/* Aba de logout */}
-      <Tabs.Screen
-        name="logout"
-        options={{
-          title: 'Sair',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="log-out-outline" size={size} color={color} />
-          ),
-          tabBarButton: () => (
-            <TouchableOpacity
-              onPress={logout}
-              style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-            >
-              <Ionicons name="log-out-outline" size={24} color="#e53935" />
-              <Text style={{ fontSize: 10, color: '#e53935', marginTop: 2 }}>Sair</Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
-    </Tabs>
+    />
   );
 }

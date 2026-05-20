@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -7,41 +7,30 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { login, getRememberedEmail } from '@services/authService';
-import { useAuth } from '@hooks/useAuth';
+import { register } from '@services/authService';
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const router = useRouter();
-  const { login: authLogin } = useAuth();
 
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
-
-  useEffect(() => {
-    const loadRememberedEmail = async () => {
-      const savedEmail = await getRememberedEmail();
-      if (savedEmail) {
-        setEmail(savedEmail);
-        setRememberMe(true);
-      }
-    };
-    loadRememberedEmail();
-  }, []);
+  const [sucesso, setSucesso] = useState('');
 
   const handleSubmit = async () => {
     setErro('');
+    setSucesso('');
 
-    if (!email || !senha) {
-      setErro('Por favor, preencha e-mail e senha.');
+    if (!nome || !email || !senha) {
+      setErro('Preencha todos os campos.');
       return;
     }
 
@@ -50,23 +39,18 @@ export default function LoginScreen() {
       return;
     }
 
+    if (senha.length < 6) {
+      setErro('A senha deve ter ao menos 6 caracteres.');
+      return;
+    }
+
     try {
       setLoading(true);
-      const { token, user } = await login(email, senha, rememberMe);
-
-      if (token && user) {
-        await authLogin(
-          {
-            id: 1,
-            nome: user.nome,
-            email: user.email,
-          },
-          token
-        );
-        router.replace('/(tabs)');
-      }
+      await register({ nome, email, senha });
+      setSucesso('Conta criada com sucesso! Redirecionando para login...');
+      setTimeout(() => router.push('/(auth)/login'), 1200);
     } catch (error: any) {
-      setErro(error.message || 'Falha ao realizar login.');
+      setErro(error.message || 'Falha ao criar conta.');
     } finally {
       setLoading(false);
     }
@@ -86,11 +70,21 @@ export default function LoginScreen() {
             <Text style={styles.iconText}>💰</Text>
           </View>
           <Text style={styles.title}>Paga Aí</Text>
-          <Text style={styles.subtitle}>Gestão de Empréstimos Pessoais</Text>
+          <Text style={styles.subtitle}>Cadastro de novo usuário</Text>
         </View>
 
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>Nome completo</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Seu nome completo"
+            placeholderTextColor="#999"
+            value={nome}
+            onChangeText={setNome}
+            editable={!loading}
+          />
+
+          <Text style={[styles.label, { marginTop: 16 }]}>Email</Text>
           <TextInput
             style={styles.input}
             placeholder="seu@email.com"
@@ -122,35 +116,18 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.optionsContainer}>
-            <View style={styles.rememberContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.checkbox,
-                  rememberMe && styles.checkboxChecked,
-                ]}
-                onPress={() => setRememberMe(!rememberMe)}
-              >
-                {rememberMe && <Text style={styles.checkmark}>✓</Text>}
-              </TouchableOpacity>
-              <Text style={styles.rememberText}>Lembrar-me</Text>
-            </View>
-            <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
-              Esqueci a senha
-            </Link>
-          </View>
-
           {erro && <Text style={styles.errorMessage}>{erro}</Text>}
+          {sucesso && <Text style={styles.successMessage}>{sucesso}</Text>}
 
           <TouchableOpacity
-            style={[styles.loginButton, loading && styles.buttonDisabled]}
+            style={[styles.registerButton, loading && styles.buttonDisabled]}
             onPress={handleSubmit}
             disabled={loading}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.loginButtonText}>Entrar</Text>
+              <Text style={styles.registerButtonText}>Criar conta</Text>
             )}
           </TouchableOpacity>
 
@@ -160,10 +137,10 @@ export default function LoginScreen() {
             <View style={styles.dividerLine} />
           </View>
 
-          <View style={styles.registerContainer}>
-            <Text style={styles.registerText}>Não tem conta?</Text>
-            <Link href="/(auth)/register" style={styles.registerLink}>
-              Criar conta
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Já tem conta?</Text>
+            <Link href="/(auth)/login" style={styles.loginLink}>
+              Entrar
             </Link>
           </View>
         </View>
@@ -261,44 +238,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
   },
-  optionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 16,
-  },
-  rememberContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkbox: {
-    width: 18,
-    height: 18,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: '#7c3aed',
-    marginRight: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkboxChecked: {
-    backgroundColor: '#7c3aed',
-  },
-  checkmark: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  rememberText: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  forgotLink: {
-    color: '#7c3aed',
-    fontSize: 14,
-    fontWeight: '600',
-  },
   errorMessage: {
     backgroundColor: '#fee2e2',
     color: '#991b1b',
@@ -306,9 +245,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 12,
     fontSize: 13,
+    marginTop: 16,
     marginBottom: 16,
   },
-  loginButton: {
+  successMessage: {
+    backgroundColor: '#dcfce7',
+    color: '#166534',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    fontSize: 13,
+    marginTop: 16,
+    marginBottom: 16,
+  },
+  registerButton: {
     width: '100%',
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -316,12 +266,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#7c3aed',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 16,
     marginBottom: 16,
   },
   buttonDisabled: {
     opacity: 0.6,
   },
-  loginButtonText: {
+  registerButtonText: {
     color: '#fff',
     fontSize: 15,
     fontWeight: '700',
@@ -342,17 +293,17 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
     marginHorizontal: 12,
   },
-  registerContainer: {
+  loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 6,
   },
-  registerText: {
+  loginText: {
     color: '#6b7280',
     fontSize: 14,
   },
-  registerLink: {
+  loginLink: {
     color: '#7c3aed',
     fontSize: 14,
     fontWeight: '700',
