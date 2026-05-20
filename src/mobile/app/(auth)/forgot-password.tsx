@@ -101,10 +101,8 @@ export default function ForgotPasswordScreen() {
 
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Lembrou sua senha?</Text>
-            <Link href="/(auth)/login" asChild>
-              <TouchableOpacity>
-                <Text style={styles.loginLink}>Entrar</Text>
-              </TouchableOpacity>
+            <Link href="/(auth)/login" style={styles.loginLink}>
+              Entrar
             </Link>
           </View>
         </View>

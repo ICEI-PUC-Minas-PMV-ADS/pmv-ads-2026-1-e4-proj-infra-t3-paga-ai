@@ -7,6 +7,8 @@ using MongoDB.Driver;
 using BCrypt.Net;
 // Criamos um alias para evitar o conflito de nomes
 using UserEntity = Usuario.API.Models.Usuario; 
+using MongoDB.Bson;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Usuarios.API.Controllers;
 
@@ -15,13 +17,31 @@ namespace Usuarios.API.Controllers;
 public class AuthController : ControllerBase
 {
     // Usando o alias 'UserEntity' em vez de 'Usuario'
-    private readonly IMongoCollection<UserEntity> _usuarios;
+    private readonly IMongoCollection<UserEntity>? _usuarios;
     private readonly IConfiguration _config;
-    private readonly Usuario.API.Services.EmailService _emailService;
+    private readonly Usuario.API.Services.EmailService? _emailService;
 
-    public AuthController(IMongoDatabase database, IConfiguration config, Usuario.API.Services.EmailService emailService)
+    // Fallback em memória para desenvolvimento quando Mongo estiver inacessível
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, UserEntity> _inMemoryUsers = new();
+
+    private bool UseInMemory => _usuarios == null;
+
+    public AuthController(
+        IMongoDatabase database,
+        IConfiguration config,
+        Usuario.API.Services.EmailService? emailService)
     {
-        _usuarios = database.GetCollection<UserEntity>("usuarios");
+        try
+        {
+            // Tentar obter a collection normalmente
+            _usuarios = database.GetCollection<UserEntity>("usuarios", null);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("[WARN] Não foi possível inicializar collection do MongoDB: " + ex.Message);
+            _usuarios = null;
+        }
+
         _config = config;
         _emailService = emailService;
     }
@@ -41,7 +61,24 @@ public class AuthController : ControllerBase
             if (string.IsNullOrWhiteSpace(request.Senha))
                 return BadRequest(new { mensagem = "Senha é obrigatória." });
 
-            var existe = await _usuarios.Find(x => x.Email == request.Email).FirstOrDefaultAsync();
+            UserEntity? existe = null;
+            if (!UseInMemory)
+            {
+                try
+                {
+                    existe = await _usuarios!.Find(x => x.Email == request.Email).FirstOrDefaultAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("[WARN] Erro ao consultar Mongo (registrar): " + ex.Message);
+                    existe = null;
+                }
+            }
+            else
+            {
+                existe = _inMemoryUsers.Values.FirstOrDefault(u => u.Email == request.Email);
+            }
+
             if (existe != null)
                 return BadRequest(new { mensagem = "E-mail já cadastrado." });
 
@@ -52,7 +89,17 @@ public class AuthController : ControllerBase
                 Senha = BCrypt.Net.BCrypt.HashPassword(request.Senha)
             };
 
-            await _usuarios.InsertOneAsync(novoUsuario);
+            if (!UseInMemory)
+            {
+                await _usuarios!.InsertOneAsync(novoUsuario);
+            }
+            else
+            {
+                // Simular Id tipo ObjectId
+                novoUsuario.Id = ObjectId.GenerateNewId().ToString();
+                _inMemoryUsers.TryAdd(novoUsuario.Id!, novoUsuario);
+            }
+
             return Created("", new { mensagem = "Usuário registrado com sucesso!", id = novoUsuario.Id });
         }
         catch (Exception ex)
@@ -66,7 +113,24 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var usuario = await _usuarios.Find(x => x.Email == request.Email).FirstOrDefaultAsync();
+        UserEntity? usuario = null;
+
+        if (!UseInMemory)
+        {
+            try
+            {
+                usuario = await _usuarios!.Find(x => x.Email == request.Email).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[WARN] Erro ao consultar Mongo (login): " + ex.Message);
+                usuario = null;
+            }
+        }
+        else
+        {
+            usuario = _inMemoryUsers.Values.FirstOrDefault(u => u.Email == request.Email);
+        }
 
         if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Senha, usuario.Senha))
             return Unauthorized(new { mensagem = "E-mail ou senha inválidos." });
@@ -84,7 +148,24 @@ public class AuthController : ControllerBase
         if (!IsValidEmail(request.Email))
             return BadRequest(new { mensagem = "E-mail inválido." });
 
-        var usuario = await _usuarios.Find(x => x.Email == request.Email).FirstOrDefaultAsync();
+        UserEntity? usuario = null;
+        if (!UseInMemory)
+        {
+            try
+            {
+                usuario = await _usuarios!.Find(x => x.Email == request.Email).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[WARN] Erro ao consultar Mongo (forgot-password): " + ex.Message);
+                usuario = null;
+            }
+        }
+        else
+        {
+            usuario = _inMemoryUsers.Values.FirstOrDefault(u => u.Email == request.Email);
+        }
+
         if (usuario == null)
         {
             // Não vazamos se o e-mail existe.
@@ -130,7 +211,24 @@ public class AuthController : ControllerBase
         if (request.NewPassword.Length < 6)
             return BadRequest(new { mensagem = "A senha deve ter ao menos 6 caracteres." });
 
-        var usuario = await _usuarios.Find(x => x.Email == request.Email).FirstOrDefaultAsync();
+        UserEntity? usuario = null;
+        if (!UseInMemory)
+        {
+            try
+            {
+                usuario = await _usuarios!.Find(x => x.Email == request.Email).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[WARN] Erro ao consultar Mongo (reset-password): " + ex.Message);
+                usuario = null;
+            }
+        }
+        else
+        {
+            usuario = _inMemoryUsers.Values.FirstOrDefault(u => u.Email == request.Email);
+        }
+
         if (usuario == null)
             return BadRequest(new { mensagem = "Usuário não encontrado." });
 
@@ -138,8 +236,21 @@ public class AuthController : ControllerBase
         // Por simplicidade, aceitamos qualquer token por enquanto
 
         var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
-        var update = Builders<UserEntity>.Update.Set(u => u.Senha, hashedPassword);
-        await _usuarios.UpdateOneAsync(x => x.Email == request.Email, update);
+
+        if (!UseInMemory)
+        {
+            var update = Builders<UserEntity>.Update.Set(u => u.Senha, hashedPassword);
+            await _usuarios!.UpdateOneAsync(x => x.Email == request.Email, update);
+        }
+        else
+        {
+            var existing = _inMemoryUsers.Values.FirstOrDefault(u => u.Email == request.Email);
+            if (existing != null && existing.Id != null)
+            {
+                existing.Senha = hashedPassword;
+                _inMemoryUsers[existing.Id] = existing;
+            }
+        }
 
         return Ok(new { mensagem = "Senha redefinida com sucesso." });
     }

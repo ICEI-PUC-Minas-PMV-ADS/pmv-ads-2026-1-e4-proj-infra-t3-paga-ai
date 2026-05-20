@@ -135,10 +135,8 @@ export default function LoginScreen() {
               </TouchableOpacity>
               <Text style={styles.rememberText}>Lembrar-me</Text>
             </View>
-            <Link href="/(auth)/forgot-password" asChild>
-              <TouchableOpacity>
-                <Text style={styles.forgotLink}>Esqueci a senha</Text>
-              </TouchableOpacity>
+            <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
+              Esqueci a senha
             </Link>
           </View>
 
@@ -164,10 +162,8 @@ export default function LoginScreen() {
 
           <View style={styles.registerContainer}>
             <Text style={styles.registerText}>Não tem conta?</Text>
-            <Link href="/(auth)/register" asChild>
-              <TouchableOpacity>
-                <Text style={styles.registerLink}>Criar conta</Text>
-              </TouchableOpacity>
+            <Link href="/(auth)/register" style={styles.registerLink}>
+              Criar conta
             </Link>
           </View>
         </View>
