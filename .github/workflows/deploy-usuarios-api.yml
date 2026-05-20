@@ -41,7 +41,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write
       contents: read
 
     steps:
@@ -51,16 +50,9 @@ jobs:
           name: usuarios-app
           path: ./artifact
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_53A764BA120245DAA629D6794EAF9C22 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_39CBE0C302F2432EABACBFABADBBD12F }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_436374D41D6C44689EDBFDE45E3572D7 }}
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'Usuario'
-          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: ./artifact/myapp.zip
