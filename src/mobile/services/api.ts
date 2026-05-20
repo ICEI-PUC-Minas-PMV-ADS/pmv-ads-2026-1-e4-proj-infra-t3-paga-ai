@@ -7,8 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL, DEV_BASE_URL } from '@constants/endpoints';
 
 const TOKEN_KEY = '@pagaai:token';
-const FALLBACK_BASE_URL = BASE_URL;
-const DIRECT_USUARIOS_BASE = Platform.OS === 'android' ? 'http://10.0.2.2:5133' : 'http://localhost:5133';
 const currentBaseUrl = __DEV__
   ? Platform.OS === 'android'
     ? 'http://10.0.2.2:5046'
