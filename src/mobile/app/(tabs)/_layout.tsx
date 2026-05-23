@@ -25,7 +25,8 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={({ route }) => {
-        const tab = TABS.find((t) => t.name === route.name);
+        const baseName = route.name.split('/')[0];
+        const tab = TABS.find((t) => t.name === baseName);
         return {
           headerShown: false,
           title: tab?.title,
