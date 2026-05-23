@@ -7,8 +7,11 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@hooks/useAuth';
+import { useAuthContext } from '@contexts/AuthContext';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL, CLIENTES, EMPRESTIMOS } from '@constants/endpoints';
@@ -56,6 +59,7 @@ const acoes = [
 export default function DashboardScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const { logout } = useAuthContext();
   const nome = user?.nome?.split(' ')[0] ?? 'Usuário';
 
   const [stats, setStats] = useState<Stats | null>(null);
@@ -109,11 +113,20 @@ export default function DashboardScreen() {
   }, [user]);
 
   return (
+    <SafeAreaView style={s.safeArea}>
     <ScrollView style={s.page} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={s.header}>
-        <Text style={s.titulo}>Painel</Text>
-        <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
+        <View>
+          <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
+          <Text style={s.titulo}>Painel</Text>
+        </View>
+        <TouchableOpacity style={s.logoutBtn} onPress={logout} activeOpacity={0.75}>
+          <View style={s.logoutIconWrap}>
+            <Ionicons name="log-out-outline" size={22} color="#DC2626" />
+          </View>
+          <Text style={s.logoutLabel}>Sair</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Cards de contagem */}
@@ -178,6 +191,7 @@ export default function DashboardScreen() {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -211,11 +225,22 @@ function FinCard({ label, valor, cor, carregando }: {
 }
 
 const s = StyleSheet.create({
+  safeArea:     { flex: 1, backgroundColor: '#F5F3FF' },
   page:         { flex: 1, backgroundColor: '#F5F3FF' },
   content:      { padding: 20, paddingBottom: 40 },
-  header:       { marginBottom: 20 },
+  header:       { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
   saudacao:     { fontSize: 14, color: '#6B7280' },
   titulo:       { fontSize: 28, fontWeight: '700', color: '#1F2937', marginTop: 4 },
+
+  logoutBtn:    { alignItems: 'center', gap: 4 },
+  logoutIconWrap: {
+    backgroundColor: '#FEE2E2',
+    borderRadius: 12,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#FECACA',
+  },
+  logoutLabel:  { fontSize: 10, fontWeight: '600', color: '#DC2626' },
 
   statsGrid:    { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 10 },
   statCard:     { backgroundColor: '#fff', borderRadius: 12, padding: 14, flexDirection: 'row',
