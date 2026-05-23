@@ -3,19 +3,15 @@ import {
   View, Text, FlatList, StyleSheet,
   ActivityIndicator, Modal, TouchableOpacity, Alert,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import { BASE_URL, EMPRESTIMOS } from '@constants/endpoints';
+import api from '@services/api';
+import { EMPRESTIMOS } from '@constants/endpoints';
 import { useAuth } from '@hooks/useAuth';
 import { Emprestimo } from 'emprestimo';
 import { EmprestimoListItem } from '@components/emprestimos/EmprestimoListItem';
 import { EmprestimoCard } from '@components/emprestimos/EmprestimoCard';
 
-const TOKEN_KEY = '@pagaai:token';
-
-async function req(method: 'get' | 'patch' | 'delete', path: string) {
-  const token = await AsyncStorage.getItem(TOKEN_KEY);
-  return axios({ method, url: `${BASE_URL}${path}`, headers: { Authorization: `Bearer ${token}` } });
+function req(method: 'get' | 'patch' | 'delete', path: string) {
+  return api({ method, url: path });
 }
 
 export default function EmprestimosScreen() {
@@ -31,12 +27,10 @@ export default function EmprestimosScreen() {
     setCarregando(true);
     try {
       const url = `${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`;
-      console.log('[Emprestimos] chamando:', url);
       const res = await req('get', url);
-      console.log('[Emprestimos] total:', res.data?.length);
       setLista(Array.isArray(res.data) ? res.data : []);
     } catch (e: any) {
-      console.error('[Emprestimos] erro:', e?.response?.status, e?.response?.data ?? e?.message);
+      console.error('[Emprestimos] erro:', e?.response?.status, e?.message);
     } finally {
       setCarregando(false);
     }
