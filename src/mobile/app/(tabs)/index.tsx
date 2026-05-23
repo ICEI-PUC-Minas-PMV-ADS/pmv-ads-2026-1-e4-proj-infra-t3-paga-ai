@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@hooks/useAuth';
 import api from '@services/api';
 import { CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
-import { Emprestimo, fmt } from '@types/emprestimo';
+import { Emprestimo, fmt } from '../../types/emprestimo';
 
 interface Stats {
   clientes: number;
@@ -96,8 +96,8 @@ export default function DashboardScreen() {
     <ScrollView style={s.page} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={s.header}>
-        <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
         <Text style={s.titulo}>Painel</Text>
+        <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
       </View>
 
       {/* Cards de contagem */}
