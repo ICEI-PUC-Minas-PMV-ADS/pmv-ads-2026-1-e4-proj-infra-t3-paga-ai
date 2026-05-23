@@ -67,3 +67,4 @@ logs/
 
 .env
 .env.*
+**/appsettings.Development.jsonuardian
