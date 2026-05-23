@@ -8,6 +8,7 @@
     "scheme": "pagaai",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": ["**/*"],
+    "icon": "./assets/images/icon.png",
     "newArchEnabled": false,
     "ios": {
       "supportsTablet": true
