@@ -30,10 +30,13 @@ export default function EmprestimosScreen() {
     if (!cobrador) return;
     setCarregando(true);
     try {
-      const res = await req('get', `${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`);
+      const url = `${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`;
+      console.log('[Emprestimos] chamando:', url);
+      const res = await req('get', url);
+      console.log('[Emprestimos] total:', res.data?.length);
       setLista(Array.isArray(res.data) ? res.data : []);
-    } catch (e) {
-      console.error('[Emprestimos] erro:', e);
+    } catch (e: any) {
+      console.error('[Emprestimos] erro:', e?.response?.status, e?.response?.data ?? e?.message);
     } finally {
       setCarregando(false);
     }
