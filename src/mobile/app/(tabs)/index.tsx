@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@hooks/useAuth';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BASE_URL, CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
+import { BASE_URL, CLIENTES, EMPRESTIMOS } from '@constants/endpoints';
 import { Emprestimo, fmt } from '../../types/emprestimo';
 
 const TOKEN_KEY = '@pagaai:token';
@@ -66,22 +66,20 @@ export default function DashboardScreen() {
     async function carregar() {
       try {
         const cobrador = user?.nome ?? '';
-        console.log('[Dashboard] cobrador:', cobrador);
-        console.log('[Dashboard] EMPRESTIMOS endpoint:', `${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`);
 
-        const [resClientes, resCarteira, resLucro] = await Promise.all([
-          get(CLIENTES),
-          get(`${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`),
-          get(`${REPORT}/relatorio-lucro/${encodeURIComponent(cobrador)}`),
-        ]);
+        const resClientes = await get(CLIENTES).catch((e) => {
+          console.error('[Dashboard] ERRO clientes:', e?.response?.status, e?.message); return null;
+        });
+        const resCarteira = await get(`${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`).catch((e) => {
+          console.error('[Dashboard] ERRO carteira:', e?.response?.status, e?.message); return null;
+        });
+        const resLucro = await get(`${EMPRESTIMOS}/relatorio-lucro/${encodeURIComponent(cobrador)}`).catch((e) => {
+          console.error('[Dashboard] ERRO lucro:', e?.response?.status, e?.message); return null;
+        });
 
-        console.log('[Dashboard] clientes:', resClientes.data);
-        console.log('[Dashboard] carteira:', resCarteira.data);
-        console.log('[Dashboard] lucro:', resLucro.data);
-
-        const clientes: unknown[] = Array.isArray(resClientes.data) ? resClientes.data : [];
-        const lista: Emprestimo[] = Array.isArray(resCarteira.data) ? resCarteira.data : [];
-        const lucro = resLucro.data;
+        const clientes: unknown[] = Array.isArray(resClientes?.data) ? resClientes.data : [];
+        const lista: Emprestimo[] = Array.isArray(resCarteira?.data) ? resCarteira.data : [];
+        const lucro = resLucro?.data;
 
         const emDia     = lista.filter((e) => calcularStatus(e) === 'emDia');
         const atrasados = lista.filter((e) => calcularStatus(e) === 'atraso');
