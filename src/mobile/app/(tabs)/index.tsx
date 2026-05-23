@@ -9,9 +9,19 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@hooks/useAuth';
-import api from '@services/api';
-import { CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL, CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
 import { Emprestimo, fmt } from '../../types/emprestimo';
+
+const TOKEN_KEY = '@pagaai:token';
+
+async function get(path: string) {
+  const token = await AsyncStorage.getItem(TOKEN_KEY);
+  return axios.get(`${BASE_URL}${path}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
 
 interface Stats {
   clientes: number;
@@ -56,11 +66,18 @@ export default function DashboardScreen() {
     async function carregar() {
       try {
         const cobrador = user?.nome ?? '';
+        console.log('[Dashboard] cobrador:', cobrador);
+        console.log('[Dashboard] EMPRESTIMOS endpoint:', `${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`);
+
         const [resClientes, resCarteira, resLucro] = await Promise.all([
-          api.get(CLIENTES),
-          api.get(`${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`),
-          api.get(`${REPORT}/relatorio-lucro/${encodeURIComponent(cobrador)}`),
+          get(CLIENTES),
+          get(`${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`),
+          get(`${REPORT}/relatorio-lucro/${encodeURIComponent(cobrador)}`),
         ]);
+
+        console.log('[Dashboard] clientes:', resClientes.data);
+        console.log('[Dashboard] carteira:', resCarteira.data);
+        console.log('[Dashboard] lucro:', resLucro.data);
 
         const clientes: unknown[] = Array.isArray(resClientes.data) ? resClientes.data : [];
         const lista: Emprestimo[] = Array.isArray(resCarteira.data) ? resCarteira.data : [];
@@ -83,7 +100,8 @@ export default function DashboardScreen() {
           aReceber:    lucro?.resumoGeral?.recebimentoTotalGeral  ?? 0,
           lucro:       lucro?.resumoGeral?.lucroTotalProjetado    ?? 0,
         });
-      } catch {
+      } catch (error: any) {
+        console.error('[Dashboard] ERRO:', error?.response?.status, error?.response?.data ?? error?.message);
         setStats({ clientes: 0, emprestimos: 0, emDia: 0, atraso: 0, investido: 0, aReceber: 0, lucro: 0 });
       } finally {
         setCarregando(false);
