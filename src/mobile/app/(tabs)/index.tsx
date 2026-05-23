@@ -2,9 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@hooks/useAuth';
+<<<<<<< HEAD
 import api from '@services/api';
 import { CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
 import { Emprestimo, fmt } from '@types/emprestimo';
+=======
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL, CLIENTES, EMPRESTIMOS } from '@constants/endpoints';
+import { Emprestimo, fmt } from '../../types/emprestimo';
+
+const TOKEN_KEY = '@pagaai:token';
+
+async function get(path: string) {
+  const token = await AsyncStorage.getItem(TOKEN_KEY);
+  return axios.get(`${BASE_URL}${path}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+>>>>>>> 1bcf4a97304bfeaca1e3049333962bb7330653e5
 
 interface Stats {
   clientes: number;
@@ -49,15 +65,20 @@ export default function DashboardScreen() {
     async function carregar() {
       try {
         const cobrador = user?.nome ?? '';
-        const [resClientes, resCarteira, resLucro] = await Promise.all([
-          api.get(CLIENTES),
-          api.get(`${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`),
-          api.get(`${REPORT}/relatorio-lucro/${encodeURIComponent(cobrador)}`),
-        ]);
 
-        const clientes: unknown[] = Array.isArray(resClientes.data) ? resClientes.data : [];
-        const lista: Emprestimo[] = Array.isArray(resCarteira.data) ? resCarteira.data : [];
-        const lucro = resLucro.data;
+        const resClientes = await get(CLIENTES).catch((e) => {
+          console.error('[Dashboard] ERRO clientes:', e?.response?.status, e?.message); return null;
+        });
+        const resCarteira = await get(`${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`).catch((e) => {
+          console.error('[Dashboard] ERRO carteira:', e?.response?.status, e?.message); return null;
+        });
+        const resLucro = await get(`${EMPRESTIMOS}/relatorio-lucro/${encodeURIComponent(cobrador)}`).catch((e) => {
+          console.error('[Dashboard] ERRO lucro:', e?.response?.status, e?.message); return null;
+        });
+
+        const clientes: unknown[] = Array.isArray(resClientes?.data) ? resClientes.data : [];
+        const lista: Emprestimo[] = Array.isArray(resCarteira?.data) ? resCarteira.data : [];
+        const lucro = resLucro?.data;
 
         const emDia     = lista.filter((e) => calcularStatus(e) === 'emDia');
         const atrasados = lista.filter((e) => calcularStatus(e) === 'atraso');
@@ -76,7 +97,8 @@ export default function DashboardScreen() {
           aReceber:    lucro?.resumoGeral?.recebimentoTotalGeral  ?? 0,
           lucro:       lucro?.resumoGeral?.lucroTotalProjetado    ?? 0,
         });
-      } catch {
+      } catch (error: any) {
+        console.error('[Dashboard] ERRO:', error?.response?.status, error?.response?.data ?? error?.message);
         setStats({ clientes: 0, emprestimos: 0, emDia: 0, atraso: 0, investido: 0, aReceber: 0, lucro: 0 });
       } finally {
         setCarregando(false);
@@ -136,8 +158,13 @@ export default function DashboardScreen() {
     <ScrollView style={s.page} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={s.header}>
+<<<<<<< HEAD
         <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
         <Text style={s.titulo}>Painel</Text>
+=======
+        <Text style={s.titulo}>Painel</Text>
+        <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
+>>>>>>> 1bcf4a97304bfeaca1e3049333962bb7330653e5
       </View>
 
       {/* Cards de contagem */}
