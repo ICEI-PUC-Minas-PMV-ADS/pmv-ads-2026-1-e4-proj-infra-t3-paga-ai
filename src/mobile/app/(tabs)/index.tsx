@@ -89,8 +89,8 @@ export default function DashboardScreen() {
     <ScrollView style={s.page} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={s.header}>
-        <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
         <Text style={s.titulo}>Painel</Text>
+        <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
       </View>
  
       {/* Cards de contagem */}
