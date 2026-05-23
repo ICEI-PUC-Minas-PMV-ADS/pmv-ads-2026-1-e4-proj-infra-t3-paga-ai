@@ -13,6 +13,7 @@ import { useAuth } from '@hooks/useAuth';
 import api from '@services/api';
 import { CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
 import { Emprestimo, fmt } from '../../types/emprestimo';
+import { StatusBar } from 'expo-status-bar';
 
 interface Stats {
   clientes: number;
@@ -101,6 +102,7 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView style={s.safe}>
+    <StatusBar style="dark" />
       <ScrollView style={s.page} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
         <View style={s.header}>
           <View>
