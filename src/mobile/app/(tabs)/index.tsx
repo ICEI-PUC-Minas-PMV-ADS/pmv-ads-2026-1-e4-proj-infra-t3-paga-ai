@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@hooks/useAuth';
 import api from '@services/api';
 import { CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
-import { Emprestimo, fmt } from '@types/emprestimo';
+import { Emprestimo, fmt } from '../../types/emprestimo';
 
 interface Stats {
   clientes: number;
