@@ -8,6 +8,7 @@ import {
   fmtDateCurta,
 } from 'emprestimo';
 
+
 interface EmprestimoListItemProps {
   emprestimo: Emprestimo;
   onPress: (id: number) => void;
