@@ -12,7 +12,8 @@
       "@types/*": ["types/*"],
       "@constants/*": ["constants/*"],
       "@contexts/*": ["contexts/*"],
-      "emprestimo": ["types/emprestimo"]
+      "emprestimo": ["types/emprestimo"],
+      "@/*": ["src/*"]
     }
   }
 }

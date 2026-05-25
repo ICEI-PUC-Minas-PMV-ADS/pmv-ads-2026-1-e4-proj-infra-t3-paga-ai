@@ -5,6 +5,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     Animated,
+    PanResponder,
+    Alert,
 } from 'react-native';
 import { Card } from '@components/common/Card';
 
@@ -12,14 +14,17 @@ export type Notificacao = {
     id: string;
     titulo: string;
     mensagem: string;
-    dataHora: string; // ISO string
+    dataHora: string;
     lida: boolean;
     tipo?: 'info' | 'alerta' | 'sucesso' | 'erro';
+    emprestimoId?: number | null;
 };
 
 type Props = {
     notificacao: Notificacao;
     onMarcarLida: (id: string) => void;
+    onDeletar: (id: string) => void;
+    onPress?: (notificacao: Notificacao) => void;
 };
 
 const TIPO_CONFIG = {
@@ -29,12 +34,13 @@ const TIPO_CONFIG = {
     erro: { cor: '#EF4444', icone: '✕' },
 } as const;
 
+const SWIPE_THRESHOLD = -80;
+
 function formatarDataHora(iso: string): string {
     const data = new Date(iso);
     const agora = new Date();
     const diffMs = agora.getTime() - data.getTime();
     const diffMin = Math.floor(diffMs / 60000);
-
     if (diffMin < 1) return 'Agora mesmo';
     if (diffMin < 60) return `Há ${diffMin} min`;
     const diffH = Math.floor(diffMin / 60);
@@ -44,10 +50,45 @@ function formatarDataHora(iso: string): string {
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
 }
 
-export default function NotificacaoItem({ notificacao, onMarcarLida }: Props) {
-    const { id, titulo, mensagem, dataHora, lida, tipo = 'info' } = notificacao;
+export default function NotificacaoItem({ notificacao, onMarcarLida, onDeletar, onPress }: Props) {
+    const { id, titulo, mensagem, dataHora, lida, tipo = 'info', emprestimoId } = notificacao;
     const { cor, icone } = TIPO_CONFIG[tipo];
+
+    const translateX = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(1)).current;
+
+    const panResponder = useRef(
+        PanResponder.create({
+            onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 10 && Math.abs(g.dy) < 20,
+            onPanResponderMove: (_, g) => {
+                if (g.dx < 0) translateX.setValue(g.dx);
+            },
+            onPanResponderRelease: (_, g) => {
+                if (g.dx < SWIPE_THRESHOLD) {
+                    // Confirma deletar
+                    Animated.timing(translateX, { toValue: -400, duration: 200, useNativeDriver: true }).start(() => {
+                        Alert.alert(
+                            'Deletar notificação',
+                            'Tem certeza que deseja deletar esta notificação?',
+                            [
+                                {
+                                    text: 'Cancelar',
+                                    onPress: () => Animated.spring(translateX, { toValue: 0, useNativeDriver: true }).start(),
+                                },
+                                {
+                                    text: 'Deletar',
+                                    style: 'destructive',
+                                    onPress: () => onDeletar(id),
+                                },
+                            ]
+                        );
+                    });
+                } else {
+                    Animated.spring(translateX, { toValue: 0, useNativeDriver: true }).start();
+                }
+            },
+        })
+    ).current;
 
     const handlePressIn = () =>
         Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true }).start();
@@ -57,59 +98,81 @@ export default function NotificacaoItem({ notificacao, onMarcarLida }: Props) {
 
     const handlePress = () => {
         if (!lida) onMarcarLida(id);
+        if (onPress) onPress(notificacao);
     };
 
     return (
-        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-            <TouchableOpacity
-                activeOpacity={1}
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
-                onPress={handlePress}
-                accessibilityRole="button"
-                accessibilityLabel={`Notificação: ${titulo}. ${lida ? 'Lida' : 'Não lida'}`}
-            >
-                <Card style={[styles.card, !lida && styles.cardNaoLida]}>
-                    {/* Barra lateral colorida */}
-                    <View style={[styles.barraLateral, { backgroundColor: cor }]} />
+        <View style={styles.wrapper}>
+            {/* Fundo vermelho de deletar */}
+            <View style={styles.deleteBackground}>
+                <Text style={styles.deleteIcon}>🗑</Text>
+            </View>
 
-                    {/* Ícone do tipo */}
-                    <View style={[styles.iconeBg, { backgroundColor: cor + '20' }]}>
-                        <Text style={[styles.icone, { color: cor }]}>{icone}</Text>
-                    </View>
+            <Animated.View style={{ transform: [{ translateX }, { scale: scaleAnim }] }} {...panResponder.panHandlers}>
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPressIn={handlePressIn}
+                    onPressOut={handlePressOut}
+                    onPress={handlePress}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Notificação: ${titulo}. ${lida ? 'Lida' : 'Não lida'}`}
+                >
+                    <Card style={[styles.card, !lida && styles.cardNaoLida]}>
+                        <View style={[styles.barraLateral, { backgroundColor: cor }]} />
 
-                    {/* Conteúdo principal */}
-                    <View style={styles.conteudo}>
-                        <View style={styles.cabecalho}>
-                            <Text
-                                style={[styles.titulo, !lida && styles.tituloNaoLido]}
-                                numberOfLines={1}
-                            >
-                                {titulo}
-                            </Text>
-                            <Text style={styles.tempo}>{formatarDataHora(dataHora)}</Text>
+                        <View style={[styles.iconeBg, { backgroundColor: cor + '20' }]}>
+                            <Text style={[styles.icone, { color: cor }]}>{icone}</Text>
                         </View>
-                        <Text style={styles.mensagem} numberOfLines={2}>
-                            {mensagem}
-                        </Text>
-                    </View>
 
-                    {/* Bolinha de não lida */}
-                    {!lida && <View style={[styles.bolinha, { backgroundColor: cor }]} />}
-                </Card>
-            </TouchableOpacity>
-        </Animated.View>
+                        <View style={styles.conteudo}>
+                            <View style={styles.cabecalho}>
+                                <Text style={[styles.titulo, !lida && styles.tituloNaoLido]} numberOfLines={1}>
+                                    {titulo}
+                                </Text>
+                                <Text style={styles.tempo}>{formatarDataHora(dataHora)}</Text>
+                            </View>
+                            <Text style={styles.mensagem} numberOfLines={2}>{mensagem}</Text>
+                            {emprestimoId && (
+                                <Text style={[styles.linkEmprestimo, { color: cor }]}>
+                                    Ver empréstimo →
+                                </Text>
+                            )}
+                        </View>
+
+                        {!lida && <View style={[styles.bolinha, { backgroundColor: cor }]} />}
+                    </Card>
+                </TouchableOpacity>
+            </Animated.View>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    wrapper: {
+        marginHorizontal: 16,
+        marginVertical: 5,
+        borderRadius: 12,
+        overflow: 'hidden',
+    },
+    deleteBackground: {
+        position: 'absolute',
+        right: 0,
+        top: 0,
+        bottom: 0,
+        width: 80,
+        backgroundColor: '#EF4444',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 12,
+    },
+    deleteIcon: {
+        fontSize: 22,
+    },
     card: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 12,
         paddingHorizontal: 12,
-        marginHorizontal: 16,
-        marginVertical: 5,
         borderRadius: 12,
         overflow: 'hidden',
         backgroundColor: '#FFFFFF',
@@ -142,13 +205,8 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         marginRight: 10,
     },
-    icone: {
-        fontSize: 16,
-        fontWeight: '700',
-    },
-    conteudo: {
-        flex: 1,
-    },
+    icone: { fontSize: 16, fontWeight: '700' },
+    conteudo: { flex: 1 },
     cabecalho: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -162,24 +220,9 @@ const styles = StyleSheet.create({
         flex: 1,
         marginRight: 8,
     },
-    tituloNaoLido: {
-        fontWeight: '700',
-        color: '#111827',
-    },
-    mensagem: {
-        fontSize: 13,
-        color: '#6B7280',
-        lineHeight: 18,
-    },
-    tempo: {
-        fontSize: 11,
-        color: '#9CA3AF',
-        fontWeight: '500',
-    },
-    bolinha: {
-        width: 9,
-        height: 9,
-        borderRadius: 5,
-        marginLeft: 8,
-    },
+    tituloNaoLido: { fontWeight: '700', color: '#111827' },
+    mensagem: { fontSize: 13, color: '#6B7280', lineHeight: 18 },
+    linkEmprestimo: { fontSize: 12, fontWeight: '600', marginTop: 4 },
+    tempo: { fontSize: 11, color: '#9CA3AF', fontWeight: '500' },
+    bolinha: { width: 9, height: 9, borderRadius: 5, marginLeft: 8 },
 });

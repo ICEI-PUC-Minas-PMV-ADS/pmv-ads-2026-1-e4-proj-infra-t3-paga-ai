@@ -14,18 +14,19 @@
     "axios": "^1.7.0",
     "expo": "~55.0.0",
     "expo-constants": "~55.0.16",
-    "expo-linking": "~55.0.15",
-    "expo-router": "~55.0.15",
-    "expo-status-bar": "~55.0.6",
+    "expo-linking": "~8.0.12",
+    "expo-notifications": "~55.0.23",
+    "expo-router": "6.0.23",
+    "expo-status-bar": "~3.0.9",
     "react": "19.2.0",
-    "react-dom": "^19.2.0",
+    "react-dom": "19.2.0",
     "react-native": "0.83.6",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.23.0",
     "react-native-web": "^0.21.0"
   },
   "devDependencies": {
-    "@types/react": "~19.1.10",
+    "@types/react": "19.1.17",
     "babel-preset-expo": "~55.0.21",
     "typescript": "~5.9.2"
   }

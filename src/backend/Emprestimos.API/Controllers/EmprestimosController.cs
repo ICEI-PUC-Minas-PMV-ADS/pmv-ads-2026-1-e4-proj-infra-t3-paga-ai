@@ -132,8 +132,9 @@ public async Task<IActionResult> Post(Emprestimo novo)
     };
 
     await colNotificacoes.InsertOneAsync(novaNotif);
+        await EnviarPushAsync(novo.Cobrador, "Novo Empréstimo", mensagem);
 
-    return CreatedAtAction(nameof(Get), new { id = novo.Id, nomeCobrador = novo.Cobrador }, novo);
+        return CreatedAtAction(nameof(Get), new { id = novo.Id, nomeCobrador = novo.Cobrador }, novo);
 }
 [HttpPatch("{id:int}/pagar/{nomeCobrador}")]
 public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
@@ -208,8 +209,9 @@ public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
     
 
     await colNotificacoes.InsertOneAsync(notificacaoPagamento);
+        await EnviarPushAsync(nomeCobrador, "Pagamento Recebido", mensagem);
 
-    var parcelasPendentes = emprestimoAtualizado.Parcelas.Count(p => !p.Pago);
+        var parcelasPendentes = emprestimoAtualizado.Parcelas.Count(p => !p.Pago);
     var saldoPendente = parcelasPendentes * emprestimoAtualizado.ValorParcela;
 
     return Ok(new
@@ -222,11 +224,45 @@ public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
     });
 }
 
+
     [HttpDelete("{id:int}/{nomeCobrador}")]
     public async Task<IActionResult> Delete(int id, string nomeCobrador)
     {
         var result = await _emprestimos.DeleteOneAsync(x => x.Id == id && x.Cobrador == nomeCobrador);
         if (result.DeletedCount == 0) return NotFound();
         return NoContent();
+    }
+
+    private async Task EnviarPushAsync(string cobrador, string titulo, string mensagem)
+    {
+        try
+        {
+            var colUsuarios = _db.GetCollection<dynamic>("usuarios");
+            var usuario = await colUsuarios
+                .Find(Builders<dynamic>.Filter.Eq("Nome", cobrador))
+                .FirstOrDefaultAsync();
+
+            if (usuario == null) return;
+
+            string? pushToken = usuario["PushToken"]?.ToString();
+            if (string.IsNullOrEmpty(pushToken)) return;
+
+            using var http = new HttpClient();
+            var payload = new
+            {
+                to = pushToken,
+                title = titulo,
+                body = mensagem,
+                sound = "default"
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            await http.PostAsync("https://exp.host/--/api/v2/push/send", content);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Push] Erro ao enviar notificação: {ex.Message}");
+        }
     }
 }

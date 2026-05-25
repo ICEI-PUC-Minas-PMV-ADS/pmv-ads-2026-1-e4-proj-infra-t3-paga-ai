@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
     View,
     Text,
@@ -9,6 +9,7 @@ import {
     ActivityIndicator,
     RefreshControl,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import NotificacaoItem, { Notificacao } from '@components/notificacoes/NotificacaoItem';
 import BadgeContador from '@components/notificacoes/BadgeContador';
 import { useAuth } from '@hooks/useAuth';
@@ -16,8 +17,15 @@ import {
     getNotificacoesPorCobrador,
     marcarComoLida,
     marcarTodasLidas,
-    NotificacaoAPI,
+    deletarNotificacao,
 } from '@services/notificacoesService';
+import {
+    pedirPermissao,
+    dispararNotificacaoLocal,
+    configurarListeners,
+} from '@services/pushNotificationService';
+
+const POLLING_INTERVAL = 30000; // 30 segundos
 
 function mapTipo(tipo: string): Notificacao['tipo'] {
     const t = tipo.toLowerCase();
@@ -27,7 +35,7 @@ function mapTipo(tipo: string): Notificacao['tipo'] {
     return 'info';
 }
 
-function apiParaNotificacao(n: NotificacaoAPI): Notificacao {
+function apiParaNotificacao(n: any): Notificacao {
     return {
         id: String(n.id),
         titulo: n.tipo,
@@ -35,47 +43,90 @@ function apiParaNotificacao(n: NotificacaoAPI): Notificacao {
         dataHora: n.dataCriacao,
         lida: n.lida,
         tipo: mapTipo(n.tipo),
+        emprestimoId: n.emprestimoId,
     };
 }
 
 export default function NotificacoesScreen() {
     const { user } = useAuth();
+    const router = useRouter();
     const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [erro, setErro] = useState('');
+    const idsConhecidos = useRef<Set<string>>(new Set());
 
     const naoLidas = notificacoes.filter((n) => !n.lida).length;
 
-    const carregar = useCallback(async () => {
+    const carregar = useCallback(async (silencioso = false) => {
         if (!user?.nome) return;
         try {
             setErro('');
             const dados = await getNotificacoesPorCobrador(user.nome);
-            setNotificacoes(dados.map(apiParaNotificacao));
-        } catch (e) {
-            setErro('Não foi possível carregar as notificações.');
+            const novas = dados.map(apiParaNotificacao);
+
+            // Detecta notificações novas e dispara notificação local
+            if (idsConhecidos.current.size > 0) {
+                for (const n of novas) {
+                    if (!idsConhecidos.current.has(n.id) && !n.lida) {
+                        await dispararNotificacaoLocal(n.titulo, n.mensagem);
+                    }
+                }
+            }
+
+            // Atualiza o conjunto de ids conhecidos
+            idsConhecidos.current = new Set(novas.map((n) => n.id));
+            setNotificacoes(novas);
+        } catch {
+            if (!silencioso) setErro('Não foi possível carregar as notificações.');
         } finally {
             setLoading(false);
             setRefreshing(false);
         }
     }, [user?.nome]);
 
+    // Carregamento inicial e permissão
     useEffect(() => {
+        pedirPermissao();
         carregar();
     }, [carregar]);
 
-    const handleMarcarLida = async (id: string) => {
-        setNotificacoes((prev) =>
-            prev.map((n) => (n.id === id ? { ...n, lida: true } : n))
+    // Polling a cada 30 segundos
+    useEffect(() => {
+        const intervalo = setInterval(() => carregar(true), POLLING_INTERVAL);
+        return () => clearInterval(intervalo);
+    }, [carregar]);
+
+    // Listeners de notificação
+    useEffect(() => {
+        const remover = configurarListeners(
+            (_n) => carregar(true),
+            (_r) => router.push('/(tabs)/notificacoes')
         );
+        return remover;
+    }, [carregar]);
+
+    const handleMarcarLida = async (id: string) => {
+        setNotificacoes((prev) => prev.map((n) => (n.id === id ? { ...n, lida: true } : n)));
         try {
             await marcarComoLida(Number(id));
         } catch {
-            setNotificacoes((prev) =>
-                prev.map((n) => (n.id === id ? { ...n, lida: false } : n))
-            );
+            setNotificacoes((prev) => prev.map((n) => (n.id === id ? { ...n, lida: false } : n)));
         }
+    };
+
+    const handleDeletar = async (id: string) => {
+        setNotificacoes((prev) => prev.filter((n) => n.id !== id));
+        idsConhecidos.current.delete(id);
+        try {
+            await deletarNotificacao(Number(id));
+        } catch {
+            carregar();
+        }
+    };
+
+    const handlePress = (notificacao: Notificacao) => {
+        router.push('/(tabs)/emprestimos');
     };
 
     const handleMarcarTodasLidas = async () => {
@@ -88,10 +139,7 @@ export default function NotificacoesScreen() {
         }
     };
 
-    const onRefresh = () => {
-        setRefreshing(true);
-        carregar();
-    };
+    const onRefresh = () => { setRefreshing(true); carregar(); };
 
     if (loading) {
         return (
@@ -120,7 +168,7 @@ export default function NotificacoesScreen() {
             {erro ? (
                 <View style={styles.erroContainer}>
                     <Text style={styles.erroTexto}>{erro}</Text>
-                    <TouchableOpacity onPress={carregar}>
+                    <TouchableOpacity onPress={() => carregar()}>
                         <Text style={styles.tentarNovamente}>Tentar novamente</Text>
                     </TouchableOpacity>
                 </View>
@@ -132,6 +180,8 @@ export default function NotificacoesScreen() {
                         <NotificacaoItem
                             notificacao={item}
                             onMarcarLida={handleMarcarLida}
+                            onDeletar={handleDeletar}
+                            onPress={handlePress}
                         />
                     )}
                     contentContainerStyle={styles.lista}
@@ -167,4 +217,3 @@ const styles = StyleSheet.create({
     erroTexto: { color: '#EF4444', fontSize: 15, textAlign: 'center', marginBottom: 12 },
     tentarNovamente: { color: '#3B82F6', fontWeight: '600', fontSize: 14 },
 });
-

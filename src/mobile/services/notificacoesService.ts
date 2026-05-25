@@ -41,3 +41,7 @@ export async function marcarComoLida(id: number): Promise<void> {
 export async function marcarTodasLidas(nomeCobrador: string): Promise<void> {
     await api.patch(`/api/Notificacoes/cobrador/${encodeURIComponent(nomeCobrador)}/marcar-todas-lidas`);
 }
+
+export async function deletarNotificacao(id: number): Promise<void> {
+    await api.delete(`/api/Notificacoes/${id}`);
+}

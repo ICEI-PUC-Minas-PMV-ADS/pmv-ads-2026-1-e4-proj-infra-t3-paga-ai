@@ -1,24 +1,40 @@
 {
-    "expo": {
-        "name": "PagaAI",
-        "slug": "paga-ai",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "platforms": [ "ios", "android", "web" ],
-        "scheme": "pagaai",
-        "userInterfaceStyle": "automatic",
-        "icon": "./assets/images/icon.png",
-        "assetBundlePatterns": [ "**/*" ],
-        "newArchEnabled": false,
-        "ios": {
-            "supportsTablet": true
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/images/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            }
-        },
-        "plugins": [ "expo-router" ]
+  "expo": {
+    "name": "PagaAI",
+    "slug": "paga-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "scheme": "pagaai",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "icon": "./assets/images/icon.png",
+    "newArchEnabled": false,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "googleServicesFile": "./google-services.json",
+      "package": "com.pagaai.mobile"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "70835f7e-976c-4b5e-8f64-03f69e5ff995"
+      }
     }
+  }
 }
