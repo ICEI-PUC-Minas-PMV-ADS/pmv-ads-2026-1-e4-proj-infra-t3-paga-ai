@@ -3,9 +3,11 @@ import { View, ActivityIndicator } from 'react-native';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { AuthProvider } from '@contexts/AuthContext';
 import { useAuth } from '@hooks/useAuth';
+import { registrarPushToken, configurarListeners } from '@services/pushNotificationService';
+import { salvarPushToken } from '@services/authService';
 
 function RootRedirect() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
@@ -20,6 +22,21 @@ function RootRedirect() {
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, isLoading, segments]);
+
+    useEffect(() => {
+        if (!isAuthenticated || !user?.email) return;
+
+        registrarPushToken().then((token) => {
+            if (token) salvarPushToken(user.email, token);
+        });
+
+        const removerListeners = configurarListeners(
+            (notificacao) => console.log('[Push] Recebida:', notificacao),
+            (response) => console.log('[Push] Clicada:', response)
+        );
+
+        return removerListeners;
+    }, [isAuthenticated, user?.email]);
 
   if (isLoading) {
     return (

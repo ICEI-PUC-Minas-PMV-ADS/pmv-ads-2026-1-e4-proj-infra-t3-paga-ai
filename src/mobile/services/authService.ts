@@ -174,6 +174,10 @@ export async function isAuthenticated(): Promise<boolean> {
   return !!token;
 }
 
+export async function salvarPushToken(email: string, token: string): Promise<void> {
+    await api.patch('/api/Auth/push-token', { email, token });
+}
+
 /**
  * Decodificar JWT para obter dados do usuário
  * O token JWT tem 3 partes separadas por "."

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "481757918302",
+    "project_id": "paga-ai-d60fc",
+    "storage_bucket": "paga-ai-d60fc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481757918302:android:eaf6cb7f2453408696f0cf",
+        "android_client_info": {
+          "package_name": "com.pagaai.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0T1HbWFtGHIVCjfB4GfVzhzAdSg78khE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

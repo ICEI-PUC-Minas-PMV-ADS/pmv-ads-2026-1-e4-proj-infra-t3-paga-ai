@@ -292,6 +292,21 @@ public class AuthController : ControllerBase
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    [HttpPatch("push-token")]
+    public async Task<IActionResult> AtualizarPushToken([FromBody] PushTokenRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Token))
+            return BadRequest(new { mensagem = "Email e token são obrigatórios." });
+
+        if (!UseInMemory)
+        {
+            var update = Builders<UserEntity>.Update.Set(u => u.PushToken, request.Token);
+            await _usuarios!.UpdateOneAsync(x => x.Email == request.Email, update);
+        }
+
+        return Ok(new { mensagem = "Token atualizado com sucesso." });
+    }
 }
 
 public class RegisterRequest
@@ -317,4 +332,10 @@ public class ResetPasswordRequest
     public string Email { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
     public string NewPassword { get; set; } = string.Empty;
+}
+
+public class PushTokenRequest
+{
+    public string Email { get; set; } = string.Empty;
+    public string Token { get; set; } = string.Empty;
 }

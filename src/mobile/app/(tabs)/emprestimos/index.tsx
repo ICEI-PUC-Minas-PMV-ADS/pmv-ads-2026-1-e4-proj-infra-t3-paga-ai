@@ -9,6 +9,7 @@ import { useAuth } from '@hooks/useAuth';
 import { Emprestimo } from 'emprestimo';
 import { EmprestimoListItem } from '@components/emprestimos/EmprestimoListItem';
 import { EmprestimoCard } from '@components/emprestimos/EmprestimoCard';
+import { useLocalSearchParams } from 'expo-router';
 
 function req(method: 'get' | 'patch' | 'delete', path: string) {
   return api({ method, url: path });
@@ -36,7 +37,16 @@ export default function EmprestimosScreen() {
     }
   }, [cobrador]);
 
-  useEffect(() => { carregar(); }, [carregar]);
+    useEffect(() => { carregar(); }, [carregar]);
+
+    const { abrirId } = useLocalSearchParams<{ abrirId?: string }>();
+
+    useEffect(() => {
+        if (abrirId && lista.length > 0) {
+            const emprestimo = lista.find((e) => String(e.id) === abrirId);
+            if (emprestimo) setSelecionado(emprestimo);
+        }
+    }, [abrirId, lista]);
 
   async function marcarPago(id: number) {
     Alert.alert('Confirmar', 'Marcar como recebido?', [
