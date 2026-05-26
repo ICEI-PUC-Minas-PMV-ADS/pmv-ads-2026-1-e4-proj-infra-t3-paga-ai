@@ -67,4 +67,6 @@ logs/
 
 .env
 .env.*
-**/appsettings.Development.jsonuardiansrc/mobile/.expo/
+**/appsettings.Development.jsonuardian
+
+.expo/
