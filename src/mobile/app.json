@@ -4,10 +4,16 @@
     "slug": "paga-ai",
     "version": "1.0.0",
     "orientation": "portrait",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "scheme": "pagaai",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "icon": "./assets/images/icon.png",
     "newArchEnabled": false,
     "ios": {
@@ -19,6 +25,9 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router",
+      "@react-native-community/datetimepicker"
+    ]
   }
 }
