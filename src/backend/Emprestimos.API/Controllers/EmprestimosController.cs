@@ -244,8 +244,10 @@ public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
 
             if (usuario == null) return;
             var dict = (IDictionary<string, object>)usuario;
+
             if (!dict.TryGetValue("PushToken", out var tokenObj)) return;
             string? pushToken = tokenObj?.ToString();
+
             if (string.IsNullOrEmpty(pushToken)) return;
 
             using var http = new HttpClient();
