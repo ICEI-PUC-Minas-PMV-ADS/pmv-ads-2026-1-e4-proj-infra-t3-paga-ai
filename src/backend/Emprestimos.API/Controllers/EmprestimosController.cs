@@ -243,8 +243,9 @@ public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
                 .FirstOrDefaultAsync();
 
             if (usuario == null) return;
-
-            string? pushToken = usuario["PushToken"]?.ToString();
+            var dict = (IDictionary<string, object>)usuario;
+            if (!dict.TryGetValue("PushToken", out var tokenObj)) return;
+            string? pushToken = tokenObj?.ToString();
             if (string.IsNullOrEmpty(pushToken)) return;
 
             using var http = new HttpClient();
@@ -265,4 +266,72 @@ public async Task<IActionResult> MarcarComoPago(int id, string nomeCobrador)
             Console.WriteLine($"[Push] Erro ao enviar notificação: {ex.Message}");
         }
     }
+
+    [HttpPost("verificar-atrasos")]
+    public async Task<IActionResult> VerificarAtrasos()
+    {
+        var hoje = DateTime.UtcNow.Date;
+        var colNotificacoes = _db.GetCollection<Notificacao>("notificacoes");
+
+        var emprestimos = await _emprestimos
+            .Find(x => !x.Pago)
+            .ToListAsync();
+
+        int count = 0;
+
+        foreach (var emp in emprestimos)
+        {
+            var parcelasAtrasadas = emp.Parcelas
+                .Where(p => !p.Pago && !p.NotificadoAtraso && p.DataVencimento.Date < hoje)
+                .ToList();
+
+            foreach (var parcela in parcelasAtrasadas)
+            {
+                var diasAtraso = (hoje - parcela.DataVencimento.Date).Days;
+
+                var mensagem = emp.NumeroParcelas == 1
+                    ? $"⚠️ ATRASO: {emp.Cliente} está {diasAtraso} dia(s) em atraso — {emp.ValorFinal:C}"
+                    : $"⚠️ ATRASO: {emp.Cliente} — parcela {parcela.Numero}/{emp.NumeroParcelas} ({parcela.Valor:C}) está {diasAtraso} dia(s) em atraso";
+
+                var ultima = await colNotificacoes.Find(_ => true).SortByDescending(x => x.Id).FirstOrDefaultAsync();
+
+                var notif = new Notificacao
+                {
+                    Id = (ultima == null) ? 1 : ultima.Id + 1,
+                    ClienteId = emp.ClienteId,
+                    ClienteNome = emp.Cliente,
+                    Cobrador = emp.Cobrador,
+                    Valor = parcela.Valor,
+                    DataVencimento = parcela.DataVencimento,
+                    Tipo = "Atraso",
+                    Data = DateTime.UtcNow,
+                    DataCriacao = DateTime.UtcNow,
+                    Lida = false,
+                    Mensagem = mensagem,
+                    EmprestimoId = emp.Id,
+                    NumeroParcela = parcela.Numero,
+                    TotalParcelas = emp.NumeroParcelas
+                };
+
+                await colNotificacoes.InsertOneAsync(notif);
+                await EnviarPushAsync(emp.Cobrador, "Parcela em Atraso", mensagem);
+
+                parcela.NotificadoAtraso = true;
+                count++;
+            }
+
+            if (parcelasAtrasadas.Any())
+            {
+                var filter = Builders<Emprestimo>.Filter.Eq(x => x.Id, emp.Id);
+                var update = Builders<Emprestimo>.Update
+                    .Set(x => x.Parcelas, emp.Parcelas)
+                    .Set(x => x.Status, StatusPagamento.Atrasado);
+
+                await _emprestimos.UpdateOneAsync(filter, update);
+            }
+        }
+
+        return Ok(new { mensagem = $"{count} notificações de atraso enviadas." });
+    }
+
 }
