@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Emprestimos.API.Models
 {
+    [BsonIgnoreExtraElements]
     public class Parcela
     {
         public int Numero { get; set; }
