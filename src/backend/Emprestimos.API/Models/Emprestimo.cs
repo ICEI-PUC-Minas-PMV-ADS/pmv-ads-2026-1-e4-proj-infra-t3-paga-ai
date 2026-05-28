@@ -15,6 +15,8 @@ namespace Emprestimos.API.Models
         public bool Pago { get; set; } = false;
 
         public DateTime? DataPagamento { get; set; }
+
+        public bool NotificadoAtraso { get; set; } = false;
     }
 
     public class Emprestimo
@@ -53,11 +55,14 @@ namespace Emprestimos.API.Models
         public DateTime? DataPagamento { get; set; }
 
         public StatusPagamento Status { get; set; } = StatusPagamento.Pendente;
+
+        public bool NotificadoAtraso { get; set; } = false;
     }
 
     public enum StatusPagamento
     {
         Pendente = 0,
+        Atrasado = 1,
         Pago = 2
     }
 }
