@@ -22,8 +22,13 @@ async function request(url, options = {}) {
 export const getCarteira = () =>
   request(`${BASE_URL}/carteira`);
 
-export const getRelatorioLucro = () =>
-  request(`${BASE_URL}/relatorio-lucro`);
+export const getRelatorioLucro = () => {
+  const hoje = new Date().toISOString().split('T')[0];
+  const inicio = '2020-01-01';
+  return request(`${BASE_URL}/relatorio-lucro?dataInicio=${inicio}&dataFim=${hoje}`);
+};
+export const getPagos = () =>
+  request(`${BASE_URL}/pagos`);
 
 export const criarEmprestimo = (dados) =>
   request(BASE_URL, { method: "POST", body: JSON.stringify(dados) });

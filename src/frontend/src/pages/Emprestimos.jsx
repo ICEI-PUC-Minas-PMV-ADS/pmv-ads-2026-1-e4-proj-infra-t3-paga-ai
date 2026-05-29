@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getUsuarioLogado, getToken } from "../services/authService";
 import { getClientes } from "../services/ClientesService";
 import {
-  getCarteira, getRelatorioLucro, criarEmprestimo,
+  getCarteira, getRelatorioLucro, getPagos, criarEmprestimo,
   marcarComoPago, deletarEmprestimo,
 } from "../services/EmprestimosService";
 
@@ -53,17 +53,14 @@ export default function Emprestimos() {
   setLoading(true);
   setErro("");
   try {
-    const [carteira, lucro] = await Promise.all([
+    const [carteira, pagos, lucro] = await Promise.all([
       getCarteira(),
+      getPagos(),
       getRelatorioLucro(),
     ]);
-    const listaRelatorio = lucro.listaDetalhada ?? [];
-    const listaCarteira  = Array.isArray(carteira) ? carteira : [];
-    const idsCarteira    = new Set(listaCarteira.map((e) => e.id));
-   const quitados = listaRelatorio
-  .filter((e) => e.status === "Recebido" && !idsCarteira.has(e.id ?? e.Id) && e.cobrador === cobrador)
-  .map((e) => ({ ...e, id: e.id ?? e.Id, pago: true }));
-    setEmprestimos([...listaCarteira, ...quitados]);
+    const listaCarteira = Array.isArray(carteira) ? carteira : [];
+    const listaPagos    = Array.isArray(pagos) ? pagos : [];
+    setEmprestimos([...listaCarteira, ...listaPagos]);
     setResumo(lucro.resumoGeral);
   } catch (e) {
     setErro(e.message);

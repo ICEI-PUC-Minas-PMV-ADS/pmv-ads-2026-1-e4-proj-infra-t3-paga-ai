@@ -45,6 +45,17 @@ public class EmprestimosController : ControllerBase
 
         return Ok(lista);
     }
+    [HttpGet("pagos")]
+public async Task<ActionResult<IEnumerable<Emprestimo>>> GetPagos()
+{
+    var cobrador = User.Identity?.Name;
+    var lista = await _emprestimos
+        .Find(x => x.Cobrador == cobrador && x.Pago)
+        .SortByDescending(x => x.DataPagamento)
+        .ToListAsync();
+
+    return Ok(lista);
+}
 
     [HttpGet("relatorio-lucro")]
     public async Task<IActionResult> GetRelatorioLucro()

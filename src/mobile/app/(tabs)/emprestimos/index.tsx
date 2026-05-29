@@ -27,7 +27,7 @@ export default function EmprestimosScreen() {
     if (!cobrador) return;
     setCarregando(true);
     try {
-      const url = `${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`;
+      const url = `${EMPRESTIMOS}/carteira`;
       const res = await req('get', url);
       setLista(Array.isArray(res.data) ? res.data : []);
     } catch (e: any) {
@@ -54,7 +54,7 @@ export default function EmprestimosScreen() {
       {
         text: 'Confirmar', onPress: async () => {
           try {
-            await req('patch', `${EMPRESTIMOS}/${id}/pagar/${encodeURIComponent(cobrador)}`);
+            await req('patch', `${EMPRESTIMOS}/${id}/pagar`);
             setSelecionado(null);
             carregar();
           } catch { Alert.alert('Erro', 'Não foi possível marcar como pago.'); }
@@ -69,7 +69,7 @@ export default function EmprestimosScreen() {
       {
         text: 'Excluir', style: 'destructive', onPress: async () => {
           try {
-            await req('delete', `${EMPRESTIMOS}/${id}/${encodeURIComponent(cobrador)}`);
+            await req('delete', `${EMPRESTIMOS}/${id}`);
             setSelecionado(null);
             carregar();
           } catch { Alert.alert('Erro', 'Não foi possível excluir.'); }
