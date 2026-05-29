@@ -74,7 +74,7 @@ export default function DashboardScreen() {
 
         let lucro = null;
         try {
-          const resLucro = await api.get(`${REPORT}/relatorio-lucro/${encodeURIComponent(cobrador)}`);
+          const resLucro = await api.get(`${EMPRESTIMOS}/relatorio-lucro/${encodeURIComponent(cobrador)}`);
           lucro = resLucro.data;
         } catch {
           console.log('Report indisponível, continuando sem dados financeiros.');
