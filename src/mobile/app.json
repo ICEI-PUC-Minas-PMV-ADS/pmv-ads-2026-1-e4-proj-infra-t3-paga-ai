@@ -16,6 +16,9 @@
     ],
     "icon": "./assets/images/icon.png",
     "newArchEnabled": false,
+    "updates": {
+      "enabled": false
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -32,10 +35,7 @@
       "@react-native-community/datetimepicker"
     ],
     "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "70835f7e-976c-4b5e-8f64-03f69e5ff995"
-      }
+      "router": {}
     }
   }
 }
