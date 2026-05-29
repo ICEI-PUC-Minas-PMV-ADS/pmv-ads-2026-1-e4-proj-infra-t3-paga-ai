@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using Microsoft.AspNetCore.Authentication.JwtBearer; // Adicionado
 using Microsoft.IdentityModel.Tokens; // Adicionado
 using System.Text; // Adicionado
+using Emprestimos.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Junto com os outros services
+builder.Services.AddHostedService<OverdueLoansService>();
 
 // --- MONGODB ---
 builder.Services.AddSingleton<IMongoClient>(s =>

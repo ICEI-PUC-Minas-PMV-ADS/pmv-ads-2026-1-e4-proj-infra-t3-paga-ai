@@ -3,9 +3,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Clientes.API.Models
 {
+    [BsonIgnoreExtraElements]
     public class Cliente
     {
-        [MongoDB.Bson.Serialization.Attributes.BsonId]
+        [BsonId]
         public int Id { get; set; }
         [Required]
         public string? Nome { get; set; }
@@ -14,5 +15,6 @@ namespace Clientes.API.Models
         public string? Endereco { get; set; }
         public string? Email { get; set; }
         public string? Descricao { get; set; }
+        public string? Cobrador { get; set; }
     }
 }
