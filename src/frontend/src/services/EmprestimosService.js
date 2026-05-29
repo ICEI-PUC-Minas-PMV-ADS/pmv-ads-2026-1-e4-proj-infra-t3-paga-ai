@@ -1,6 +1,7 @@
 import { getToken } from "./authService";
 
 const BASE_URL = `${import.meta.env.VITE_GATEWAY_URL ?? "http://localhost:5046"}/backend/Emprestimos`;
+
 function authHeaders() {
   const token = getToken();
   return {
@@ -18,17 +19,17 @@ async function request(url, options = {}) {
   return res.status === 204 ? null : res.json();
 }
 
-export const getCarteira = (cobrador) =>
-  request(`${BASE_URL}/carteira/${encodeURIComponent(cobrador)}`);
+export const getCarteira = () =>
+  request(`${BASE_URL}/carteira`);
 
-export const getRelatorioLucro = (cobrador) =>
-  request(`${BASE_URL}/relatorio-lucro/${encodeURIComponent(cobrador)}`);
+export const getRelatorioLucro = () =>
+  request(`${BASE_URL}/relatorio-lucro`);
 
 export const criarEmprestimo = (dados) =>
   request(BASE_URL, { method: "POST", body: JSON.stringify(dados) });
 
-export const marcarComoPago = (id, cobrador) =>
-  request(`${BASE_URL}/${id}/pagar/${encodeURIComponent(cobrador)}`, { method: "PATCH" });
+export const marcarComoPago = (id) =>
+  request(`${BASE_URL}/${id}/pagar`, { method: "PATCH" });
 
-export const deletarEmprestimo = (id, cobrador) =>
-  request(`${BASE_URL}/${id}/${encodeURIComponent(cobrador)}`, { method: "DELETE" });
+export const deletarEmprestimo = (id) =>
+  request(`${BASE_URL}/${id}`, { method: "DELETE" });

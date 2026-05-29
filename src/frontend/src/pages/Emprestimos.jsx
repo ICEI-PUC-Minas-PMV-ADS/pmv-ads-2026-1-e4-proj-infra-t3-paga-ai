@@ -50,27 +50,27 @@ export default function Emprestimos() {
   const [clientes,    setClientes]    = useState([]);
 
   async function carregar() {
-    setLoading(true);
-    setErro("");
-    try {
-      const [carteira, lucro] = await Promise.all([
-        getCarteira(cobrador),
-        getRelatorioLucro(cobrador),
-      ]);
-      const listaRelatorio = lucro.listaDetalhada ?? [];
-      const listaCarteira  = Array.isArray(carteira) ? carteira : [];
-      const idsCarteira    = new Set(listaCarteira.map((e) => e.id));
-      const quitados = listaRelatorio
-        .filter((e) => e.status === "Recebido" && !idsCarteira.has(e.id))
-        .map((e) => ({ ...e, pago: true }));
-      setEmprestimos([...listaCarteira, ...quitados]);
-      setResumo(lucro.resumoGeral);
-    } catch (e) {
-      setErro(e.message);
-    } finally {
-      setLoading(false);
-    }
+  setLoading(true);
+  setErro("");
+  try {
+    const [carteira, lucro] = await Promise.all([
+      getCarteira(),
+      getRelatorioLucro(),
+    ]);
+    const listaRelatorio = lucro.listaDetalhada ?? [];
+    const listaCarteira  = Array.isArray(carteira) ? carteira : [];
+    const idsCarteira    = new Set(listaCarteira.map((e) => e.id));
+    const quitados = listaRelatorio
+      .filter((e) => e.status === "Recebido" && !idsCarteira.has(e.id))
+      .map((e) => ({ ...e, pago: true }));
+    setEmprestimos([...listaCarteira, ...quitados]);
+    setResumo(lucro.resumoGeral);
+  } catch (e) {
+    setErro(e.message);
+  } finally {
+    setLoading(false);
   }
+}
 
   useEffect(() => { carregar(); }, [cobrador]);
 
@@ -96,11 +96,10 @@ export default function Emprestimos() {
     }
     setSalvando(true);
     try {
-      await criarEmprestimo({
+  await criarEmprestimo({
   Cliente:        form.Cliente,
   Valor:          parseFloat(form.Valor),
   TaxaJuros:      parseFloat(form.TaxaJuros) / 100,
-  Cobrador:       cobrador,
   ClienteId:      parseInt(form.ClienteId) || Math.floor(Math.random() * 9000) + 1000,
   NumeroParcelas: parseInt(form.NumeroParcelas) || 1,
   DataVencimento: form.DataVencimento ? new Date(form.DataVencimento).toISOString() : "",
@@ -116,20 +115,20 @@ export default function Emprestimos() {
   }
 
   async function handlePagar(id) {
-    if (!confirm("Confirmar recebimento deste empréstimo?")) return;
-    try {
-      await marcarComoPago(id, cobrador);
-      carregar();
-    } catch (e) { alert(e.message); }
-  }
+  if (!confirm("Confirmar recebimento deste empréstimo?")) return;
+  try {
+    await marcarComoPago(id);
+    carregar();
+  } catch (e) { alert(e.message); }
+}
 
   async function handleDeletar(id) {
-    if (!confirm("Excluir este empréstimo?")) return;
-    try {
-      await deletarEmprestimo(id, cobrador);
-      carregar();
-    } catch (e) { alert(e.message); }
-  }
+  if (!confirm("Excluir este empréstimo?")) return;
+  try {
+    await deletarEmprestimo(id);
+    carregar();
+  } catch (e) { alert(e.message); }
+}
 
   const comStatus = emprestimos.map((e) => ({ ...e, _status: calcularStatus(e) }));
   const tabAtual  = TABS.find((t) => t.key === activeTab);
