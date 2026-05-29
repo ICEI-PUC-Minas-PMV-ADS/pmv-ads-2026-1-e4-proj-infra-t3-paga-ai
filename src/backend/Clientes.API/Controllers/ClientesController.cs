@@ -18,11 +18,14 @@ public class ClientesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Cliente>>> Get()
-    {
-        var clientes = await _clientes.Find(_ => true).ToListAsync();
-        return Ok(clientes);
-    }
+public async Task<ActionResult<IEnumerable<Cliente>>> Get()
+{
+    var cobrador = User.Identity?.Name;
+    var clientes = cobrador != null
+        ? await _clientes.Find(c => c.Cobrador == cobrador).ToListAsync()
+        : await _clientes.Find(_ => true).ToListAsync();
+    return Ok(clientes);
+}
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Cliente>> Get(int id)
@@ -36,18 +39,20 @@ public class ClientesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Cliente novoCliente)
-    {
-        var ultimoCliente = await _clientes.Find(_ => true)
-            .SortByDescending(c => c.Id)
-            .Limit(1)
-            .FirstOrDefaultAsync();
+public async Task<IActionResult> Post(Cliente novoCliente)
+{
+    novoCliente.Cobrador = User.Identity?.Name;
 
-        novoCliente.Id = (ultimoCliente?.Id ?? 0) + 1;
+    var ultimoCliente = await _clientes.Find(_ => true)
+        .SortByDescending(c => c.Id)
+        .Limit(1)
+        .FirstOrDefaultAsync();
 
-        await _clientes.InsertOneAsync(novoCliente);
-        return CreatedAtAction(nameof(Get), new { id = novoCliente.Id }, novoCliente);
-    }
+    novoCliente.Id = (ultimoCliente?.Id ?? 0) + 1;
+
+    await _clientes.InsertOneAsync(novoCliente);
+    return CreatedAtAction(nameof(Get), new { id = novoCliente.Id }, novoCliente);
+}
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Cliente clienteAtualizado)
