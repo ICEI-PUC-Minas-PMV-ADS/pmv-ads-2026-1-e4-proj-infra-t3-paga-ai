@@ -10,6 +10,8 @@ import { Emprestimo } from 'emprestimo';
 import { EmprestimoListItem } from '@components/emprestimos/EmprestimoListItem';
 import { EmprestimoCard } from '@components/emprestimos/EmprestimoCard';
 import { useLocalSearchParams } from 'expo-router';
+import { TextInput } from 'react-native';
+
 
 function req(method: 'get' | 'patch' | 'delete', path: string) {
   return api({ method, url: path });
@@ -18,6 +20,13 @@ function req(method: 'get' | 'patch' | 'delete', path: string) {
 export default function EmprestimosScreen() {
   const { user } = useAuth();
   const cobrador = user?.nome ?? '';
+  const [criando, setCriando] = useState(false);
+  const [cliente, setCliente] = useState('');
+  const [clienteId, setClienteId] = useState('');
+  const [valor, setValor] = useState('');
+  const [juros, setJuros] = useState('');
+  const [parcelas, setParcelas] = useState('1');
+  const [vencimento, setVencimento] = useState('');
 
   const [lista, setLista]             = useState<Emprestimo[]>([]);
   const [carregando, setCarregando]   = useState(true);
@@ -47,6 +56,22 @@ export default function EmprestimosScreen() {
             if (emprestimo) setSelecionado(emprestimo);
         }
     }, [abrirId, lista]);
+    async function criarEmprestimo() {
+  try {
+    await api.post(EMPRESTIMOS, {
+      cliente,
+      clienteId: Number(clienteId),
+      valor: Number(valor),
+      taxaJuros: Number(juros),
+      numeroParcelas: Number(parcelas),
+      dataVencimento: vencimento ? new Date(vencimento).toISOString() : undefined,
+    });
+    setCriando(false);
+    carregar(); // recarrega lista
+  } catch (e) {
+    Alert.alert('Erro', 'Não foi possível criar o empréstimo.');
+  }
+}
 
   async function marcarPago(id: number) {
     Alert.alert('Confirmar', 'Marcar como recebido?', [
@@ -87,6 +112,7 @@ export default function EmprestimosScreen() {
       <View style={s.header}>
         <Text style={s.titulo}>Empréstimos</Text>
         <Text style={s.sub}>{lista.length} registro{lista.length !== 1 ? 's' : ''}</Text>
+      
       </View>
 
       {lista.length === 0 ? (
@@ -106,21 +132,48 @@ export default function EmprestimosScreen() {
           contentContainerStyle={{ paddingBottom: 32 }}
         />
       )}
+     <TouchableOpacity style={s.addButton} onPress={() => setCriando(true)}>
+       <Text style={s.addButtonText}>+ Novo Empréstimo</Text>
+     </TouchableOpacity>
 
-      <Modal visible={!!selecionado} animationType="slide" onRequestClose={() => setSelecionado(null)}>
-        <View style={s.modalPage}>
-          <TouchableOpacity style={s.fechar} onPress={() => setSelecionado(null)}>
-            <Text style={s.fecharText}>← Voltar</Text>
-          </TouchableOpacity>
-          {selecionado && (
-            <EmprestimoCard
-              emprestimo={selecionado}
-              onPagar={marcarPago}
-              onDeletar={deletar}
-            />
-          )}
-        </View>
-      </Modal>
+
+  {/* Modal de detalhes */}
+<Modal visible={!!selecionado} animationType="slide" onRequestClose={() => setSelecionado(null)}>
+  <View style={s.modalPage}>
+    <TouchableOpacity style={s.fechar} onPress={() => setSelecionado(null)}>
+      <Text style={s.fecharText}>← Voltar</Text>
+    </TouchableOpacity>
+    {selecionado && (
+      <EmprestimoCard
+        emprestimo={selecionado}
+        onPagar={marcarPago}
+        onDeletar={deletar}
+      />
+    )}
+  </View>
+</Modal>
+
+{/* Modal de criação */}
+<Modal visible={criando} animationType="slide" onRequestClose={() => setCriando(false)}>
+  <View style={s.modalPage}>
+    <TouchableOpacity style={s.fechar} onPress={() => setCriando(false)}>
+      <Text style={s.fecharText}>← Voltar</Text>
+    </TouchableOpacity>
+
+    <Text style={s.titulo}>Novo Empréstimo</Text>
+
+    <TextInput placeholder="Cliente" style={s.input} value={cliente} onChangeText={setCliente} />
+    <TextInput placeholder="Cliente ID" style={s.input} value={clienteId} onChangeText={setClienteId} keyboardType="numeric" />
+    <TextInput placeholder="Valor" style={s.input} value={valor} onChangeText={setValor} keyboardType="numeric" />
+    <TextInput placeholder="Taxa de juros (%)" style={s.input} value={juros} onChangeText={setJuros} keyboardType="numeric" />
+    <TextInput placeholder="Número de parcelas" style={s.input} value={parcelas} onChangeText={setParcelas} keyboardType="numeric" />
+    <TextInput placeholder="Data de vencimento (YYYY-MM-DD)" style={s.input} value={vencimento} onChangeText={setVencimento} />
+
+    <TouchableOpacity style={s.btnSalvar} onPress={criarEmprestimo}>
+      <Text style={s.btnSalvarText}>Salvar</Text>
+    </TouchableOpacity>
+  </View>
+</Modal>
     </View>
   );
 }
@@ -135,4 +188,43 @@ const s = StyleSheet.create({
   modalPage:  { flex: 1, backgroundColor: '#F5F3FF', padding: 16 },
   fechar:     { paddingVertical: 12, marginBottom: 8 },
   fecharText: { fontSize: 15, color: '#7C3AED', fontWeight: '600' },
+  input: {
+  borderWidth: 1,
+  borderColor: '#ccc',
+  borderRadius: 6,
+  padding: 10,
+  marginVertical: 8,
+  backgroundColor: '#fff',
+},
+btnSalvar: {
+  backgroundColor: '#7C3AED',
+  padding: 14,
+  borderRadius: 8,
+  alignItems: 'center',
+  marginTop: 16,
+},
+btnSalvarText: {
+  color: '#fff',
+  fontWeight: '600',
+  fontSize: 16,
+},
+addButton: {
+  position: 'absolute',
+  bottom: 20,
+  right: 20,
+  backgroundColor: '#7C3AED',
+  paddingVertical: 14,
+  paddingHorizontal: 20,
+  borderRadius: 50,
+  elevation: 5,
+  shadowColor: '#000',
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+  shadowOffset: { width: 0, height: 2 },
+},
+addButtonText: {
+  color: '#fff',
+  fontWeight: '600',
+  fontSize: 16,
+},
 });
