@@ -27,9 +27,8 @@ namespace Emprestimos.API.Models
 
         public int ClienteId { get; set; }
 
-        public string Cliente { get; set; } = null!;
-
-        public string Cobrador { get; set; } = null!;
+       public string? Cliente { get; set; }
+        public string? Cobrador { get; set; }
 
         [BsonRepresentation(BsonType.Decimal128)] 
         public decimal Valor { get; set; }

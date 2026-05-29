@@ -60,9 +60,9 @@ export default function Emprestimos() {
     const listaRelatorio = lucro.listaDetalhada ?? [];
     const listaCarteira  = Array.isArray(carteira) ? carteira : [];
     const idsCarteira    = new Set(listaCarteira.map((e) => e.id));
-    const quitados = listaRelatorio
-      .filter((e) => e.status === "Recebido" && !idsCarteira.has(e.id))
-      .map((e) => ({ ...e, pago: true }));
+   const quitados = listaRelatorio
+  .filter((e) => e.status === "Recebido" && !idsCarteira.has(e.id ?? e.Id) && e.cobrador === cobrador)
+  .map((e) => ({ ...e, id: e.id ?? e.Id, pago: true }));
     setEmprestimos([...listaCarteira, ...quitados]);
     setResumo(lucro.resumoGeral);
   } catch (e) {
@@ -248,7 +248,9 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
   const pago    = status === "Pago";
   const valor   = e.valor   ?? e.valorEmprestado ?? 0;
   const receber = e.valorFinal ?? e.valorComJuros ?? 0;
-  const id      = String(e.id ?? 0).padStart(3, "0");
+  const realId  = e.id ?? e.Id ?? 0;
+  console.log('Emprestimo objeto:', e, 'realId:', realId);
+  const id      = String(realId).padStart(3, "0");
 
  return (
     <div style={s.card}>
@@ -256,9 +258,11 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
         <span style={s.cardNome}>{e.cliente ?? e.devedor ?? "—"} <span style={s.cardId}>#{id}</span></span>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {!pago && (
-            <button style={s.btnPagar} onClick={() => onPagar(e.id)}>✔ Recebido</button>
-          )}
-          <button style={s.btnDeletar} onClick={() => onDeletar(e.id)}>✕</button>
+           <button style={s.btnPagar} onClick={() => onPagar(realId)}>✔ Recebido</button>
+
+           )}
+           <button style={s.btnDeletar} onClick={() => onDeletar(realId)}>✕</button>
+
           <span style={{ ...s.statusBadge, background: estilo.bg, color: estilo.color }}>{status}</span>
         </div>
       </div>
