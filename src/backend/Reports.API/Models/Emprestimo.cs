@@ -20,10 +20,12 @@ public class Parcela
     public bool NotificadoAtraso { get; set; } = false;
 }
 
+[BsonIgnoreExtraElements]
 public class Emprestimo
 {
     [BsonId] 
     public int Id { get; set; }
+    // ... resto dos campos
     public int ClienteId {get; set; }
     public string Cliente { get; set; } = null!;
     public string Cobrador { get; set; } = null!;
