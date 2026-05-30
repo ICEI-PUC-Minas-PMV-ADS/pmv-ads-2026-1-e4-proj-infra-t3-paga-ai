@@ -11,8 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Input } from '@components/common';
-import type { Cliente, ClientePayload } from '@types/cliente';
-
+import type { Cliente, ClientePayload } from '@typings/cliente';
 interface ClienteFormProps {
   visivel: boolean;
   clienteParaEditar?: Cliente | null;
@@ -33,6 +32,22 @@ export function ClienteForm({ visivel, clienteParaEditar, onSalvar, onFechar }: 
   const [form, setForm] = useState<ClientePayload>(VAZIO);
   const [salvando, setSalvando] = useState(false);
   const [erros, setErros] = useState<Partial<Record<keyof ClientePayload, string>>>({});
+  function mascaraCPF(value: string): string {
+  return value
+    .replace(/\D/g, '')
+    .slice(0, 11)
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function mascaraTelefone(value: string): string {
+  return value
+    .replace(/\D/g, '')
+    .slice(0, 11)
+    .replace(/(\d{2})(\d)/, '($1)$2')
+    .replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+}
 
   useEffect(() => {
     if (clienteParaEditar) {
@@ -48,8 +63,7 @@ export function ClienteForm({ visivel, clienteParaEditar, onSalvar, onFechar }: 
       setForm(VAZIO);
     }
     setErros({});
-  }, [clienteParaEditar, visivel]);
-
+  }, [clienteParaEditar]); 
   function set(field: keyof ClientePayload, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErros((prev) => ({ ...prev, [field]: undefined }));
@@ -100,20 +114,22 @@ export function ClienteForm({ visivel, clienteParaEditar, onSalvar, onFechar }: 
                 placeholder="Nome completo"
               />
               <Input
-                label="CPF *"
-                value={form.cpf}
-                onChangeText={(v) => set('cpf', v)}
-                error={erros.cpf}
-                placeholder="000.000.000-00"
+              label="CPF *"
+              value={form.cpf}
+              onChangeText={(v) => set('cpf', mascaraCPF(v))}
+              error={erros.cpf}
+              placeholder="000.000.000-00"
+              keyboardType="numeric"
               />
-              <Input
-                label="Telefone *"
-                value={form.telefone}
-                onChangeText={(v) => set('telefone', v)}
-                error={erros.telefone}
-                placeholder="(00) 00000-0000"
+             <Input
+              label="Telefone *"
+              value={form.telefone}
+              onChangeText={(v) => set('telefone', mascaraTelefone(v))}
+              error={erros.telefone}
+              placeholder="(00)90000-0000"
+              keyboardType="numeric"
               />
-              <Input
+               <Input
                 label="E-mail *"
                 value={form.email}
                 onChangeText={(v) => set('email', v)}

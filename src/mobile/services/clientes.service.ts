@@ -1,6 +1,7 @@
 import api from './api';
 import { CLIENTES } from '@constants/endpoints';
-import type { Cliente, ClientePayload } from '@types/cliente';
+import type { Cliente, ClientePayload } from '@typings/cliente';
+
 
 export async function getClientes(): Promise<Cliente[]> {
   const { data } = await api.get<Cliente[]>(CLIENTES);
@@ -18,7 +19,8 @@ export async function createCliente(payload: ClientePayload): Promise<Cliente> {
 }
 
 export async function updateCliente(id: number, payload: Partial<ClientePayload>): Promise<Cliente> {
-  const { data } = await api.put<Cliente>(`${CLIENTES}/${id}`, payload);
+  await api.put(`${CLIENTES}/${id}`, payload);
+  const { data } = await api.get<Cliente>(`${CLIENTES}/${id}`);
   return data;
 }
 

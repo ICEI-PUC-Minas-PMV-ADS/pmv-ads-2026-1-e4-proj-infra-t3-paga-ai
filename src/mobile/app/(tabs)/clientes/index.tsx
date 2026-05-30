@@ -57,6 +57,7 @@ export default function ClientesScreen() {
   }
 
   function confirmarDeletar(id: number) {
+    console.log('🔍 deletar id:', id, typeof id);
     const nome = clientes.find((c) => c.id === id)?.nome ?? 'este cliente';
     Alert.alert('Remover cliente', `Deseja remover ${nome}?`, [
       { text: 'Cancelar', style: 'cancel' },
