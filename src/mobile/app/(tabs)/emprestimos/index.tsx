@@ -11,6 +11,8 @@ import { EmprestimoListItem } from '@components/emprestimos/EmprestimoListItem';
 import { EmprestimoCard } from '@components/emprestimos/EmprestimoCard';
 import { useLocalSearchParams } from 'expo-router';
 import { TextInput } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 
 function req(method: 'get' | 'patch' | 'delete', path: string) {
@@ -20,6 +22,7 @@ function req(method: 'get' | 'patch' | 'delete', path: string) {
 export default function EmprestimosScreen() {
   const { user } = useAuth();
   const cobrador = user?.nome ?? '';
+  const tabBarHeight = useBottomTabBarHeight();
   const [criando, setCriando] = useState(false);
   const [cliente, setCliente] = useState('');
   const [clienteId, setClienteId] = useState('');
@@ -101,13 +104,17 @@ export default function EmprestimosScreen() {
       },
     ]);
   }
+   const addButtonStyle = {
+    ...s.addButton,
+    bottom: tabBarHeight + 5,
+  };
 
   if (carregando) {
     return <View style={s.center}><ActivityIndicator size="large" color="#7C3AED" /></View>;
   }
 
   return (
-    <View style={s.page}>
+    <SafeAreaView style={s.page} edges={['top', 'left', 'right']}>
       <View style={s.header}>
         <Text style={s.titulo}>Empréstimos</Text>
         <Text style={s.sub}>{lista.length} registro{lista.length !== 1 ? 's' : ''}</Text>
@@ -131,7 +138,7 @@ export default function EmprestimosScreen() {
           contentContainerStyle={{ paddingBottom: 32 }}
         />
       )}
-     <TouchableOpacity style={s.addButton} onPress={() => setCriando(true)}>
+     <TouchableOpacity style={addButtonStyle} onPress={() => setCriando(true)}>
        <Text style={s.addButtonText}>+ Novo Empréstimo</Text>
      </TouchableOpacity>
 
@@ -172,7 +179,7 @@ export default function EmprestimosScreen() {
     </TouchableOpacity>
   </View>
 </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -208,7 +215,6 @@ btnSalvarText: {
 },
 addButton: {
   position: 'absolute',
-  bottom: 20,
   right: 20,
   backgroundColor: '#7C3AED',
   paddingVertical: 14,
