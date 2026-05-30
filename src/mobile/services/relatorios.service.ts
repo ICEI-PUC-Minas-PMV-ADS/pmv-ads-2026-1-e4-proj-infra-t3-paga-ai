@@ -43,7 +43,7 @@ export async function exportarPdf(
   dataInicio: string,
   dataFim: string,
   cobrador?: string
-): Promise<string> {
+): Promise<ArrayBuffer> {  // ← era Promise<string>
   const response = await api.post(
     `${REPORT}/export-pdf`,
     { dataInicio, dataFim, cobrador },
