@@ -57,19 +57,18 @@ export default function EmprestimosScreen() {
         }
     }, [abrirId, lista]);
     async function criarEmprestimo() {
-  try {
-    await api.post(EMPRESTIMOS, {
-      cliente,
-      clienteId: Number(clienteId),
-      valor: Number(valor),
-      taxaJuros: Number(juros),
-      numeroParcelas: Number(parcelas),
-      dataVencimento: vencimento ? new Date(vencimento).toISOString() : undefined,
-    });
-    setCriando(false);
-    carregar(); // recarrega lista
-  } catch (e) {
-    Alert.alert('Erro', 'Não foi possível criar o empréstimo.');
+      try {
+        await api.post(EMPRESTIMOS, {
+          cliente,
+          valor: Number(valor),
+          taxaJuros: Number(juros),
+          numeroParcelas: Number(parcelas),
+          dataVencimento: vencimento ? new Date(vencimento).toISOString() : undefined,
+        });
+        setCriando(false);
+        carregar(); // recarrega lista
+      } catch (e) {
+        Alert.alert('Erro', 'Não foi possível criar o empréstimo.');
   }
 }
 
@@ -163,7 +162,6 @@ export default function EmprestimosScreen() {
     <Text style={s.titulo}>Novo Empréstimo</Text>
 
     <TextInput placeholder="Cliente" style={s.input} value={cliente} onChangeText={setCliente} />
-    <TextInput placeholder="Cliente ID" style={s.input} value={clienteId} onChangeText={setClienteId} keyboardType="numeric" />
     <TextInput placeholder="Valor" style={s.input} value={valor} onChangeText={setValor} keyboardType="numeric" />
     <TextInput placeholder="Taxa de juros (%)" style={s.input} value={juros} onChangeText={setJuros} keyboardType="numeric" />
     <TextInput placeholder="Número de parcelas" style={s.input} value={parcelas} onChangeText={setParcelas} keyboardType="numeric" />
