@@ -8,6 +8,7 @@ import { getRelatorio, exportarPdf, type Relatorio } from '@services/relatorios.
 import { useAuth } from '@hooks/useAuth';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const hoje = new Date();
 const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
@@ -87,9 +88,13 @@ export default function RelatoriosScreen() {
     }
   }
 
-  return (
-    <ScrollView style={s.container} contentContainerStyle={s.content}>
-      <Text style={s.titulo}>Relatórios</Text>
+ return (
+  <View style={s.container}>
+  <View style={s.header}>
+    <Text style={s.titulo}>Relatórios</Text>
+  </View>
+  <ScrollView style={{ flex: 1 }} contentContainerStyle={s.content}>
+      
 
       {/* Filtros */}
       <View style={s.card}>
@@ -217,6 +222,7 @@ export default function RelatoriosScreen() {
         </>
       )}
     </ScrollView>
+</View>
   );
 }
 
@@ -240,7 +246,8 @@ function DevedorInfo({ label, value }: { label: string; value: string }) {
 
 const s = StyleSheet.create({
   container:   { flex: 1, backgroundColor: '#F5F3FF' },
-  content:     { padding: 16, paddingBottom: 40 },
+  header:      { padding: 20, paddingBottom: 12 },  
+  content:     { padding: 16, paddingBottom: 100 },
   titulo:      { fontSize: 24, fontWeight: '700', color: '#1F2937', marginBottom: 16 },
 
   card:        { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 16, elevation: 2, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 4 },
