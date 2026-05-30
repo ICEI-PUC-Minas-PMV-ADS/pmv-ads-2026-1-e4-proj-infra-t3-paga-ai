@@ -1,6 +1,3 @@
-// Layout de abas principal. Define as 5 seções da aplicação com nome e ícone.
-// Cada aba aponta para o index.tsx da sua pasta — implemente as telas lá.
-
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -33,11 +30,11 @@ export default function TabsLayout() {
           tabBarActiveTintColor: '#7C3AED',
           tabBarInactiveTintColor: '#9CA3AF',
           tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopWidth: 1,
-          borderTopColor: '#E5E7EB',
-          paddingBottom: 8,
-          paddingTop: 4,
+            backgroundColor: '#ffffff',
+            borderTopWidth: 1,
+            borderTopColor: '#E5E7EB',
+            paddingBottom: 8,
+            paddingTop: 4,
           },
           tabBarLabelStyle: {
             fontSize: 11,
@@ -49,6 +46,12 @@ export default function TabsLayout() {
           },
         };
       }}
-    />
+    >
+      <Tabs.Screen name="index" />
+      <Tabs.Screen name="clientes/index" />
+      <Tabs.Screen name="emprestimos/index" />
+      <Tabs.Screen name="notificacoes/index" />
+      <Tabs.Screen name="relatorios/index" />
+      </Tabs>
   );
 }
