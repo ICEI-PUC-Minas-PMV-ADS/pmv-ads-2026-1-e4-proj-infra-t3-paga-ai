@@ -10,9 +10,10 @@ interface InputProps {
   secureTextEntry?: boolean;
   error?: string;
   placeholder?: string;
+  keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
 }
 
-export function Input({ label, value, onChangeText, secureTextEntry = false, error, placeholder }: InputProps) {
+export function Input({ label, value, onChangeText, secureTextEntry = false, error, placeholder, keyboardType = 'default' }: InputProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -24,6 +25,7 @@ export function Input({ label, value, onChangeText, secureTextEntry = false, err
         placeholder={placeholder}
         placeholderTextColor="#aaa"
         autoCapitalize="none"
+        keyboardType={keyboardType}  // ← adiciona aqui
       />
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>

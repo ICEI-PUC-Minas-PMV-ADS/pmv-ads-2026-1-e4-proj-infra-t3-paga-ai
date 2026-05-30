@@ -1,9 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card } from '@components/common';
-import { fmtCpf, fmtTelefone } from '@types/cliente';
-import type { Cliente } from '@types/cliente';
-
+import { fmtCpf, fmtTelefone, type Cliente } from '@typings/cliente';
 interface ClienteCardProps {
   cliente: Cliente;
   onEditar: (cliente: Cliente) => void;
@@ -11,8 +9,7 @@ interface ClienteCardProps {
 }
 
 export function ClienteCard({ cliente, onEditar, onDeletar }: ClienteCardProps) {
-  const inicial = cliente.nome.charAt(0).toUpperCase();
-
+  const inicial = (cliente.nome ?? '?').charAt(0).toUpperCase();
   return (
     <Card style={s.card}>
       <View style={s.row}>
