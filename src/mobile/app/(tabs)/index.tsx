@@ -14,6 +14,7 @@ import api from '@services/api';
 import { CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
 import { Emprestimo, fmt } from '../../types/emprestimo';
 import { StatusBar } from 'expo-status-bar';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 interface Stats {
   clientes: number;
@@ -53,6 +54,7 @@ export default function DashboardScreen() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [vencendo, setVencendo] = useState<Emprestimo[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
   async function carregar() {
@@ -117,9 +119,9 @@ export default function DashboardScreen() {
 }, [user]);
 
   return (
-    <SafeAreaView style={s.safe}>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
     <StatusBar style="dark" />
-      <ScrollView style={s.page} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={s.page} contentContainerStyle={[s.content, { paddingBottom: tabBarHeight + 20 }]} showsVerticalScrollIndicator={false}>
         <View style={s.header}>
           <View>
             <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
@@ -224,7 +226,8 @@ function FinCard({ label, valor, cor, carregando }: {
 const s = StyleSheet.create({
   safe:          { flex: 1, backgroundColor: '#F5F3FF' },
   page:          { flex: 1 },
-  content:       { padding: 20, paddingBottom: 40 },
+  content: { padding: 20, paddingBottom: 120 },
+
   header:        { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
   logoutBtn:     { backgroundColor: '#FEE2E2', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8 },
   logoutTxt:     { color: '#DC2626', fontWeight: '700', fontSize: 13 },
