@@ -48,7 +48,7 @@ const acoes = [
 
 export default function DashboardScreen() {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const nome = user?.nome?.split(' ')[0] ?? 'Usuário';
 
   const [stats, setStats] = useState<Stats | null>(null);
@@ -57,9 +57,11 @@ export default function DashboardScreen() {
   const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
+  if (isLoading) return;
+  if (!user) return;
+  
   async function carregar() {
     const cobrador = user?.nome ?? '';
-    
 
     let clientes: unknown[] = [];
     let lista: Emprestimo[] = [];
@@ -67,16 +69,13 @@ export default function DashboardScreen() {
     try {
       const resClientes = await api.get(CLIENTES);
       clientes = Array.isArray(resClientes.data) ? resClientes.data : [];
-      
     } catch (err) {
       console.log('❌ Erro clientes:', err);
     }
 
     try {
       const resCarteira = await api.get(`${EMPRESTIMOS}/carteira`);
-
       lista = Array.isArray(resCarteira.data) ? resCarteira.data : [];
-      
     } catch (err) {
       console.log('❌ Erro empréstimos:', err);
     }
@@ -92,7 +91,6 @@ export default function DashboardScreen() {
       let lucro = null;
       try {
         const resLucro = await api.get(`${EMPRESTIMOS}/relatorio-lucro`);
-
         lucro = resLucro.data;
       } catch {
         console.log('Report indisponível, continuando sem dados financeiros.');
@@ -116,7 +114,7 @@ export default function DashboardScreen() {
     }
   }
   carregar();
-}, [user]);
+}, [user, isLoading]);
 
   return (
     <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
