@@ -43,8 +43,7 @@ function ResetPassword() {
     try {
       setLoading(true);
       await resetPassword(email, token, newPassword);
-      setSucesso("Senha redefinida com sucesso! Redirecionando para login...");
-      setTimeout(() => navigate("/login"), 2000);
+      setSucesso("Senha redefinida com sucesso!");
     } catch (e) {
       setErro(e.message || "Falha ao redefinir senha.");
     } finally {
