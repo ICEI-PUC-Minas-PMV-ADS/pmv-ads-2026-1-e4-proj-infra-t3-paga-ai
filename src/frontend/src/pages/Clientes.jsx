@@ -10,7 +10,22 @@ const clienteVazio = {
   email:     "",
   descricao: "",
 };
+function mascaraCPF(value) {
+  return value
+    .replace(/\D/g, '')
+    .slice(0, 11)
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
 
+function mascaraTelefone(value) {
+  return value
+    .replace(/\D/g, '')
+    .slice(0, 11)
+    .replace(/(\d{2})(\d)/, '($1)$2')
+    .replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+}
 // ─────────────────────────────────────────────────────────────────────────────
 // MODAL DE CADASTRO / EDIÇÃO
 // ─────────────────────────────────────────────────────────────────────────────
@@ -117,8 +132,11 @@ export default function Clientes() {
     }
   }
 
-  const atualizarForm = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
-
+  const atualizarForm = (key, value) => {
+  if (key === 'cpf')      value = mascaraCPF(value);
+  if (key === 'telefone') value = mascaraTelefone(value);
+  setForm((prev) => ({ ...prev, [key]: value }));
+};
   const clientesFiltrados = clientes.filter((c) =>
     c.nome?.toLowerCase().includes(busca.toLowerCase()) ||
     c.cpf?.includes(busca) ||
