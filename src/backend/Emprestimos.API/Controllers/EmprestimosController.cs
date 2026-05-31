@@ -280,6 +280,7 @@ public async Task<ActionResult<IEnumerable<Emprestimo>>> GetPagos()
         }
     }
 
+    [AllowAnonymous]
     [HttpPost("verificar-atrasos")]
     public async Task<IActionResult> VerificarAtrasos()
     {
