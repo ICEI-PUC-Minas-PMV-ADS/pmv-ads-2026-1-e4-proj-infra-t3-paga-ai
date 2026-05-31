@@ -16,6 +16,7 @@ const TABS: TabConfig[] = [
   { name: 'emprestimos',  title: 'Empréstimos',  icon: 'cash-outline',          iconFocused: 'cash' },
   { name: 'notificacoes', title: 'Notificações', icon: 'notifications-outline', iconFocused: 'notifications' },
   { name: 'relatorios',   title: 'Relatórios',   icon: 'bar-chart-outline',     iconFocused: 'bar-chart' },
+  { name: 'perfil',       title: 'Perfil',       icon: 'person-outline',        iconFocused: 'person' },
 ];
 
 export default function TabsLayout() {
@@ -52,6 +53,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="emprestimos/index" />
       <Tabs.Screen name="notificacoes/index" />
       <Tabs.Screen name="relatorios/index" />
+      <Tabs.Screen name="perfil/index" />
       </Tabs>
   );
 }
