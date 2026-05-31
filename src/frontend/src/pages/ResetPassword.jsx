@@ -114,16 +114,6 @@ function ResetPassword() {
           </button>
         </form>
 
-        <div style={styles.divider}>
-          <span style={styles.dividerLine} />
-          <span style={styles.dividerText}>ou</span>
-          <span style={styles.dividerLine} />
-        </div>
-
-        <div style={styles.createRow}>
-          <span style={styles.createText}>Lembrou sua senha?</span>
-          <Link to="/login" style={styles.createLink}>Entrar</Link>
-        </div>
       </div>
     </div>
   );

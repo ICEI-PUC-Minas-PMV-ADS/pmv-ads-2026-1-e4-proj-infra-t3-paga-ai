@@ -20,7 +20,11 @@
       "enabled": false
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pagaai.mobile",
+      "associatedDomains": [
+        "applinks:pagai.com"
+      ]
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +32,24 @@
         "backgroundColor": "#ffffff"
       },
       "googleServicesFile": "./google-services.json",
-      "package": "com.pagaai.mobile"
+      "package": "com.pagaai.mobile",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "pagaai",
+              "host": "reset-password"
+            },
+            {
+              "scheme": "https",
+              "host": "pagai.com",
+              "pathPrefix": "/reset-password"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "plugins": [
       "expo-router",

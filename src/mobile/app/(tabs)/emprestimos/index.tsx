@@ -63,12 +63,15 @@ export default function EmprestimosScreen() {
             if (emprestimo) setSelecionado(emprestimo);
         }
     }, [abrirId, lista]);
+<<<<<<< HEAD
+=======
     useEffect(() => {
         if (!cobrador) return;
         api.get('/backend/Clientes')
             .then((res) => setClientes(Array.isArray(res.data) ? res.data : []))
             .catch((e) => console.error('[Clientes] erro:', e?.message));
     }, [cobrador]);
+>>>>>>> origin/main
     async function criarEmprestimo() {
       try {
         await api.post(EMPRESTIMOS, {
@@ -178,6 +181,16 @@ export default function EmprestimosScreen() {
 
     <Text style={s.titulo}>Novo Empréstimo</Text>
 
+<<<<<<< HEAD
+   <Picker
+  selectedValue={cliente}
+  onValueChange={(itemValue: string) => setCliente(itemValue)}
+>
+  {clientes.map(c => (
+    <Picker.Item key={c.nome} label={c.nome} value={c.nome} />
+  ))}
+</Picker>
+=======
                   <View style={s.input}>
                       <Picker
                           selectedValue={cliente}
@@ -190,6 +203,7 @@ export default function EmprestimosScreen() {
                           ))}
                       </Picker>
                   </View>
+>>>>>>> origin/main
     <TextInput placeholder="Valor" style={s.input} value={valor} onChangeText={setValor} keyboardType="numeric" />
     <TextInput placeholder="Taxa de juros (%)" style={s.input} value={juros} onChangeText={setJuros} keyboardType="numeric" />
     <TextInput placeholder="Número de parcelas" style={s.input} value={parcelas} onChangeText={setParcelas} keyboardType="numeric" />

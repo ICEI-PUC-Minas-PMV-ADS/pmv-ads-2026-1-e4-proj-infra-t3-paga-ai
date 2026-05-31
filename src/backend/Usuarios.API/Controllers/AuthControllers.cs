@@ -6,7 +6,7 @@ using System.Text;
 using MongoDB.Driver;
 using BCrypt.Net;
 // Criamos um alias para evitar o conflito de nomes
-using UserEntity = Usuario.API.Models.Usuario; 
+using UserEntity = Usuario.API.Models.Usuario;
 using MongoDB.Bson;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,15 +16,15 @@ namespace Usuarios.API.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    // Usando o alias 'UserEntity' em vez de 'Usuario'
     private readonly IMongoCollection<UserEntity>? _usuarios;
+    private readonly IMongoCollection<PasswordReset>? _passwordResets;
     private readonly IConfiguration _config;
     private readonly Usuario.API.Services.EmailService? _emailService;
 
     // Fallback em memória para desenvolvimento quando Mongo estiver inacessível
     private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, UserEntity> _inMemoryUsers = new();
 
-    private bool UseInMemory => _usuarios == null;
+    private bool UseInMemory => _usuarios == null || _passwordResets == null;
 
     public AuthController(
         IMongoDatabase database,
@@ -33,13 +33,27 @@ public class AuthController : ControllerBase
     {
         try
         {
-            // Tentar obter a collection normalmente
             _usuarios = database.GetCollection<UserEntity>("usuarios", null);
+            _passwordResets = database.GetCollection<PasswordReset>("password_resets", null);
+
+            // Criar índice TTL para expirar automaticamente registros antigos (opcional)
+            try
+            {
+                var indexKeys = Builders<PasswordReset>.IndexKeys.Ascending(x => x.ExpiresAt);
+                var indexOptions = new CreateIndexOptions { ExpireAfter = TimeSpan.Zero };
+                var indexModel = new CreateIndexModel<PasswordReset>(indexKeys, indexOptions);
+                _passwordResets.Indexes.CreateOne(indexModel);
+            }
+            catch (Exception idxEx)
+            {
+                Console.WriteLine("[WARN] Não foi possível criar índice TTL (password_resets): " + idxEx.Message);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("[WARN] Não foi possível inicializar collection do MongoDB: " + ex.Message);
+            Console.WriteLine("[WARN] Não foi possível inicializar collections do MongoDB: " + ex.Message);
             _usuarios = null;
+            _passwordResets = null;
         }
 
         _config = config;
@@ -172,20 +186,71 @@ public class AuthController : ControllerBase
             return Ok(new { mensagem = "Se o e-mail existir, você receberá instruções em breve." });
         }
 
-        // Gerar um token simples para redefinição (em produção, usar JWT ou GUID)
+        // Gerar um token seguro para redefinição
         var resetToken = Guid.NewGuid().ToString();
-        // Aqui poderia salvar o token no banco com expiração
 
-        var frontendUrl = _config["FrontendSettings:Url"] ?? "http://localhost:5173";
-        var resetLink = $"{frontendUrl.TrimEnd('/')}/#/reset-password?token={Uri.EscapeDataString(resetToken)}&email={Uri.EscapeDataString(request.Email)}";
+        // Persistir token no banco com expiração (ex: 1 hora)
+        var expiresAt = DateTime.UtcNow.AddHours(1);
+
+        if (!UseInMemory)
+        {
+            try
+            {
+                var resetDoc = new PasswordReset
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Email = request.Email,
+                    Token = resetToken,
+                    ExpiresAt = expiresAt
+                };
+
+                // Inserir ou atualizar (upsert) para evitar múltiplos tokens ativos
+                var filter = Builders<PasswordReset>.Filter.Eq(x => x.Email, request.Email);
+                var update = Builders<PasswordReset>.Update
+                    .Set(x => x.Token, resetToken)
+                    .Set(x => x.ExpiresAt, expiresAt)
+                    .SetOnInsert(x => x.CreatedAt, DateTime.UtcNow);
+                var options = new UpdateOptions { IsUpsert = true };
+                await _passwordResets!.UpdateOneAsync(filter, update, options);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[WARN] Erro ao salvar reset token no Mongo: " + ex.Message);
+            }
+        }
+        else
+        {
+            // Em memória: armazenar no dicionário (apenas para dev)
+            var resetDoc = new PasswordReset
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = request.Email,
+                Token = resetToken,
+                ExpiresAt = expiresAt
+            };
+            // Simples: adicionar com chave email
+            // (em produção, use coleção no Mongo)
+            // Aqui não persistimos entre reinícios
+        }
+
+        // Montar deep link e fallback web
+        var emailEnc = Uri.EscapeDataString(request.Email);
+        var tokenEnc = Uri.EscapeDataString(resetToken);
+
+        var deepLink = $"pagaai://reset-password?token={tokenEnc}&email={emailEnc}";
 
         var subject = "Redefinição de Senha - Paga Aí";
         var body = $@"
         <h2>Redefinição de Senha</h2>
         <p>Olá {usuario.Nome},</p>
         <p>Você solicitou a redefinição de senha para sua conta no Paga Aí.</p>
-        <p>Clique no link abaixo para redefinir sua senha:</p>
-        <a href='{resetLink}'>Redefinir Senha</a>
+
+        <p>
+          <a href='{deepLink}' style='display:inline-block;padding:12px 20px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;'>
+            Redefinir senha no app
+          </a>
+        </p>
+
         <p>Se você não solicitou isso, ignore este email.</p>
         <p>Atenciosamente,<br>Equipe Paga Aí</p>
         ";
@@ -232,27 +297,56 @@ public class AuthController : ControllerBase
         if (usuario == null)
             return BadRequest(new { mensagem = "Usuário não encontrado." });
 
-        // Aqui, validar o token (simples, apenas verificar se existe; em produção, verificar expiração)
-        // Por simplicidade, aceitamos qualquer token por enquanto
-
-        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
-
+        // Validar token no banco
         if (!UseInMemory)
         {
-            var update = Builders<UserEntity>.Update.Set(u => u.Senha, hashedPassword);
-            await _usuarios!.UpdateOneAsync(x => x.Email == request.Email, update);
+            try
+            {
+                var filter = Builders<PasswordReset>.Filter.Where(x => x.Email == request.Email && x.Token == request.Token);
+                var resetEntry = await _passwordResets!.Find(filter).FirstOrDefaultAsync();
+
+                if (resetEntry == null)
+                    return BadRequest(new { mensagem = "Token inválido ou não encontrado." });
+
+                if (resetEntry.ExpiresAt < DateTime.UtcNow)
+                {
+                    // Remover token expirado
+                    await _passwordResets.DeleteOneAsync(Builders<PasswordReset>.Filter.Eq(x => x.Id, resetEntry.Id));
+                    return BadRequest(new { mensagem = "Token expirado. Solicite um novo link." });
+                }
+
+                // Token válido: prosseguir com alteração de senha
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+                var update = Builders<UserEntity>.Update.Set(u => u.Senha, hashedPassword);
+                await _usuarios!.UpdateOneAsync(x => x.Email == request.Email, update);
+
+                // Remover token após uso
+                await _passwordResets.DeleteOneAsync(Builders<PasswordReset>.Filter.Eq(x => x.Id, resetEntry.Id));
+
+                return Ok(new { mensagem = "Senha redefinida com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[WARN] Erro ao validar token/reset-password: " + ex.Message);
+                return StatusCode(500, new { mensagem = "Erro ao redefinir senha. Tente novamente." });
+            }
         }
         else
         {
+            // Em memória: comportamento simplificado (apenas para dev)
+            // Aceitar qualquer token por enquanto (comportamento antigo)
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
             var existing = _inMemoryUsers.Values.FirstOrDefault(u => u.Email == request.Email);
             if (existing != null && existing.Id != null)
             {
                 existing.Senha = hashedPassword;
                 _inMemoryUsers[existing.Id] = existing;
             }
-        }
 
-        return Ok(new { mensagem = "Senha redefinida com sucesso." });
+            return Ok(new { mensagem = "Senha redefinida com sucesso." });
+        }
     }
 
     private bool IsValidEmail(string email)
@@ -307,6 +401,16 @@ public class AuthController : ControllerBase
 
         return Ok(new { mensagem = "Token atualizado com sucesso." });
     }
+}
+
+// Model para armazenar tokens de reset
+public class PasswordReset
+{
+    public string? Id { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string Token { get; set; } = string.Empty;
+    public DateTime ExpiresAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public class RegisterRequest
