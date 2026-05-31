@@ -15,6 +15,9 @@ import { CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
 import { Emprestimo, fmt } from '../../types/emprestimo';
 import { StatusBar } from 'expo-status-bar';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+// Adiciona o import do hook e Image
+import { useFotoPerfil } from '@hooks/useFotoPerfil';
+import { Image } from 'react-native';
 
 interface Stats {
   clientes: number;
@@ -55,6 +58,7 @@ export default function DashboardScreen() {
   const [vencendo, setVencendo] = useState<Emprestimo[]>([]);
   const [carregando, setCarregando] = useState(true);
   const tabBarHeight = useBottomTabBarHeight();
+  const { foto } = useFotoPerfil();
 
   useEffect(() => {
   if (isLoading) return;
@@ -121,14 +125,24 @@ export default function DashboardScreen() {
     <StatusBar style="dark" />
       <ScrollView style={s.page} contentContainerStyle={[s.content, { paddingBottom: tabBarHeight + 20 }]} showsVerticalScrollIndicator={false}>
         <View style={s.header}>
-          <View>
-            <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
-            <Text style={s.titulo}>Painel</Text>
-          </View>
-          <TouchableOpacity style={s.logoutBtn} onPress={logout}>
-            <Text style={s.logoutTxt}>Sair</Text>
-          </TouchableOpacity>
-        </View>
+  <View>
+    <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
+    <Text style={s.titulo}>Painel</Text>
+  </View>
+  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+    {foto ? (
+      <Image source={{ uri: foto }} style={{ width: 38, height: 38, borderRadius: 19 }} />
+    ) : (
+      <View style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: '#EDE9FE',
+                     alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ color: '#7C3AED', fontWeight: '700', fontSize: 16 }}>{nome.charAt(0)}</Text>
+      </View>
+    )}
+    <TouchableOpacity style={s.logoutBtn} onPress={logout}>
+      <Text style={s.logoutTxt}>Sair</Text>
+    </TouchableOpacity>
+  </View>
+</View>
 
         <View style={s.statsGrid}>
           <StatCard icon="👥" label="Clientes"    valor={stats?.clientes}    cor="#7C3AED" carregando={carregando} />
