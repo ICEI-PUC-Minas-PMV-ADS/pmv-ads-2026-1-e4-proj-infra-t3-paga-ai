@@ -146,11 +146,6 @@ export default function ResetPasswordScreen() {
             )}
           </TouchableOpacity>
  
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>ou</Text>
-            <View style={styles.dividerLine} />
-          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
