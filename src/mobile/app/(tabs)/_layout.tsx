@@ -1,6 +1,3 @@
-// Layout de abas principal. Define as 5 seções da aplicação com nome e ícone.
-// Cada aba aponta para o index.tsx da sua pasta — implemente as telas lá.
-
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -19,24 +16,44 @@ const TABS: TabConfig[] = [
   { name: 'emprestimos',  title: 'Empréstimos',  icon: 'cash-outline',          iconFocused: 'cash' },
   { name: 'notificacoes', title: 'Notificações', icon: 'notifications-outline', iconFocused: 'notifications' },
   { name: 'relatorios',   title: 'Relatórios',   icon: 'bar-chart-outline',     iconFocused: 'bar-chart' },
+  { name: 'perfil',       title: 'Perfil',       icon: 'person-outline',        iconFocused: 'person' },
 ];
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={({ route }) => {
-        const tab = TABS.find((t) => t.name === route.name);
+        const baseName = route.name.split('/')[0];
+        const tab = TABS.find((t) => t.name === baseName);
         return {
           headerShown: false,
           title: tab?.title,
-          tabBarActiveTintColor: '#1a73e8',
-          tabBarInactiveTintColor: '#888',
+          tabBarActiveTintColor: '#7C3AED',
+          tabBarInactiveTintColor: '#9CA3AF',
+          tabBarStyle: {
+            backgroundColor: '#ffffff',
+            borderTopWidth: 1,
+            borderTopColor: '#E5E7EB',
+            paddingBottom: 8,
+            paddingTop: 4,
+          },
+          tabBarLabelStyle: {
+            fontSize: 11,
+            fontWeight: '600',
+          },
           tabBarIcon: ({ focused, color, size }) => {
             const iconName = focused ? tab?.iconFocused : tab?.icon;
             return <Ionicons name={iconName ?? 'ellipse-outline'} size={size} color={color} />;
           },
         };
       }}
-    />
+    >
+      <Tabs.Screen name="index" />
+      <Tabs.Screen name="clientes/index" />
+      <Tabs.Screen name="emprestimos/index" />
+      <Tabs.Screen name="notificacoes/index" />
+      <Tabs.Screen name="relatorios/index" />
+      <Tabs.Screen name="perfil/index" />
+      </Tabs>
   );
 }

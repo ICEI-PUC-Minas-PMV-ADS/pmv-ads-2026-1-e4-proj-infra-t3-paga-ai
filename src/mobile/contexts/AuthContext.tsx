@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TOKEN_KEY } from '@services/api';
-import type { Usuario } from '@types/usuario';
+import type { Usuario } from '@typings/usuario';
+
 
 interface AuthContextData {
   user: Usuario | null;
@@ -17,6 +18,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
 
   useEffect(() => {
     async function loadStoredAuth() {

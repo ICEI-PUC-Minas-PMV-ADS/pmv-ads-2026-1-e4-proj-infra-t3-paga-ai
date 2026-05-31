@@ -1,24 +1,51 @@
 import { useEffect } from 'react';
+import { View, ActivityIndicator } from 'react-native';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { AuthProvider } from '@contexts/AuthContext';
 import { useAuth } from '@hooks/useAuth';
+import { registrarPushToken, configurarListeners } from '@services/pushNotificationService';
+import { salvarPushToken } from '@services/authService';
 
 function RootRedirect() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoading) return; // aguarda carregar o token do storage
+    if (isLoading) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    const isResetPassword = segments[1] === 'reset-password';
 
-    if (!isAuthenticated && !inAuthGroup) {
+    if (!isAuthenticated && !inAuthGroup && !isResetPassword) {
       router.replace('/(auth)/login');
-    } else if (isAuthenticated && inAuthGroup) {
+    } else if (isAuthenticated && inAuthGroup && !isResetPassword) {
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, isLoading, segments]);
+
+    useEffect(() => {
+        if (!isAuthenticated || !user?.email) return;
+
+        registrarPushToken().then((token) => {
+            if (token) salvarPushToken(user.email, token);
+        });
+
+        const removerListeners = configurarListeners(
+            (notificacao) => console.log('[Push] Recebida:', notificacao),
+            (response) => console.log('[Push] Clicada:', response)
+        );
+
+        return removerListeners;
+    }, [isAuthenticated, user?.email]);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#7C3AED" />
+      </View>
+    );
+  }
 
   return <Slot />;
 }

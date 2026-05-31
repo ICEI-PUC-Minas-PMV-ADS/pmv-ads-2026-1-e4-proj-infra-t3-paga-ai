@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getUsuarioLogado, getToken } from "../services/authService";
 import { getClientes } from "../services/ClientesService";
 import {
-  getCarteira, getRelatorioLucro, criarEmprestimo,
+  getCarteira, getRelatorioLucro, getPagos, criarEmprestimo,
   marcarComoPago, deletarEmprestimo,
 } from "../services/EmprestimosService";
 
@@ -50,27 +50,24 @@ export default function Emprestimos() {
   const [clientes,    setClientes]    = useState([]);
 
   async function carregar() {
-    setLoading(true);
-    setErro("");
-    try {
-      const [carteira, lucro] = await Promise.all([
-        getCarteira(cobrador),
-        getRelatorioLucro(cobrador),
-      ]);
-      const listaRelatorio = lucro.listaDetalhada ?? [];
-      const listaCarteira  = Array.isArray(carteira) ? carteira : [];
-      const idsCarteira    = new Set(listaCarteira.map((e) => e.id));
-      const quitados = listaRelatorio
-        .filter((e) => e.status === "Recebido" && !idsCarteira.has(e.id))
-        .map((e) => ({ ...e, pago: true }));
-      setEmprestimos([...listaCarteira, ...quitados]);
-      setResumo(lucro.resumoGeral);
-    } catch (e) {
-      setErro(e.message);
-    } finally {
-      setLoading(false);
-    }
+  setLoading(true);
+  setErro("");
+  try {
+    const [carteira, pagos, lucro] = await Promise.all([
+      getCarteira(),
+      getPagos(),
+      getRelatorioLucro(),
+    ]);
+    const listaCarteira = Array.isArray(carteira) ? carteira : [];
+    const listaPagos    = Array.isArray(pagos) ? pagos : [];
+    setEmprestimos([...listaCarteira, ...listaPagos]);
+    setResumo(lucro.resumoGeral);
+  } catch (e) {
+    setErro(e.message);
+  } finally {
+    setLoading(false);
   }
+}
 
   useEffect(() => { carregar(); }, [cobrador]);
 
@@ -96,11 +93,10 @@ export default function Emprestimos() {
     }
     setSalvando(true);
     try {
-      await criarEmprestimo({
+  await criarEmprestimo({
   Cliente:        form.Cliente,
   Valor:          parseFloat(form.Valor),
   TaxaJuros:      parseFloat(form.TaxaJuros) / 100,
-  Cobrador:       cobrador,
   ClienteId:      parseInt(form.ClienteId) || Math.floor(Math.random() * 9000) + 1000,
   NumeroParcelas: parseInt(form.NumeroParcelas) || 1,
   DataVencimento: form.DataVencimento ? new Date(form.DataVencimento).toISOString() : "",
@@ -116,20 +112,20 @@ export default function Emprestimos() {
   }
 
   async function handlePagar(id) {
-    if (!confirm("Confirmar recebimento deste empréstimo?")) return;
-    try {
-      await marcarComoPago(id, cobrador);
-      carregar();
-    } catch (e) { alert(e.message); }
-  }
+  if (!confirm("Confirmar recebimento deste empréstimo?")) return;
+  try {
+    await marcarComoPago(id);
+    carregar();
+  } catch (e) { alert(e.message); }
+}
 
   async function handleDeletar(id) {
-    if (!confirm("Excluir este empréstimo?")) return;
-    try {
-      await deletarEmprestimo(id, cobrador);
-      carregar();
-    } catch (e) { alert(e.message); }
-  }
+  if (!confirm("Excluir este empréstimo?")) return;
+  try {
+    await deletarEmprestimo(id);
+    carregar();
+  } catch (e) { alert(e.message); }
+}
 
   const comStatus = emprestimos.map((e) => ({ ...e, _status: calcularStatus(e) }));
   const tabAtual  = TABS.find((t) => t.key === activeTab);
@@ -249,7 +245,9 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
   const pago    = status === "Pago";
   const valor   = e.valor   ?? e.valorEmprestado ?? 0;
   const receber = e.valorFinal ?? e.valorComJuros ?? 0;
-  const id      = String(e.id ?? 0).padStart(3, "0");
+  const realId  = e.id ?? e.Id ?? 0;
+  console.log('Emprestimo objeto:', e, 'realId:', realId);
+  const id      = String(realId).padStart(3, "0");
 
  return (
     <div style={s.card}>
@@ -257,9 +255,11 @@ function CartaoEmprestimo({ e, onPagar, onDeletar }) {
         <span style={s.cardNome}>{e.cliente ?? e.devedor ?? "—"} <span style={s.cardId}>#{id}</span></span>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {!pago && (
-            <button style={s.btnPagar} onClick={() => onPagar(e.id)}>✔ Recebido</button>
-          )}
-          <button style={s.btnDeletar} onClick={() => onDeletar(e.id)}>✕</button>
+           <button style={s.btnPagar} onClick={() => onPagar(realId)}>✔ Recebido</button>
+
+           )}
+           <button style={s.btnDeletar} onClick={() => onDeletar(realId)}>✕</button>
+
           <span style={{ ...s.statusBadge, background: estilo.bg, color: estilo.color }}>{status}</span>
         </div>
       </div>

@@ -1,5 +1,6 @@
 // Serviço de autenticação para o mobile
 // Espelha a implementação do web, mas usa axios em vez de fetch
+import { BASE_URL } from '@constants/endpoints';
 import api from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,7 +8,7 @@ const TOKEN_KEY = '@pagaai:token';
 const REMEMBERED_EMAIL_KEY = '@pagaai:remembered_email';
 
 // URL base da API de usuários via gateway compartilhado
-const USUARIOS_BASE_URL = '/backend/Usuarios';
+const USUARIOS_BASE_URL = BASE_URL + '/backend/Usuarios';
 
 function validarEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -173,6 +174,10 @@ export async function isAuthenticated(): Promise<boolean> {
   return !!token;
 }
 
+export async function salvarPushToken(email: string, token: string): Promise<void> {
+    await api.patch('/api/Auth/push-token', { email, token });
+}
+
 /**
  * Decodificar JWT para obter dados do usuário
  * O token JWT tem 3 partes separadas por "."
@@ -184,10 +189,6 @@ function base64UrlDecode(value: string): string {
 
   if (typeof globalThis.atob === 'function') {
     return globalThis.atob(padded);
-  }
-
-  if (typeof Buffer !== 'undefined') {
-    return Buffer.from(padded, 'base64').toString('utf-8');
   }
 
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';

@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Reports.API.Models;
 
+[BsonIgnoreExtraElements]
 public class Parcela
 {
     public int Numero { get; set; }
@@ -15,12 +16,16 @@ public class Parcela
     public bool Pago { get; set; } = false;
 
     public DateTime? DataPagamento { get; set; }
+
+    public bool NotificadoAtraso { get; set; } = false;
 }
 
+[BsonIgnoreExtraElements]
 public class Emprestimo
 {
     [BsonId] 
     public int Id { get; set; }
+    // ... resto dos campos
     public int ClienteId {get; set; }
     public string Cliente { get; set; } = null!;
     public string Cobrador { get; set; } = null!;

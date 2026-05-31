@@ -100,6 +100,7 @@ export default function LoginScreen() {
             keyboardType="email-address"
             editable={!loading}
           />
+          </View>
 
           <Text style={[styles.label, { marginTop: 16 }]}>Senha</Text>
           <View style={styles.passwordContainer}>
@@ -165,8 +166,7 @@ export default function LoginScreen() {
             <Link href="/(auth)/register" style={styles.registerLink}>
               Criar conta
             </Link>
-          </View>
-        </View>
+          </View>     
       </ScrollView>
     </KeyboardAvoidingView>
   );

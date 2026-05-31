@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Emprestimos.API.Models
 {
+    [BsonIgnoreExtraElements]
     public class Parcela
     {
         public int Numero { get; set; }
@@ -15,6 +16,8 @@ namespace Emprestimos.API.Models
         public bool Pago { get; set; } = false;
 
         public DateTime? DataPagamento { get; set; }
+
+        public bool NotificadoAtraso { get; set; } = false;
     }
 
     public class Emprestimo
@@ -24,9 +27,8 @@ namespace Emprestimos.API.Models
 
         public int ClienteId { get; set; }
 
-        public string Cliente { get; set; } = null!;
-
-        public string Cobrador { get; set; } = null!;
+       public string? Cliente { get; set; }
+        public string? Cobrador { get; set; }
 
         [BsonRepresentation(BsonType.Decimal128)] 
         public decimal Valor { get; set; }
@@ -53,11 +55,14 @@ namespace Emprestimos.API.Models
         public DateTime? DataPagamento { get; set; }
 
         public StatusPagamento Status { get; set; } = StatusPagamento.Pendente;
+
+        public bool NotificadoAtraso { get; set; } = false;
     }
 
     public enum StatusPagamento
     {
         Pendente = 0,
+        Atrasado = 1,
         Pago = 2
     }
 }

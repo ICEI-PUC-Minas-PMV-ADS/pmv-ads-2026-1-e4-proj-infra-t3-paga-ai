@@ -6,13 +6,14 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["components/*"],
-      "@services/*": ["services/*"],
-      "@hooks/*": ["hooks/*"],
-      "@types/*": ["types/*"],
-      "@constants/*": ["constants/*"],
-      "@contexts/*": ["contexts/*"],
-      "emprestimo": ["types/emprestimo"]
-    }
+  "@components/*": ["components/*"],
+  "@services/*": ["services/*"],
+  "@hooks/*": ["hooks/*"],
+  "@typings/*": ["types/*"],     // ← era @types
+  "@constants/*": ["constants/*"],
+  "@contexts/*": ["contexts/*"],
+  "emprestimo": ["types/emprestimo"],
+  "@/*": ["src/*"]
+}
   }
 }
