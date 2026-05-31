@@ -14,6 +14,7 @@ import api from '@services/api';
 import { CLIENTES, EMPRESTIMOS, REPORT } from '@constants/endpoints';
 import { Emprestimo, fmt } from '../../types/emprestimo';
 import { StatusBar } from 'expo-status-bar';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 interface Stats {
   clientes: number;
@@ -47,63 +48,78 @@ const acoes = [
 
 export default function DashboardScreen() {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const nome = user?.nome?.split(' ')[0] ?? 'Usuário';
 
   const [stats, setStats] = useState<Stats | null>(null);
   const [vencendo, setVencendo] = useState<Emprestimo[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
-    async function carregar() {
-      try {
-        const cobrador = user?.nome ?? '';
+  if (isLoading) return;
+  if (!user) return;
+  
+  async function carregar() {
+    const cobrador = user?.nome ?? '';
 
-        const resClientes = await api.get(CLIENTES);
-        const resCarteira = await api.get(`${EMPRESTIMOS}/carteira/${encodeURIComponent(cobrador)}`);
+    let clientes: unknown[] = [];
+    let lista: Emprestimo[] = [];
 
-        const clientes: unknown[] = Array.isArray(resClientes.data) ? resClientes.data : [];
-        const lista: Emprestimo[] = Array.isArray(resCarteira.data) ? resCarteira.data : [];
-
-        const emDia     = lista.filter((e) => calcularStatus(e) === 'emDia');
-        const atrasados = lista.filter((e) => calcularStatus(e) === 'atraso');
-        const proximos  = lista
-          .filter((e) => !e.pago)
-          .sort((a, b) => new Date(a.dataVencimento).getTime() - new Date(b.dataVencimento).getTime())
-          .slice(0, 4);
-
-        let lucro = null;
-        try {
-          const resLucro = await api.get(`${EMPRESTIMOS}/relatorio-lucro/${encodeURIComponent(cobrador)}`);
-          lucro = resLucro.data;
-        } catch {
-          console.log('Report indisponível, continuando sem dados financeiros.');
-        }
-
-        setVencendo(proximos);
-        setStats({
-          clientes:    clientes.length,
-          emprestimos: lista.length,
-          emDia:       emDia.length,
-          atraso:      atrasados.length,
-          investido:   lucro?.resumoGeral?.investimentoTotal     ?? 0,
-          aReceber:    lucro?.resumoGeral?.recebimentoTotalGeral ?? 0,
-          lucro:       lucro?.resumoGeral?.lucroTotalProjetado   ?? 0,
-        });
-      } catch (err) {
-        console.log('Erro ao carregar dashboard:', err);
-        setStats({ clientes: 0, emprestimos: 0, emDia: 0, atraso: 0, investido: 0, aReceber: 0, lucro: 0 });
-      } finally {
-        setCarregando(false);
-      }
+    try {
+      const resClientes = await api.get(CLIENTES);
+      clientes = Array.isArray(resClientes.data) ? resClientes.data : [];
+    } catch (err) {
+      console.log('❌ Erro clientes:', err);
     }
-    carregar();
-  }, [user]);
+
+    try {
+      const resCarteira = await api.get(`${EMPRESTIMOS}/carteira`);
+      lista = Array.isArray(resCarteira.data) ? resCarteira.data : [];
+    } catch (err) {
+      console.log('❌ Erro empréstimos:', err);
+    }
+
+    try {
+      const emDia     = lista.filter((e) => calcularStatus(e) === 'emDia');
+      const atrasados = lista.filter((e) => calcularStatus(e) === 'atraso');
+      const proximos  = lista
+        .filter((e) => !e.pago)
+        .sort((a, b) => new Date(a.dataVencimento).getTime() - new Date(b.dataVencimento).getTime())
+        .slice(0, 4);
+
+      let lucro = null;
+      try {
+        const resLucro = await api.get(`${EMPRESTIMOS}/relatorio-lucro`);
+        lucro = resLucro.data;
+      } catch {
+        console.log('Report indisponível, continuando sem dados financeiros.');
+      }
+
+      setVencendo(proximos);
+      setStats({
+        clientes:    clientes.length,
+        emprestimos: lista.length,
+        emDia:       emDia.length,
+        atraso:      atrasados.length,
+        investido:   lucro?.resumoGeral?.investimentoTotal     ?? 0,
+        aReceber:    lucro?.resumoGeral?.recebimentoTotalGeral ?? 0,
+        lucro:       lucro?.resumoGeral?.lucroTotalProjetado   ?? 0,
+      });
+    } catch (err) {
+      console.log('❌ Erro ao processar dashboard:', err);
+      setStats({ clientes: 0, emprestimos: 0, emDia: 0, atraso: 0, investido: 0, aReceber: 0, lucro: 0 });
+    } finally {
+      setCarregando(false);
+    }
+  }
+  carregar();
+}, [user, isLoading]);
 
   return (
-    <SafeAreaView style={s.safe}>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
     <StatusBar style="dark" />
-      <ScrollView style={s.page} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={s.page} contentContainerStyle={[s.content, { paddingBottom: tabBarHeight + 20 }]} showsVerticalScrollIndicator={false}>
         <View style={s.header}>
           <View>
             <Text style={s.saudacao}>{saudacao()}, {nome} 👋</Text>
@@ -208,7 +224,8 @@ function FinCard({ label, valor, cor, carregando }: {
 const s = StyleSheet.create({
   safe:          { flex: 1, backgroundColor: '#F5F3FF' },
   page:          { flex: 1 },
-  content:       { padding: 20, paddingBottom: 40 },
+  content: { padding: 20, paddingBottom: 120 },
+
   header:        { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
   logoutBtn:     { backgroundColor: '#FEE2E2', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8 },
   logoutTxt:     { color: '#DC2626', fontWeight: '700', fontSize: 13 },

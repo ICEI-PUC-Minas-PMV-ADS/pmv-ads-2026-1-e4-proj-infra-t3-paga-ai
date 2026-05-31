@@ -11,6 +11,10 @@ import { EmprestimoListItem } from '@components/emprestimos/EmprestimoListItem';
 import { EmprestimoCard } from '@components/emprestimos/EmprestimoCard';
 import { useLocalSearchParams } from 'expo-router';
 import { TextInput } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {Picker} from '@react-native-picker/picker';
 
 
 function req(method: 'get' | 'patch' | 'delete', path: string) {
@@ -20,13 +24,16 @@ function req(method: 'get' | 'patch' | 'delete', path: string) {
 export default function EmprestimosScreen() {
   const { user } = useAuth();
   const cobrador = user?.nome ?? '';
+  const tabBarHeight = useBottomTabBarHeight();
   const [criando, setCriando] = useState(false);
   const [cliente, setCliente] = useState('');
   const [clienteId, setClienteId] = useState('');
   const [valor, setValor] = useState('');
   const [juros, setJuros] = useState('');
   const [parcelas, setParcelas] = useState('1');
-  const [vencimento, setVencimento] = useState('');
+  const [vencimento, setVencimento] = useState(new Date());
+  const [mostrarCalendario, setMostrarCalendario] = useState(false);
+  const [clientes, setClientes] = useState<{ id: number, nome: string }[]>([]);
 
   const [lista, setLista]             = useState<Emprestimo[]>([]);
   const [carregando, setCarregando]   = useState(true);
@@ -101,13 +108,17 @@ export default function EmprestimosScreen() {
       },
     ]);
   }
+   const addButtonStyle = {
+    ...s.addButton,
+    bottom: tabBarHeight + 5,
+  };
 
   if (carregando) {
     return <View style={s.center}><ActivityIndicator size="large" color="#7C3AED" /></View>;
   }
 
   return (
-    <View style={s.page}>
+    <SafeAreaView style={s.page} edges={['top', 'left', 'right']}>
       <View style={s.header}>
         <Text style={s.titulo}>Empréstimos</Text>
         <Text style={s.sub}>{lista.length} registro{lista.length !== 1 ? 's' : ''}</Text>
@@ -131,7 +142,7 @@ export default function EmprestimosScreen() {
           contentContainerStyle={{ paddingBottom: 32 }}
         />
       )}
-     <TouchableOpacity style={s.addButton} onPress={() => setCriando(true)}>
+     <TouchableOpacity style={addButtonStyle} onPress={() => setCriando(true)}>
        <Text style={s.addButtonText}>+ Novo Empréstimo</Text>
      </TouchableOpacity>
 
@@ -161,18 +172,41 @@ export default function EmprestimosScreen() {
 
     <Text style={s.titulo}>Novo Empréstimo</Text>
 
-    <TextInput placeholder="Cliente" style={s.input} value={cliente} onChangeText={setCliente} />
+   <Picker
+  selectedValue={cliente}
+  onValueChange={(itemValue: string) => setCliente(itemValue)}
+>
+  {clientes.map(c => (
+    <Picker.Item key={c.nome} label={c.nome} value={c.nome} />
+  ))}
+</Picker>
     <TextInput placeholder="Valor" style={s.input} value={valor} onChangeText={setValor} keyboardType="numeric" />
     <TextInput placeholder="Taxa de juros (%)" style={s.input} value={juros} onChangeText={setJuros} keyboardType="numeric" />
     <TextInput placeholder="Número de parcelas" style={s.input} value={parcelas} onChangeText={setParcelas} keyboardType="numeric" />
-    <TextInput placeholder="Data de vencimento (YYYY-MM-DD)" style={s.input} value={vencimento} onChangeText={setVencimento} />
+    {/* Botão para abrir calendário */}
+<TouchableOpacity onPress={() => setMostrarCalendario(true)} style={s.btnSalvar}>
+  <Text style={s.btnSalvarText}>Escolher Data de Vencimento</Text>
+</TouchableOpacity>
 
-    <TouchableOpacity style={s.btnSalvar} onPress={criarEmprestimo}>
-      <Text style={s.btnSalvarText}>Salvar</Text>
-    </TouchableOpacity>
+{/* DateTimePicker aparece só quando mostrarCalendario = true */}
+{mostrarCalendario && (
+  <DateTimePicker
+    value={vencimento}
+    mode="date"
+    display="default"
+    onChange={(event, date) => {
+      setMostrarCalendario(false);
+      if (date) setVencimento(date);
+    }}
+  />
+)}
+
+<TouchableOpacity style={s.btnSalvar} onPress={criarEmprestimo}>
+  <Text style={s.btnSalvarText}>Salvar</Text>
+</TouchableOpacity>
   </View>
 </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -208,7 +242,6 @@ btnSalvarText: {
 },
 addButton: {
   position: 'absolute',
-  bottom: 20,
   right: 20,
   backgroundColor: '#7C3AED',
   paddingVertical: 14,

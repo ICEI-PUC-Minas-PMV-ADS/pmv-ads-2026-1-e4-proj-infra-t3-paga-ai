@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { Cliente, ClientePayload } from '@types/cliente';
+import type { Cliente, ClientePayload } from '@typings/cliente';
 import {
   getClientes,
   createCliente,
@@ -36,7 +36,6 @@ export function useClientes() {
     setClientes((prev) => prev.map((c) => (c.id === id ? atualizado : c)));
     return atualizado;
   }, []);
-
   const deletar = useCallback(async (id: number) => {
     await deleteCliente(id);
     setClientes((prev) => prev.filter((c) => c.id !== id));
