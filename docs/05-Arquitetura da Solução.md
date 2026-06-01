@@ -217,6 +217,10 @@ Apresente também uma figura explicando como as tecnologias estão relacionadas 
 ## Hospedagem
 Hospedada na azure: https://pagai-frontend-h0ece2hjcbb7gag7.eastus-01.azurewebsites.net/
 
+Link Versão APK do Mobile: https://expo.dev/accounts/thiago.12/projects/paga-ai/builds/e0190297-8e0d-4f70-8809-fc53095ef47b
+
+Recomendado baixar o APK para testar funções nativas
+
 ## Qualidade de Software
 
 Conceituar qualidade de fato é uma tarefa complexa, mas ela pode ser vista como um método gerencial que através de procedimentos disseminados por toda a organização, busca garantir um produto final que satisfaça às expectativas dos stakeholders.
