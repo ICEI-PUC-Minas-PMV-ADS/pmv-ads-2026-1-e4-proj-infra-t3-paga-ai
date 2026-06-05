@@ -55,18 +55,23 @@ public async Task<IActionResult> Post(Cliente novoCliente)
 }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Cliente clienteAtualizado)
-    {
-        clienteAtualizado.Id = id;
+public async Task<IActionResult> Update(int id, Cliente clienteAtualizado)
+{
+    var clienteExistente = await _clientes.Find(c => c.Id == id).FirstOrDefaultAsync();
+    
+    if (clienteExistente is null)
+        return NotFound(new { mensagem = $"Cliente com ID {id} não encontrado." });
 
-        var result = await _clientes.ReplaceOneAsync(c => c.Id == id, clienteAtualizado);
+    clienteAtualizado.Id = id;
+    clienteAtualizado.Cobrador = clienteExistente.Cobrador; // preserva o cobrador
 
-        if (result.MatchedCount == 0)
-            return NotFound(new { mensagem = $"Cliente com ID {id} não encontrado." });
+    var result = await _clientes.ReplaceOneAsync(c => c.Id == id, clienteAtualizado);
 
-        return NoContent();
-    }
+    if (result.MatchedCount == 0)
+        return NotFound(new { mensagem = $"Cliente com ID {id} não encontrado." });
 
+    return NoContent();
+}
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
