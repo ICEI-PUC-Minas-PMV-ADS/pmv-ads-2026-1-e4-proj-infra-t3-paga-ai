@@ -15,10 +15,11 @@ function RootRedirect() {
     if (isLoading) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    const isResetPassword = segments[1] === 'reset-password';
 
-    if (!isAuthenticated && !inAuthGroup) {
+    if (!isAuthenticated && !inAuthGroup && !isResetPassword) {
       router.replace('/(auth)/login');
-    } else if (isAuthenticated && inAuthGroup) {
+    } else if (isAuthenticated && inAuthGroup && !isResetPassword) {
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, isLoading, segments]);

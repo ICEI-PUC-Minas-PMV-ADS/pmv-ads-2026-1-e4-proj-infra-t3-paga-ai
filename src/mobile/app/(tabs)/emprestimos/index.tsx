@@ -4,7 +4,7 @@ import {
   ActivityIndicator, Modal, TouchableOpacity, Alert,
 } from 'react-native';
 import api from '@services/api';
-import { EMPRESTIMOS } from '@constants/endpoints';
+import { EMPRESTIMOS, CLIENTES } from '@constants/endpoints';
 import { useAuth } from '@hooks/useAuth';
 import { Emprestimo } from 'emprestimo';
 import { EmprestimoListItem } from '@components/emprestimos/EmprestimoListItem';
@@ -14,7 +14,7 @@ import { TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
 
 function req(method: 'get' | 'patch' | 'delete', path: string) {
@@ -63,6 +63,12 @@ export default function EmprestimosScreen() {
             if (emprestimo) setSelecionado(emprestimo);
         }
     }, [abrirId, lista]);
+    useEffect(() => {
+        if (!cobrador) return;
+        api.get('/backend/Clientes')
+            .then((res) => setClientes(Array.isArray(res.data) ? res.data : []))
+            .catch((e) => console.error('[Clientes] erro:', e?.message));
+    }, [cobrador]);
     async function criarEmprestimo() {
       try {
         await api.post(EMPRESTIMOS, {
@@ -172,14 +178,18 @@ export default function EmprestimosScreen() {
 
     <Text style={s.titulo}>Novo Empréstimo</Text>
 
-   <Picker
-  selectedValue={cliente}
-  onValueChange={(itemValue: string) => setCliente(itemValue)}
->
-  {clientes.map(c => (
-    <Picker.Item key={c.nome} label={c.nome} value={c.nome} />
-  ))}
-</Picker>
+                  <View style={s.input}>
+                      <Picker
+                          selectedValue={cliente}
+                          onValueChange={(itemValue: string) => setCliente(itemValue)}
+                          style={{ height: 50 }}
+                      >
+                          <Picker.Item label="Selecione um cliente..." value="" />
+                          {clientes.map(c => (
+                              <Picker.Item key={c.id} label={c.nome} value={c.nome} />
+                          ))}
+                      </Picker>
+                  </View>
     <TextInput placeholder="Valor" style={s.input} value={valor} onChangeText={setValor} keyboardType="numeric" />
     <TextInput placeholder="Taxa de juros (%)" style={s.input} value={juros} onChangeText={setJuros} keyboardType="numeric" />
     <TextInput placeholder="Número de parcelas" style={s.input} value={parcelas} onChangeText={setParcelas} keyboardType="numeric" />

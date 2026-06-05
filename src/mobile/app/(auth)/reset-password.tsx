@@ -58,8 +58,7 @@ export default function ResetPasswordScreen() {
     try {
       setLoading(true);
       await resetPassword(email as string, token as string, newPassword);
-      setSucesso('Senha redefinida com sucesso! Redirecionando para login...');
-      setTimeout(() => router.push('/(auth)/login'), 2000);
+      setSucesso('Senha redefinida com sucesso!');
     } catch (error: any) {
       setErro(error.message || 'Falha ao redefinir senha.');
     } finally {
@@ -147,18 +146,6 @@ export default function ResetPasswordScreen() {
             )}
           </TouchableOpacity>
  
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>ou</Text>
-            <View style={styles.dividerLine} />
-          </View>
- 
-          <View style={styles.loginContainer}>
-            <Text style={styles.loginText}>Lembrou sua senha?</Text>
-            <Link href="/(auth)/login" style={styles.loginLink}>
-              Entrar
-            </Link>
-          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

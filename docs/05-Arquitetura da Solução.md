@@ -215,15 +215,11 @@ Descreva aqui qual(is) tecnologias você vai usar para resolver o seu problema, 
 Apresente também uma figura explicando como as tecnologias estão relacionadas ou como uma interação do usuário com o sistema vai ser conduzida, por onde ela passa até retornar uma resposta ao usuário.
 
 ## Hospedagem
+Hospedada na azure: https://pagai-frontend-h0ece2hjcbb7gag7.eastus-01.azurewebsites.net/
 
-Explique como a hospedagem e o lançamento da plataforma foi feita.
+Link Versão APK do Mobile: https://expo.dev/accounts/thiago.12/projects/paga-ai/builds/e0190297-8e0d-4f70-8809-fc53095ef47b
 
-> **Links Úteis**:
->
-> - [Website com GitHub Pages](https://pages.github.com/)
-> - [Programação colaborativa com Repl.it](https://repl.it/)
-> - [Getting Started with Heroku](https://devcenter.heroku.com/start)
-> - [Publicando Seu Site No Heroku](http://pythonclub.com.br/publicando-seu-hello-world-no-heroku.html)
+Recomendado baixar o APK para testar funções nativas
 
 ## Qualidade de Software
 

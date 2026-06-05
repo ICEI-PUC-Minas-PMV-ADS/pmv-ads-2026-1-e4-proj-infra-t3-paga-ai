@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "PagaAI",
+    "name": "Paga Aí",
     "slug": "paga-ai",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,7 +20,11 @@
       "enabled": false
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pagaai.mobile",
+      "associatedDomains": [
+        "applinks:pagai.com"
+      ]
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +32,27 @@
         "backgroundColor": "#ffffff"
       },
       "googleServicesFile": "./google-services.json",
-      "package": "com.pagaai.mobile"
+      "package": "com.pagaai.mobile",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "pagaai",
+              "host": "reset-password"
+            },
+            {
+              "scheme": "https",
+              "host": "pagai.com",
+              "pathPrefix": "/reset-password"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "plugins": [
       "expo-router",
@@ -36,7 +60,11 @@
       "expo-sharing"
     ],
     "extra": {
-      "router": {}
-    }
+      "router": {},
+      "eas": {
+        "projectId": "41214123-2d6e-4408-a1c1-d07ec564615a"
+      }
+    },
+    "owner": "thiago.12"
   }
 }

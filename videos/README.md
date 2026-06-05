@@ -18,4 +18,6 @@ Etapa 3 Paga AÍ: https://youtu.be/SSXpMMTVIL8
 
 Etapa 3 Renata: https://github.com/user-attachments/assets/0fa93e00-3154-4029-936a-031bdcc07dc5
 
+Etapa 4 Paga Aí: https://youtu.be/wv-zXBe-5sk
+
 
