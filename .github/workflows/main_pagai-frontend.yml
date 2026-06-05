@@ -26,6 +26,7 @@ jobs:
       - name: npm install, build, and test
         working-directory: src/frontend
         env:
+          VITE_GATEWAY_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net
           VITE_API_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net/backend/Usuarios
           VITE_EMPRESTIMOS_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net/backend/Emprestimos
           VITE_CLIENTES_URL: https://gateway-hxc8cshmfsd9cwdt.eastus-01.azurewebsites.net/backend/Clientes
