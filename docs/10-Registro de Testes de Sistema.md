@@ -105,7 +105,7 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 * **Descrição:** O usuário acessa o sistema pelo navegador, preenche os dados do empréstimo e envia a requisição para a API em C#.
 * **Resultado:** A API processa os dados com sucesso e a tela atualiza mostrando o novo empréstimo na lista.
 * **Evidência do Teste:**
-  ![Tela de Empréstimo na Plataforma Web](docs/img/docs/img/web_emprestimo.png)
+  ![Tela de Empréstimo  Web](img/web_emprestimo.png)
 
 ---
 
@@ -114,4 +114,4 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 * **Descrição:** O usuário abre o aplicativo no celular e visualiza a lista de empréstimos ativos cadastrados no banco de dados através da API.
 * **Resultado:** Os dados são carregados rapidamente e exibidos em formato de cartões (cards) na tela do celular.
 * **Evidência do Teste:**
-  ![Tela de Empréstimos no Aplicativo Mobile](docs/img/docs/img/docs/img/mobile_emprestimo.png)
+  ![Tela Empréstimo Mobile](img/docs/img/mobile_emprestimo.png)
