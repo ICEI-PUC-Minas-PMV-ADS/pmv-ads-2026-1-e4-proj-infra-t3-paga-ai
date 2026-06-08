@@ -61,23 +61,33 @@ namespace MyProject
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class EmprestimosController : ControllerBase
     {
-        private static List<User> Users = new List<User>();
+        private static List<Emprestimo> Emprestimos = new List<Emprestimo>();
 
         [HttpPost]
-        public IActionResult AddUser(User user)
+        public IActionResult CriarEmprestimo(Emprestimo emprestimo)
         {
-            Users.Add(user);
-            return Ok();
+            Emprestimos.Add(emprestimo);
+            return Ok(new { mensagem = "Empréstimo realizado com sucesso!" });
         }
 
         [HttpGet]
-        public IActionResult GetUsers()
+        public IActionResult ObterEmprestimos()
         {
-            return Ok(Users);
+            return Ok(Emprestimos);
         }
     }
+
+    public class Emprestimo
+    {
+        public int Id { get; set; }
+        public string Item { get; set; }
+        public string Usuario { get; set; }
+        public string DataDevolucao { get; set; }
+    }
+}
+
 
     public class User
     {
@@ -85,3 +95,23 @@ namespace MyProject
         public string Email { get; set; }
     }
 }
+```
+## Demonstração dos Requisitos Implementados (Web & Mobile)
+
+Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os testes integrando o back-end em C# com as interfaces de usuário.
+
+### 1. Fluxo de Empréstimos - Plataforma Web
+
+* **Descrição:** O usuário acessa o sistema pelo navegador, preenche os dados do empréstimo e envia a requisição para a API em C#.
+* **Resultado:** A API processa os dados com sucesso e a tela atualiza mostrando o novo empréstimo na lista.
+* **Evidência do Teste:**
+  ![Tela de Empréstimo na Plataforma Web](docs/img/docs/img/web_emprestimo.png)
+
+---
+
+### 2. Fluxo de Empréstimos - Aplicativo Mobile
+
+* **Descrição:** O usuário abre o aplicativo no celular e visualiza a lista de empréstimos ativos cadastrados no banco de dados através da API.
+* **Resultado:** Os dados são carregados rapidamente e exibidos em formato de cartões (cards) na tela do celular.
+* **Evidência do Teste:**
+  ![Tela de Empréstimos no Aplicativo Mobile](docs/img/docs/img/docs/img/mobile_emprestimo.png)
