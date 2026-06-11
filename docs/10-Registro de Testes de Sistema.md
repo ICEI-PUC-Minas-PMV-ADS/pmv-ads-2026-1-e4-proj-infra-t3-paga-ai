@@ -123,6 +123,8 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 * **Descrição** Após o preenchimento do empréstimo, automaticamente irá criar um push da notificação de "Criação de Empréstimo"
 * **Resultado** A API processa os dados, a tela atualiza listando a criação do emprestimo, ou quando for marcado como pago, ou quando estiver em atraso.
 * **Evidência do Teste:**
+<img width="1919" height="914" alt="Captura de tela 2026-06-11 143506" src="https://github.com/user-attachments/assets/f7de9f9c-0336-442e-a6b9-c13f03465774" />
+
 <img width="1904" height="911" alt="Captura de tela 2026-06-11 141324" src="https://github.com/user-attachments/assets/a4c575e0-af9a-4386-9fa9-52ce8d47fe3f" />
 
 
