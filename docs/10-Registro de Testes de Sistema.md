@@ -118,7 +118,7 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 
 ---
 
-### 3. Fluxo de Notificações Plataforma Web
+### 3. Fluxo de Notificações - Plataforma Web
 
 * **Descrição** Após o preenchimento do empréstimo, automaticamente irá criar um push da notificação de "Criação de Empréstimo"
 * **Resultado** A API processa os dados, a tela atualiza listando a criação do emprestimo, ou quando for marcado como pago, ou quando estiver em atraso.
@@ -126,5 +126,19 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 <img width="1919" height="914" alt="Captura de tela 2026-06-11 143506" src="https://github.com/user-attachments/assets/f7de9f9c-0336-442e-a6b9-c13f03465774" />
 
 <img width="1904" height="911" alt="Captura de tela 2026-06-11 141324" src="https://github.com/user-attachments/assets/a4c575e0-af9a-4386-9fa9-52ce8d47fe3f" />
+
+---
+
+### 4. Fluxo de Notificações - Aplicativo Mobile
+
+* **Descrição:** O usuário abre o aplicativo no celular vai até a pagina de notificções onde lista todas as notificaçoes sober os empréstimos.
+* **Resultado:** Os dados são carregados rapidamente e exibidos em formato de cartões (cards) na tela do celular.
+* **Evidência do Teste:**
+
+<img width="433" height="936" alt="image" src="https://github.com/user-attachments/assets/10cf6d01-fd41-43a5-a241-71db35d6d15f" />
+<img width="437" height="937" alt="image" src="https://github.com/user-attachments/assets/182f32ae-6bf8-4119-941c-e79bdceece50" />
+<img width="432" height="936" alt="image" src="https://github.com/user-attachments/assets/a8a71a6a-f035-42f6-ab75-1e493aac25c1" />
+<img width="434" height="933" alt="image" src="https://github.com/user-attachments/assets/4207d8da-fd99-4679-8ebf-07d2a6f6d31d" />
+
 
 
