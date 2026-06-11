@@ -115,3 +115,13 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 * **Resultado:** Os dados são carregados rapidamente e exibidos em formato de cartões (cards) na tela do celular.
 * **Evidência do Teste:**
   ![Tela Empréstimo Mobile](img/docs/img/mobile_emprestimo.png)
+
+---
+
+### 3. Fluxo de Notificações Plataforma Web
+
+* **Descrição** Após o preenchimento do empréstimo, automaticamente irá criar um push da notificação de "Criação de Empréstimo"
+* **Resultado** A API processa os dados, a tela atualiza listando a criação do emprestimo, ou quando for marcado como pago, ou quando estiver em atraso.
+* **Evidência do Teste:**
+<img width="1904" height="911" alt="image" src="https://github.com/user-attachments/assets/325674b8-ba4b-4da6-8e41-cea8d8c82c30" />
+
