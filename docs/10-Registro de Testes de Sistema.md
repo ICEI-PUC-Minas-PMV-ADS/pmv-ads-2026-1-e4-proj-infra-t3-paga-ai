@@ -140,5 +140,26 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 <img width="432" height="936" alt="image" src="https://github.com/user-attachments/assets/a8a71a6a-f035-42f6-ab75-1e493aac25c1" />
 <img width="434" height="933" alt="image" src="https://github.com/user-attachments/assets/4207d8da-fd99-4679-8ebf-07d2a6f6d31d" />
 
+---
+
+### 5. Fluxo de Autenticação e Gateway - Plataforma Web
+
+* **Descrição:** O usuário acessa a interface Web, realiza cadastro e login, e as requisições são encaminhadas pelo gateway para a API de autenticação e usuários.
+* **Resultado:** O fluxo de autenticação é concluído com sucesso e o usuário consegue acessar a aplicação pela plataforma Web.
+* **Evidência do Teste:**
+  ![Cadastro Web](img/cadastro_web.png)
+  ![Login Web](img/login_web.png)
+  ![Sucesso Login/Cadastro Web](img/sucesso_login-cadastro_web.png)
+
+---
+
+### 6. Fluxo de Autenticação e Gateway - Aplicativo Mobile
+
+* **Descrição:** O usuário realiza cadastro e login no aplicativo Mobile, e o gateway repassa as requisições até a API de autenticação.
+* **Resultado:** O aplicativo autentica o usuário com sucesso e permite o acesso ao sistema pelo Mobile.
+* **Evidência do Teste:**
+  ![Cadastro Mobile](img/cadastro_mobile.png)
+  ![Login Mobile](img/login_mobile.png)
+  ![Sucesso Login/Cadastro Mobile](img/sucesso_login-cadastro_mobile.png)
 
 
