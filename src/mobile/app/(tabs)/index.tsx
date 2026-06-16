@@ -27,6 +27,8 @@ interface Stats {
   investido: number;
   aReceber: number;
   lucro: number;
+  jurosAReceber: number;
+  jurosPagos: number;
 }
 
 function calcularStatus(e: Emprestimo) {
@@ -102,17 +104,19 @@ export default function DashboardScreen() {
 
       setVencendo(proximos);
       setStats({
-        clientes:    clientes.length,
-        emprestimos: lista.length,
-        emDia:       emDia.length,
-        atraso:      atrasados.length,
-        investido:   lucro?.resumoGeral?.investimentoTotal     ?? 0,
-        aReceber:    lucro?.resumoGeral?.recebimentoTotalGeral ?? 0,
-        lucro:       lucro?.resumoGeral?.lucroTotalProjetado   ?? 0,
+        clientes:      clientes.length,
+        emprestimos:   lista.length,
+        emDia:         emDia.length,
+        atraso:        atrasados.length,
+        investido:     lucro?.resumoGeral?.investimentoTotal     ?? 0,
+        aReceber:      lucro?.resumoGeral?.recebimentoTotalGeral ?? 0,
+        lucro:         lucro?.resumoGeral?.lucroTotalProjetado   ?? 0,
+        jurosAReceber: lucro?.resumoGeral?.jurosAReceber          ?? 0,
+        jurosPagos:    lucro?.resumoGeral?.jurosPagos             ?? 0,
       });
     } catch (err) {
       console.log('❌ Erro ao processar dashboard:', err);
-      setStats({ clientes: 0, emprestimos: 0, emDia: 0, atraso: 0, investido: 0, aReceber: 0, lucro: 0 });
+      setStats({ clientes: 0, emprestimos: 0, emDia: 0, atraso: 0, investido: 0, aReceber: 0, lucro: 0, jurosAReceber: 0, jurosPagos: 0 });
     } finally {
       setCarregando(false);
     }
@@ -152,9 +156,10 @@ export default function DashboardScreen() {
         </View>
 
         <View style={s.finGrid}>
-          <FinCard label="Total Investido" valor={fmt(stats?.investido ?? 0)} cor="#7C3AED" carregando={carregando} />
-          <FinCard label="Total a Receber" valor={fmt(stats?.aReceber  ?? 0)} cor="#2563EB" carregando={carregando} />
-          <FinCard label="Lucro Projetado" valor={fmt(stats?.lucro     ?? 0)} cor="#16A34A" carregando={carregando} />
+          <FinCard label="Total Investido" valor={fmt(stats?.investido      ?? 0)} cor="#7C3AED" carregando={carregando} />
+          <FinCard label="Total a Receber" valor={fmt(stats?.aReceber       ?? 0)} cor="#2563EB" carregando={carregando} />
+          <FinCard label="Juros a Receber" valor={fmt(stats?.jurosAReceber  ?? 0)} cor="#0891B2" carregando={carregando} />
+          <FinCard label="Juros Pagos"     valor={fmt(stats?.jurosPagos     ?? 0)} cor="#059669" carregando={carregando} />
         </View>
 
         <View style={s.section}>

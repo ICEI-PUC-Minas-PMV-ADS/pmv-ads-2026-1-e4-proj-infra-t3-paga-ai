@@ -66,6 +66,8 @@ public async Task<ActionResult<IEnumerable<Emprestimo>>> GetPagos()
         var totalInvestido = emprestimos.Sum(x => x.Valor);
         var totalAReceberGeral = emprestimos.Sum(x => x.ValorFinal);
         var lucroTotalProjetado = totalAReceberGeral - totalInvestido;
+        var jurosAReceber = emprestimos.Where(x => !x.Pago).Sum(x => x.ValorFinal - x.Valor);
+        var jurosPagos = emprestimos.Where(x => x.Pago).Sum(x => x.ValorFinal - x.Valor);
 
         var detalhePorDevedor = emprestimos.Select(e => new {
             Devedor = e.Cliente,
@@ -80,7 +82,9 @@ public async Task<ActionResult<IEnumerable<Emprestimo>>> GetPagos()
             ResumoGeral = new {
                 InvestimentoTotal = totalInvestido,
                 RecebimentoTotalGeral = totalAReceberGeral,
-                LucroTotalProjetado = lucroTotalProjetado
+                LucroTotalProjetado = lucroTotalProjetado,
+                JurosAReceber = jurosAReceber,
+                JurosPagos = jurosPagos
             },
             ListaDetalhada = detalhePorDevedor
         });
