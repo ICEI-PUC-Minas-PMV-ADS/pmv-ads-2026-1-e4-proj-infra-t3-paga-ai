@@ -161,5 +161,108 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
   ![Cadastro Mobile](img/cadastro_mobile.png)
   ![Login Mobile](img/login_mobile.png)
   ![Sucesso Login/Cadastro Mobile](img/sucesso_login-cadastro_mobile.png)
+  
+---
 
+### Fluxo de Relatório - Plataforma Web
+**Cenário 01 - Acessar tela de Relatórios**
+
+**Dado** que o usuário esteja autenticado no sistema.<br>
+**Quando** acessar o menu "Relatórios".<br>
+**Então** o sistema deverá exibir a tela de Relatórios.
+
+---
+
+**Cenário 02 - Filtrar relatório por período**
+
+**Dado** que o usuário esteja na tela de Relatórios.<br>
+**Quando** informar a Data Inicial e a Data Final.<br>
+**E** clicar no botão "Filtrar".<br>
+**Então** o sistema deverá apresentar os dados financeiros correspondentes ao período informado.
+
+---
+**Cenário 03 - Visualizar indicadores financeiros**
+
+**Dado** que exista movimentação para o período consultado<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir os indicadores:<br>
+- Total Emprestado
+- Total Recebido
+- Total Pendente
+- Lucro Total
+
+---
+
+**Cenário 04 - Visualizar Empréstimos por Devedor**
+
+**Dado** que existam empréstimos para o período consultado<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir a relação de empréstimos agrupados por devedor.
+
+---
+**Cenário 05 - Visualizar Pagamentos Recentes**
+
+**Dado** que existam pagamentos para o período consultado<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir a relação de pagamentos recentes.
+
+---
+
+**Cenário 06 - Exportar relatório em PDF**
+
+**Dado** que o usuário esteja na tela de Relatórios<br>
+**Quando** clicar no botão "Exportar PDF"<br>
+**Então** o sistema deverá gerar e realizar o download do arquivo PDF contendo os dados do relatório.
+
+---
+
+### Fluxo de Relatório - Aplicativo Mobile
+
+**Cenário 01 - Acessar tela de Relatórios**
+
+**Dado** que o usuário esteja autenticado no aplicativo<br>
+**Quando** acessar a aba "Relatórios"<br>
+**Então** o sistema deverá exibir a tela de Relatórios.
+
+---
+
+**Cenário 02 - Filtrar relatório por período**
+
+**Dado** que o usuário esteja na tela de Relatórios<br>
+**Quando** selecionar a Data Inicial e a Data Final<br>
+**E** clicar em "Filtrar"<br>
+**Então** o sistema deverá apresentar os dados financeiros correspondentes ao período informado.
+
+---
+
+**Cenário 03 - Visualizar indicadores financeiros**
+
+**Dado** que existam registros para o período informado<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir os indicadores financeiros do relatório.
+
+---
+
+**Cenário 04 - Visualizar Empréstimos por Devedor**
+
+**Dado** que existam empréstimos cadastrados para o período<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir os empréstimos agrupados por devedor.
+
+---
+
+ **Cenário 05 - Visualizar Pagamentos Recentes**
+
+**Dado** que existam pagamentos registrados para o período<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir os pagamentos recentes.
+
+---
+
+**Cenário 06 - Exportar e compartilhar PDF**
+
+**Dado** que o usuário esteja na tela de Relatórios<br>
+**Quando** clicar no botão "Exportar PDF"<br>
+**Então** o sistema deverá gerar o arquivo PDF<br>
+**E** disponibilizar as opções de compartilhamento do dispositivo.
 
