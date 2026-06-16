@@ -247,8 +247,7 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 **E** clicar em "Filtrar"<br>
 **Então** o sistema deverá apresentar os dados financeiros correspondentes ao período informado.
 
-<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30 (3)" src="https://github.com/user-attachments/assets/56f68eef-e368-4d6a-a481-4d3edbaf5de0" />
-<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30 (1)" src="https://github.com/user-attachments/assets/e5673bfb-3316-40fd-b53f-06052c1c8914" />
+<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30 (1)" src="https://github.com/user-attachments/assets/d3a0570e-ff06-4453-a64f-08f5a6b7cc0a" />
 
 ---
 
@@ -258,7 +257,7 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 **Quando** o filtro for executado<br>
 **Então** o sistema deverá exibir os indicadores financeiros do relatório.
 
-![Uploading WhatsApp Image 2026-06-15 at 21.30.30 (3).jpeg…]()
+<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30 (3)" src="https://github.com/user-attachments/assets/5058fd09-1c19-4f56-8222-85a7d89d2e50" />
 
 ---
 
