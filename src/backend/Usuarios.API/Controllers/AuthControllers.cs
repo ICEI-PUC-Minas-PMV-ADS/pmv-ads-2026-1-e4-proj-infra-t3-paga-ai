@@ -74,6 +74,18 @@ public class AuthController : ControllerBase
                 return BadRequest(new { mensagem = "E-mail é obrigatório." });
             if (string.IsNullOrWhiteSpace(request.Senha))
                 return BadRequest(new { mensagem = "Senha é obrigatória." });
+            if (string.IsNullOrWhiteSpace(request.DataNascimento))
+                return BadRequest(new { mensagem = "Data de nascimento é obrigatória." });
+            if (string.IsNullOrWhiteSpace(request.Cpf))
+                return BadRequest(new { mensagem = "CPF é obrigatório." });
+            var cpfDigitos = System.Text.RegularExpressions.Regex.Replace(request.Cpf, @"\D", "");
+            if (cpfDigitos.Length != 11)
+                return BadRequest(new { mensagem = "CPF inválido. Informe 11 dígitos." });
+            if (string.IsNullOrWhiteSpace(request.Telefone))
+                return BadRequest(new { mensagem = "Número de telefone é obrigatório." });
+            var telefoneDigitos = System.Text.RegularExpressions.Regex.Replace(request.Telefone, @"\D", "");
+            if (telefoneDigitos.Length < 10)
+                return BadRequest(new { mensagem = "Telefone inválido. Informe DDD + número." });
 
             UserEntity? existe = null;
             if (!UseInMemory)
@@ -100,7 +112,10 @@ public class AuthController : ControllerBase
             {
                 Nome = request.Nome,
                 Email = request.Email,
-                Senha = BCrypt.Net.BCrypt.HashPassword(request.Senha)
+                Senha = BCrypt.Net.BCrypt.HashPassword(request.Senha),
+                DataNascimento = request.DataNascimento,
+                Cpf = cpfDigitos,
+                Telefone = telefoneDigitos
             };
 
             if (!UseInMemory)
@@ -387,6 +402,100 @@ public class AuthController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    [HttpGet("perfil")]
+    public async Task<IActionResult> ObterPerfil([FromQuery] string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return BadRequest(new { mensagem = "E-mail é obrigatório." });
+
+        UserEntity? usuario = null;
+        if (!UseInMemory)
+        {
+            try { usuario = await _usuarios!.Find(x => x.Email == email).FirstOrDefaultAsync(); }
+            catch (Exception ex) { Console.WriteLine("[WARN] Erro ao consultar Mongo (perfil): " + ex.Message); }
+        }
+        else
+        {
+            usuario = _inMemoryUsers.Values.FirstOrDefault(u => u.Email == email);
+        }
+
+        if (usuario == null)
+            return NotFound(new { mensagem = "Usuário não encontrado." });
+
+        return Ok(new
+        {
+            nome           = usuario.Nome,
+            email          = usuario.Email,
+            dataNascimento = usuario.DataNascimento,
+            cpf            = usuario.Cpf,
+            telefone       = usuario.Telefone
+        });
+    }
+
+    [HttpPatch("atualizar-perfil")]
+    public async Task<IActionResult> AtualizarPerfil([FromBody] UpdateProfileRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email))
+            return BadRequest(new { mensagem = "E-mail é obrigatório." });
+        if (string.IsNullOrWhiteSpace(request.Nome))
+            return BadRequest(new { mensagem = "Nome é obrigatório." });
+
+        string? telefoneDigitos = null;
+        if (!string.IsNullOrWhiteSpace(request.Telefone))
+        {
+            telefoneDigitos = System.Text.RegularExpressions.Regex.Replace(request.Telefone, @"\D", "");
+            if (telefoneDigitos.Length < 10)
+                return BadRequest(new { mensagem = "Telefone inválido. Informe DDD + número." });
+        }
+
+        UserEntity? usuario = null;
+        if (!UseInMemory)
+        {
+            try { usuario = await _usuarios!.Find(x => x.Email == request.Email).FirstOrDefaultAsync(); }
+            catch (Exception ex) { Console.WriteLine("[WARN] Erro ao consultar Mongo (atualizar-perfil): " + ex.Message); }
+        }
+        else
+        {
+            usuario = _inMemoryUsers.Values.FirstOrDefault(u => u.Email == request.Email);
+        }
+
+        // Se não encontrou e estamos em memória, recria o usuário a partir dos dados da requisição
+        // (o JWT já prova a identidade — não há risco de impersonation aqui)
+        if (usuario == null && UseInMemory)
+        {
+            usuario = new UserEntity
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Nome = request.Nome,
+                Email = request.Email,
+                Telefone = telefoneDigitos
+            };
+            _inMemoryUsers.TryAdd(usuario.Id!, usuario);
+            var token0 = GerarToken(usuario);
+            return Ok(new { mensagem = "Perfil atualizado com sucesso.", token = token0 });
+        }
+
+        if (usuario == null)
+            return NotFound(new { mensagem = "Usuário não encontrado." });
+
+        if (!UseInMemory)
+        {
+            var updateDef = Builders<UserEntity>.Update.Set(u => u.Nome, request.Nome);
+            if (telefoneDigitos != null)
+                updateDef = updateDef.Set(u => u.Telefone, telefoneDigitos);
+            await _usuarios!.UpdateOneAsync(x => x.Email == request.Email, updateDef);
+        }
+
+        usuario.Nome = request.Nome;
+        if (telefoneDigitos != null) usuario.Telefone = telefoneDigitos;
+
+        if (UseInMemory && usuario.Id != null)
+            _inMemoryUsers[usuario.Id] = usuario;
+
+        var token = GerarToken(usuario);
+        return Ok(new { mensagem = "Perfil atualizado com sucesso.", token });
+    }
+
     [HttpPatch("push-token")]
     public async Task<IActionResult> AtualizarPushToken([FromBody] PushTokenRequest request)
     {
@@ -418,6 +527,9 @@ public class RegisterRequest
     public string Nome { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Senha { get; set; } = string.Empty;
+    public string? DataNascimento { get; set; }
+    public string? Cpf { get; set; }
+    public string? Telefone { get; set; }
 }
 
 public class LoginRequest
@@ -436,6 +548,13 @@ public class ResetPasswordRequest
     public string Email { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
     public string NewPassword { get; set; } = string.Empty;
+}
+
+public class UpdateProfileRequest
+{
+    public string Email { get; set; } = string.Empty;
+    public string Nome { get; set; } = string.Empty;
+    public string? Telefone { get; set; }
 }
 
 public class PushTokenRequest

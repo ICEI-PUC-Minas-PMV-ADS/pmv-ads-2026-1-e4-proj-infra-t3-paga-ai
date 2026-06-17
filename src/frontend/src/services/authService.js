@@ -60,6 +60,30 @@ export async function register(usuario) {
   return res.json();
 }
 
+export async function obterPerfil(email) {
+  const res = await request(`${BASE_URL}/perfil?email=${encodeURIComponent(email)}`, {
+    method: "GET",
+  });
+  return res.json();
+}
+
+export async function atualizarPerfil(email, nome, telefone) {
+  const res = await request(`${BASE_URL}/atualizar-perfil`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, nome, telefone: telefone || undefined }),
+  });
+  const data = await res.json();
+  if (data.token) {
+    if (localStorage.getItem("auth_token")) {
+      localStorage.setItem("auth_token", data.token);
+    } else {
+      sessionStorage.setItem("auth_token", data.token);
+    }
+  }
+  return data;
+}
+
 export async function forgotPassword(email) {
   const res = await request(`${BASE_URL}/forgot-password`, {
     method: "POST",

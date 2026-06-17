@@ -62,10 +62,13 @@ export async function register(userData: {
   nome: string;
   email: string;
   senha: string;
+  dataNascimento: string;
+  cpf: string;
+  telefone: string;
 }): Promise<{ mensagem: string; id: string }> {
   try {
     // Validações básicas
-    if (!userData.nome || !userData.email || !userData.senha) {
+    if (!userData.nome || !userData.email || !userData.senha || !userData.dataNascimento || !userData.cpf || !userData.telefone) {
       throw new Error('Preencha todos os campos.');
     }
     if (!validarEmail(userData.email)) {
@@ -172,6 +175,47 @@ export async function getRememberedEmail(): Promise<string | null> {
 export async function isAuthenticated(): Promise<boolean> {
   const token = await getToken();
   return !!token;
+}
+
+export async function obterPerfil(email: string): Promise<{
+  nome: string;
+  email: string;
+  dataNascimento?: string;
+  cpf?: string;
+  telefone?: string;
+}> {
+  try {
+    const response = await api.get(
+      `${USUARIOS_BASE_URL}/perfil?email=${encodeURIComponent(email)}`
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.mensagem || 'Falha ao carregar perfil.');
+  }
+}
+
+export async function atualizarPerfil(
+  email: string,
+  nome: string,
+  telefone?: string
+): Promise<{ mensagem: string; token: string }> {
+  try {
+    const response = await api.patch(`${USUARIOS_BASE_URL}/atualizar-perfil`, {
+      email,
+      nome,
+      telefone: telefone || undefined,
+    });
+    if (response.data.token) {
+      await AsyncStorage.setItem(TOKEN_KEY, response.data.token);
+    }
+    return response.data;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.mensagem ||
+      error.message ||
+      'Falha ao atualizar perfil.';
+    throw new Error(message);
+  }
 }
 
 export async function salvarPushToken(email: string, token: string): Promise<void> {

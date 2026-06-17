@@ -6,11 +6,43 @@ function validarEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function maskCpf(value) {
+  return value
+    .replace(/\D/g, "")
+    .slice(0, 11)
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+
+function maskTelefone(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 10) {
+    return digits
+      .replace(/(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
+  }
+  return digits
+    .replace(/(\d{2})(\d)/, "($1) $2")
+    .replace(/(\d{5})(\d)/, "$1-$2");
+}
+
+function maskData(value) {
+  return value
+    .replace(/\D/g, "")
+    .slice(0, 8)
+    .replace(/(\d{2})(\d)/, "$1/$2")
+    .replace(/(\d{2})(\d)/, "$1/$2");
+}
+
 export default function Register() {
   const navigate = useNavigate();
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
@@ -21,7 +53,7 @@ export default function Register() {
     setErro("");
     setSucesso("");
 
-    if (!nome || !email || !senha) {
+    if (!nome || !email || !senha || !dataNascimento || !cpf || !telefone) {
       setErro("Preencha todos os campos.");
       return;
     }
@@ -33,10 +65,18 @@ export default function Register() {
       setErro("A senha deve ter ao menos 6 caracteres.");
       return;
     }
+    if (cpf.replace(/\D/g, "").length !== 11) {
+      setErro("CPF inválido. Informe 11 dígitos.");
+      return;
+    }
+    if (telefone.replace(/\D/g, "").length < 10) {
+      setErro("Telefone inválido. Informe DDD + número.");
+      return;
+    }
 
     try {
       setLoading(true);
-      await register({ nome, email, senha });
+      await register({ nome, email, senha, dataNascimento, cpf, telefone });
       setSucesso("Conta criada com sucesso! Redirecionando para login...");
       setTimeout(() => navigate("/login"), 1200);
     } catch (e) {
@@ -66,6 +106,39 @@ export default function Register() {
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             style={styles.input}
+          />
+
+          <label style={styles.label} htmlFor="dataNascimento">Data de Nascimento</label>
+          <input
+            id="dataNascimento"
+            type="text"
+            placeholder="DD/MM/AAAA"
+            value={dataNascimento}
+            onChange={(e) => setDataNascimento(maskData(e.target.value))}
+            style={styles.input}
+            maxLength={10}
+          />
+
+          <label style={styles.label} htmlFor="cpf">CPF</label>
+          <input
+            id="cpf"
+            type="text"
+            placeholder="000.000.000-00"
+            value={cpf}
+            onChange={(e) => setCpf(maskCpf(e.target.value))}
+            style={styles.input}
+            maxLength={14}
+          />
+
+          <label style={styles.label} htmlFor="telefone">Número de Telefone</label>
+          <input
+            id="telefone"
+            type="text"
+            placeholder="(00) 00000-0000"
+            value={telefone}
+            onChange={(e) => setTelefone(maskTelefone(e.target.value))}
+            style={styles.input}
+            maxLength={15}
           />
 
           <label style={styles.label} htmlFor="email">Email</label>

@@ -10,6 +10,7 @@ interface AuthContextData {
   isLoading: boolean;
   login: (user: Usuario, token: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (user: Usuario) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -47,8 +48,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
   }
 
+  async function updateUser(updatedUser: Usuario) {
+    await AsyncStorage.setItem('@pagaai:user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -14,12 +14,44 @@ import {
 import { Link, useRouter } from 'expo-router';
 import { register } from '@services/authService';
 
+function maskCpf(value: string) {
+  return value
+    .replace(/\D/g, '')
+    .slice(0, 11)
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function maskTelefone(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (digits.length <= 10) {
+    return digits
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{4})(\d)/, '$1-$2');
+  }
+  return digits
+    .replace(/(\d{2})(\d)/, '($1) $2')
+    .replace(/(\d{5})(\d)/, '$1-$2');
+}
+
+function maskData(value: string) {
+  return value
+    .replace(/\D/g, '')
+    .slice(0, 8)
+    .replace(/(\d{2})(\d)/, '$1/$2')
+    .replace(/(\d{2})(\d)/, '$1/$2');
+}
+
 export default function RegisterScreen() {
   const router = useRouter();
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [telefone, setTelefone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
@@ -29,7 +61,7 @@ export default function RegisterScreen() {
     setErro('');
     setSucesso('');
 
-    if (!nome || !email || !senha) {
+    if (!nome || !email || !senha || !dataNascimento || !cpf || !telefone) {
       setErro('Preencha todos os campos.');
       return;
     }
@@ -44,9 +76,19 @@ export default function RegisterScreen() {
       return;
     }
 
+    if (cpf.replace(/\D/g, '').length !== 11) {
+      setErro('CPF inválido. Informe 11 dígitos.');
+      return;
+    }
+
+    if (telefone.replace(/\D/g, '').length < 10) {
+      setErro('Telefone inválido. Informe DDD + número.');
+      return;
+    }
+
     try {
       setLoading(true);
-      await register({ nome, email, senha });
+      await register({ nome, email, senha, dataNascimento, cpf, telefone });
       setSucesso('Conta criada com sucesso! Redirecionando para login...');
       setTimeout(() => router.push('/(auth)/login'), 1200);
     } catch (error: any) {
@@ -81,6 +123,42 @@ export default function RegisterScreen() {
             placeholderTextColor="#999"
             value={nome}
             onChangeText={setNome}
+            editable={!loading}
+          />
+
+          <Text style={[styles.label, { marginTop: 16 }]}>Data de Nascimento</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="DD/MM/AAAA"
+            placeholderTextColor="#999"
+            value={dataNascimento}
+            onChangeText={(v) => setDataNascimento(maskData(v))}
+            keyboardType="numeric"
+            maxLength={10}
+            editable={!loading}
+          />
+
+          <Text style={[styles.label, { marginTop: 16 }]}>CPF</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="000.000.000-00"
+            placeholderTextColor="#999"
+            value={cpf}
+            onChangeText={(v) => setCpf(maskCpf(v))}
+            keyboardType="numeric"
+            maxLength={14}
+            editable={!loading}
+          />
+
+          <Text style={[styles.label, { marginTop: 16 }]}>Número de Telefone</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="(00) 00000-0000"
+            placeholderTextColor="#999"
+            value={telefone}
+            onChangeText={(v) => setTelefone(maskTelefone(v))}
+            keyboardType="phone-pad"
+            maxLength={15}
             editable={!loading}
           />
 

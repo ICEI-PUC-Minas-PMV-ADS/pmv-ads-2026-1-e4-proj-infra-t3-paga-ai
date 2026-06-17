@@ -53,7 +53,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="emprestimos/index" />
       <Tabs.Screen name="notificacoes/index" />
       <Tabs.Screen name="relatorios/index" />
-      <Tabs.Screen name="perfil/index" />
+      <Tabs.Screen name="perfil" />
       </Tabs>
   );
 }

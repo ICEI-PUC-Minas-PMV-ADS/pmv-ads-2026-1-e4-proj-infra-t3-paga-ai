@@ -51,7 +51,7 @@ builder.Services.AddSingleton(s => {
 builder.Services.AddSingleton<Usuario.API.Services.EmailService>();
 
 // JWT 
-var chaveJwt = builder.Configuration["JwtSettings:SecretKey"]!;
+var chaveJwt = builder.Configuration["JwtSettings:SecretKey"] ?? "Chave_Super_Secreta_PagaAi_Com_Mais_De_32_Chars!";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
