@@ -273,4 +273,5 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 
 Fluxo de Clientes - Web e Mobile
 Transações: Consulta, inserção, edição e exclusão de clientes
-[ApresentaçãoPagai_clientes.pdf](https://github.com/user-attachments/files/29028692/ApresentacaoPagai_clientes.pdf)
+<img width="720" height="405" alt="ApresentaçãoPagai_clientes" src="https://github.com/user-attachments/assets/5407b994-a73c-432e-be41-6532d79e475b" />
+
