@@ -161,5 +161,113 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
   ![Cadastro Mobile](img/cadastro_mobile.png)
   ![Login Mobile](img/login_mobile.png)
   ![Sucesso Login/Cadastro Mobile](img/sucesso_login-cadastro_mobile.png)
+  
+---
 
+### Fluxo de Relatório - Plataforma Web
+**Cenário 01 - Acessar tela de Relatórios**
+
+**Dado** que o usuário esteja autenticado no sistema.<br>
+**Quando** acessar o menu "Relatórios".<br>
+**Então** o sistema deverá exibir a tela de Relatórios.
+
+<img width="1919" height="1142" alt="image" src="https://github.com/user-attachments/assets/4d7e7cb6-7f3c-44ac-957c-073da020b75d" />
+
+---
+
+**Cenário 02 - Filtrar relatório por período**
+
+**Dado** que o usuário esteja na tela de Relatórios.<br>
+**Quando** informar a Data Inicial e a Data Final.<br>
+**E** clicar no botão "Filtrar".<br>
+**Então** o sistema deverá apresentar os dados financeiros correspondentes ao período informado.
+
+<img width="1920" height="1175" alt="image" src="https://github.com/user-attachments/assets/3b7e7cee-f8f7-46e3-9bcc-0123b0eac68d" />
+
+---
+**Cenário 03 - Visualizar indicadores financeiros**
+
+**Dado** que exista movimentação para o período consultado<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir os indicadores:<br>
+- Total Emprestado
+- Total Recebido
+- Total Pendente
+- Lucro Total
+
+<img width="1920" height="1152" alt="image" src="https://github.com/user-attachments/assets/e4e621b8-8076-49ce-b2fe-3f60576e9eca" />
+
+---
+
+**Cenário 04 - Visualizar Empréstimos por Devedor**
+
+**Dado** que existam empréstimos para o período consultado<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir a relação de empréstimos agrupados por devedor.
+
+<img width="1920" height="1121" alt="image" src="https://github.com/user-attachments/assets/f1e4d91e-d0fc-4dd7-8967-5a2fb3583f85" />
+
+---
+**Cenário 05 - Visualizar Pagamentos Recentes**
+
+**Dado** que existam pagamentos para o período consultado<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir a relação de pagamentos recentes.
+
+<img width="1920" height="1119" alt="image" src="https://github.com/user-attachments/assets/659e8940-affa-47b5-9a64-19644a7fea74" />
+
+---
+
+**Cenário 06 - Exportar relatório em PDF**
+
+**Dado** que o usuário esteja na tela de Relatórios<br>
+**Quando** clicar no botão "Exportar PDF"<br>
+**Então** o sistema deverá gerar e realizar o download do arquivo PDF contendo os dados do relatório.
+
+<img width="1920" height="1130" alt="image" src="https://github.com/user-attachments/assets/863e791c-09ae-4354-942d-f745dd470d9e" />
+
+---
+
+### Fluxo de Relatório - Aplicativo Mobile
+
+**Cenário 01 - Acessar tela de Relatórios**
+
+**Dado** que o usuário esteja autenticado no aplicativo<br>
+**Quando** acessar a aba "Relatórios"<br>
+**Então** o sistema deverá exibir a tela de Relatórios.
+
+<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30" src="https://github.com/user-attachments/assets/11c8503a-1022-44b2-b155-a536898154f3" />
+
+---
+
+**Cenário 02 - Filtrar relatório por período**
+
+**Dado** que o usuário esteja na tela de Relatórios<br>
+**Quando** selecionar a Data Inicial e a Data Final<br>
+**E** clicar em "Filtrar"<br>
+**Então** o sistema deverá apresentar os dados financeiros correspondentes ao período informado.
+
+<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30 (1)" src="https://github.com/user-attachments/assets/d3a0570e-ff06-4453-a64f-08f5a6b7cc0a" />
+
+---
+
+**Cenário 03 - Visualizar indicadores financeiros**
+
+**Dado** que existam registros para o período informado<br>
+**Quando** o filtro for executado<br>
+**Então** o sistema deverá exibir os indicadores financeiros do relatório.
+
+<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30 (3)" src="https://github.com/user-attachments/assets/5058fd09-1c19-4f56-8222-85a7d89d2e50" />
+
+---
+
+**Cenário 04 - Exportar e compartilhar PDF**
+
+**Dado** que o usuário esteja na tela de Relatórios<br>
+**Quando** clicar no botão "Exportar PDF"<br>
+**Então** o sistema deverá gerar o arquivo PDF<br>
+**E** disponibilizar as opções de compartilhamento do dispositivo.
+
+<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 29" src="https://github.com/user-attachments/assets/6554a255-7016-4e46-b05e-9b98c8015e43" />
+<img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30 (2)" src="https://github.com/user-attachments/assets/cc3f44f6-fd5c-4d3f-8d1b-c3282863a435" />
 
