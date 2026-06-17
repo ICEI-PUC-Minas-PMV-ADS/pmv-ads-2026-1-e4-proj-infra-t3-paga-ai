@@ -271,3 +271,6 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 <img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 29" src="https://github.com/user-attachments/assets/6554a255-7016-4e46-b05e-9b98c8015e43" />
 <img width="738" height="1600" alt="WhatsApp Image 2026-06-15 at 21 30 30 (2)" src="https://github.com/user-attachments/assets/cc3f44f6-fd5c-4d3f-8d1b-c3282863a435" />
 
+Fluxo de Clientes - Web e Mobile
+Transações: Consulta, inserção, edição e exclusão de clientes
+[ApresentaçãoPagai_clientes.pdf](https://github.com/user-attachments/files/29028692/ApresentacaoPagai_clientes.pdf)
