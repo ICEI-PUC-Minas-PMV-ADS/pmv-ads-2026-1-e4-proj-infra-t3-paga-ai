@@ -276,4 +276,4 @@ Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os 
 ### Fluxo de Clientes - Web e Mobile
 **Transações:** Consulta, inserção, edição e exclusão de clientes
 
-<img width="1280" height="905" alt="apresentacaoh" src="https://github.com/user-attachments/assets/6dd04317-8446-4c82-9985-67ffe219891a" />
+<img width="1920" height="1080" alt="apresentacaor" src="https://github.com/user-attachments/assets/e9ed22e4-b504-4519-a8f8-5c0771e95d57" />
