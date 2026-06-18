@@ -14,6 +14,13 @@ Conjunto de slides em um arquivo PowerPoint ou PDF com a apresentação do proje
 
 <img width="327" height="298" alt="Captura de Tela 2026-06-17 às 21 21 00" src="https://github.com/user-attachments/assets/decd4935-6303-4569-9608-d0bc52101152" />
 
+---
+
+## Considerações Finais: Componentes do Grupo
+
+[Considerações_Finais_Flavio.pdf](https://github.com/user-attachments/files/29072121/Consideracoes_Finais_Flavio.pdf)
+
+
 ## Conjunto de Slides (Estrutura)
 
 O grupo deve distribuir de forma coerente o conteúdo a ser apresentado, dentro do tempo determinado. Importante ressaltar a importância da descrição clara de todo o andamento do projeto, insumos gerados e requisitos atendidos.
