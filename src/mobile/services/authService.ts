@@ -21,14 +21,14 @@ export async function login(
   email: string,
   senha: string,
   rememberMe: boolean = false
-): Promise<{ token: string; user?: { nome: string; email: string } }> {
+): Promise<{ token: string; user?: { nome: string; email: string; dataNascimento?: string; cpf?: string; telefone?: string } }> {
   try {
     const response = await api.post(`${USUARIOS_BASE_URL}/login`, {
       email,
       senha,
     });
 
-    const { token } = response.data;
+    const { token, nome, email: emailResposta, dataNascimento, cpf, telefone } = response.data;
 
     if (!token) {
       throw new Error('Token não retornado pela API.');
@@ -42,8 +42,15 @@ export async function login(
       await AsyncStorage.removeItem(REMEMBERED_EMAIL_KEY);
     }
 
-    // Decodificar JWT para extrair dados do usuário
-    const user = decodeToken(token) ?? { nome: 'Usuário', email };
+    // Preferir dados retornados pela API; cair para JWT como fallback
+    const decoded = decodeToken(token) ?? { nome: 'Usuário', email };
+    const user = {
+      nome: nome ?? decoded.nome,
+      email: emailResposta ?? decoded.email,
+      dataNascimento,
+      cpf,
+      telefone,
+    };
 
     return { token, user };
   } catch (error: any) {

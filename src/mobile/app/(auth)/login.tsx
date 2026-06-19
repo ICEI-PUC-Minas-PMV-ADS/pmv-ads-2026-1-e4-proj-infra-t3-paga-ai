@@ -60,6 +60,9 @@ export default function LoginScreen() {
             id: 1,
             nome: user.nome,
             email: user.email,
+            dataNascimento: user.dataNascimento,
+            cpf: user.cpf,
+            telefone: user.telefone,
           },
           token
         );

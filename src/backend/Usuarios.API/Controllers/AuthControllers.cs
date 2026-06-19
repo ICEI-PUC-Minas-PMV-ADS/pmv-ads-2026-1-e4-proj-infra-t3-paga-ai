@@ -165,7 +165,14 @@ public class AuthController : ControllerBase
             return Unauthorized(new { mensagem = "E-mail ou senha inválidos." });
 
         var token = GerarToken(usuario);
-        return Ok(new { token });
+        return Ok(new {
+            token,
+            nome           = usuario.Nome,
+            email          = usuario.Email,
+            dataNascimento = usuario.DataNascimento,
+            cpf            = usuario.Cpf,
+            telefone       = usuario.Telefone
+        });
     }
 
     [HttpPost("forgot-password")]
