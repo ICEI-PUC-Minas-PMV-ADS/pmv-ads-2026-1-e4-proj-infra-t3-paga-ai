@@ -20,7 +20,7 @@ Conjunto de slides em um arquivo PowerPoint ou PDF com a apresentação do proje
 
 [Considerações_Finais_Flavio.pdf](https://github.com/user-attachments/files/29072121/Consideracoes_Finais_Flavio.pdf)
 [ConsideraçõesFinais-Alex.pdf](https://github.com/user-attachments/files/29109909/ConsideracoesFinais-Alex.pdf)
-[ConsideraçõesFinais-Luan.pdf](ConsideracoesFinais-Luan.pdf)
+[ConsideraçõesFinais-Luan.pdf](docs/ConsideracoesFinais-Luan.pdf)
 
 
 
