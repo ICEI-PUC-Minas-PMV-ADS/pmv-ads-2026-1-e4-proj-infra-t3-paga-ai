@@ -6,16 +6,23 @@ Conjunto de slides em um arquivo PowerPoint ou PDF com a apresentação do proje
 
 ## Título do Projeto
 
-Nome e marca do projeto
+**PagaAí** - Gestão de Empréstimos Pessoais
+
+---
 
 ## Identidade Visual (Marca, Design)
 
-O grupo deve ter o cuidado em utilizar figuras, imagens, e cores dentro do contexto da solução proposta, de forma a manter a temática do problema.
+<img width="327" height="298" alt="Captura de Tela 2026-06-17 às 21 21 00" src="https://github.com/user-attachments/assets/decd4935-6303-4569-9608-d0bc52101152" />
 
-> **Links Úteis**:
-> - [10 dicas de design para slides](https://rockcontent.com/blog/design-para-slides/)
-> - [7 dicas de design para criar apresentações de PowerPoint incríveis e eficientes](https://www.shutterstock.com/pt/blog/7-dicas-de-design-para-criar-apresentacoes-de-powerpoint-incriveis-e-eficientes)
-> - [Especialista do TED dá 10 dicas para criar slides eficazes e bonitos](https://soap.com.br/blog/especialista-do-ted-da-10-dicas-para-criar-slides-eficazes-e-bonitos)
+---
+
+## Considerações Finais: Componentes do Grupo
+
+[Considerações_Finais_Flavio.pdf](https://github.com/user-attachments/files/29072121/Consideracoes_Finais_Flavio.pdf)
+[ConsideraçõesFinais-Alex.pdf](https://github.com/user-attachments/files/29109909/ConsideracoesFinais-Alex.pdf)
+[ConsideraçõesFinais-Luan.pdf](docs/ConsideracoesFinais-Luan.pdf)
+
+
 
 ## Conjunto de Slides (Estrutura)
 
