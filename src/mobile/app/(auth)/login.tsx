@@ -12,7 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { login, getRememberedEmail } from '@services/authService';
+import { login, getRememberedEmail, obterPerfil } from '@services/authService';
 import { useAuth } from '@hooks/useAuth';
 
 export default function LoginScreen() {
@@ -55,11 +55,22 @@ export default function LoginScreen() {
       const { token, user } = await login(email, senha, rememberMe);
 
       if (token && user) {
+        let dadosPerfil: { dataNascimento?: string; cpf?: string; telefone?: string } = {};
+        try {
+          const perfil = await obterPerfil(user.email);
+          dadosPerfil = {
+            dataNascimento: perfil.dataNascimento,
+            cpf: perfil.cpf,
+            telefone: perfil.telefone,
+          };
+        } catch {}
+
         await authLogin(
           {
             id: 1,
             nome: user.nome,
             email: user.email,
+            ...dadosPerfil,
           },
           token
         );

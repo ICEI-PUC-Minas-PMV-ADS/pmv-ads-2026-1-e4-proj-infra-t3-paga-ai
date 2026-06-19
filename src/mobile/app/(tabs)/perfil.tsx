@@ -61,7 +61,17 @@ export default function PerfilScreen() {
     if (!user?.email) { setCarregando(false); return; }
     obterPerfil(user.email)
       .then(setPerfil)
-      .catch(() => {/* silencioso — usa dados do contexto */})
+      .catch(() => {
+        if (user) {
+          setPerfil({
+            nome: user.nome,
+            email: user.email,
+            dataNascimento: user.dataNascimento,
+            cpf: user.cpf,
+            telefone: user.telefone,
+          });
+        }
+      })
       .finally(() => setCarregando(false));
   }, [user?.email]);
 
