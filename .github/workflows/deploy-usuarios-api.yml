@@ -29,7 +29,7 @@ jobs:
         run: dotnet publish src/backend/Usuarios.API/Usuarios.API.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Zip artifact
-        run: cd ${{env.DOTNET_ROOT}} && zip -r myapp.zip myapp
+        run: cd ${{env.DOTNET_ROOT}}/myapp && zip -r ../myapp.zip .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
