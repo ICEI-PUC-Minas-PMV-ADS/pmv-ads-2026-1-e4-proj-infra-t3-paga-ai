@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-// Build trigger 2: wwwroot foi limpo manualmente para corrigir corrupção de arquivos de deploys anteriores.
+// Build trigger 3: workflow de deploy corrigido (zip continha pasta myapp/ como prefixo).
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. REGISTRO DE SERVIÇOS (Tudo que usa builder.Services)
