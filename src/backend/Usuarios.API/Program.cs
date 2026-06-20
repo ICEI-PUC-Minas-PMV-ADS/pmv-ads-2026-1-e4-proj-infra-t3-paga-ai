@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+// Build trigger: força redeploy completo com o app parado para evitar lock de arquivo na DLL principal.
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. REGISTRO DE SERVIÇOS (Tudo que usa builder.Services)
