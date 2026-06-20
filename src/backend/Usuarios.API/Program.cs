@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-// Build trigger 3: workflow de deploy corrigido (zip continha pasta myapp/ como prefixo).
+// Build trigger 4: redeploy sem intervencao manual de stop/clean para evitar corrida com extracao do Kudu.
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. REGISTRO DE SERVIÇOS (Tudo que usa builder.Services)
