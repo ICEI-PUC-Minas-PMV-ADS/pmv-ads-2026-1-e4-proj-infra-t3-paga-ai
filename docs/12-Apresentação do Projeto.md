@@ -21,6 +21,7 @@ Conjunto de slides em um arquivo PowerPoint ou PDF com a apresentação do proje
 [Considerações_Finais_Flavio.pdf](https://github.com/user-attachments/files/29072121/Consideracoes_Finais_Flavio.pdf)
 [ConsideraçõesFinais-Alex.pdf](https://github.com/user-attachments/files/29109909/ConsideracoesFinais-Alex.pdf)
 [ConsideracoesFinais-Luan.pdf](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2026-1-e4-proj-infra-t3-paga-ai/raw/main/docs/ConsideracoesFinais-Luan.pdf)
+[Consideracoes_Finais_Thiago.pdf](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2026-1-e4-proj-infra-t3-paga-ai/raw/main/docs/Consideracoes_Finais_Thiago.pdf)
 
 
 
