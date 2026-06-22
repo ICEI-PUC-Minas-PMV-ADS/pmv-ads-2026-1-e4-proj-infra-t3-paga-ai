@@ -100,6 +100,43 @@ namespace MyProject
 
 Para validar o funcionamento completo do sistema (ponta a ponta), realizamos os testes integrando o back-end em C# com as interfaces de usuário.
 
+### Painel (Dashboard) do cobrador  
+
+Como cobrador autenticado no sistema Paga Aí
+Quero visualizar um painel com indicadores financeiros e de carteira
+Para acompanhar minha operação de empréstimos de forma confiável
+
+Contexto:
+Dado que estou autenticado como cobrador
+E acesso a tela de "Painel"
+
+Cenário001: Exibir total investido na carteira
+Dado que existem empréstimos cadastrados para o meu usuário
+Quando o painel carrega os dados financeiros
+Então o card "Total Investido" deve exibir a soma dos valores principais (Valor) de todos os meus empréstimos  
+<img width="886" height="391" alt="image" src="https://github.com/user-attachments/assets/d5fb2869-5609-4389-bbb4-fdca98ec079b" />  
+
+Cenário002: Exibir total a receber
+Dado que existem empréstimos cadastrados para o meu usuário
+Quando o painel carrega os dados financeiros
+Então o card "Total a Receber" deve exibir a soma do valor final (principal + juros) de todos os meus empréstimos  
+<img width="886" height="384" alt="image" src="https://github.com/user-attachments/assets/a0350148-c6a1-4f45-9f09-feb5871a7116" />  
+
+Cenário003: Cards financeiros consistentes entre web e mobile
+Dado que o mesmo cobrador acessa o painel pela versão web e pela versão mobile
+Quando os dados financeiros são carregados em ambas as plataformas
+Então os valores de "Total Investido", "Total a Receber", "Juros a Receber" e "Juros Pagos" devem ser idênticos nas duas versões  
+<img width="886" height="384" alt="image" src="https://github.com/user-attachments/assets/87dcdd7c-ba38-490a-bf17-f9c4755e58c5" />  
+<img width="361" height="778" alt="image" src="https://github.com/user-attachments/assets/94615d15-cf03-40b1-9545-d14d907c1cde" />  
+<img width="349" height="763" alt="image" src="https://github.com/user-attachments/assets/f9c06dfe-98f7-4143-9be3-a998d629e7ea" />  
+
+Cenário004: Contagem de empréstimos em dia e em atraso
+Dado que existem empréstimos pendentes com datas de vencimento futuras e passadas
+Quando o painel carrega a carteira de empréstimos
+Então os empréstimos com data de vencimento no passado devem ser contados como "Em atraso"
+E os empréstimos com data de vencimento futura devem ser contados como "Em dia"  
+<img width="886" height="394" alt="image" src="https://github.com/user-attachments/assets/31b766ef-3788-4dca-b25d-5199c556acaa" />
+
 ### 1. Fluxo de Empréstimos - Plataforma Web
 
 * **Descrição:** O usuário acessa o sistema pelo navegador, preenche os dados do empréstimo e envia a requisição para a API em C#.
