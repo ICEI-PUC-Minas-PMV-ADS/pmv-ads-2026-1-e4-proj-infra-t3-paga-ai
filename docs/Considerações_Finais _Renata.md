@@ -5,7 +5,7 @@
 
 A equipe adotou Scrum como metodologia de gestão, com acompanhamento das atividades em um quadro Kanban no GitHub Projects. Esse modelo trouxe ritmo previsível às entregas e ajudou a tratar bugs e dificuldades como problemas do grupo, não de uma pessoa isolada.
 
-Tecnicamente, o backend foi construído como um conjunto de microsserviços .NET separados por domínio — Clientes, Empréstimos, Usuários, Notificações e Reports —, todos acessados por um Gateway em Ocelot que centraliza o roteamento das requisições. Os dados ficam em MongoDB, com uma coleção por domínio. O frontend é em React e o aplicativo mobile em Expo/React Native, ambos hospedados na Azure. Essa separação por domínio facilita a manutenção independente de cada serviço.
+Tecnicamente, o backend foi construído como um conjunto de microsserviços .NET separados por domínio: Clientes, Empréstimos, Usuários, Notificações e Reports. Todos acessados por um Gateway em Ocelot que centraliza o roteamento das requisições. Os dados ficam em MongoDB, com uma coleção por domínio. O frontend é em React e o aplicativo mobile em Expo/React Native, ambos hospedados na Azure. Essa separação por domínio facilita a manutenção independente de cada serviço.
 
 ---
 
