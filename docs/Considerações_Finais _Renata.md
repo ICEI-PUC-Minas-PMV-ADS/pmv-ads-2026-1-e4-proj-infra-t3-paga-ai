@@ -23,7 +23,7 @@ Tecnicamente, o backend foi construído como um conjunto de microsserviços .NET
 
 ---
 
-## Renata Dimas Tomé — Minha Contribuição
+## Renata Dimas Tomé - Minha Contribuição
 
 Fui responsável pela identidade visual e pelas telas do sistema ao longo do semestre. Na etapa final, meu foco passou para testar o sistema ponta a ponta e corrigir o que os testes expuseram:
 
@@ -36,4 +36,4 @@ Fui responsável pela identidade visual e pelas telas do sistema ao longo do sem
 
 ## Conclusão
 
-O projeto entregou o que foi proposto. O principal aprendizado: corrigir o código não é o fim — é preciso confirmar que a correção chegou à produção, porque a cadeia entre commit e deploy pode falhar em silêncio.
+O projeto entregou o que foi proposto. O principal aprendizado: corrigir o código não é o fim, é preciso confirmar que a correção chegou à produção, porque a cadeia entre commit e deploy pode falhar em silêncio.
