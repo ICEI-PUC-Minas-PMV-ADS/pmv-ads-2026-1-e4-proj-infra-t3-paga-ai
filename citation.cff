@@ -1,29 +1,25 @@
-message: Please cite this software using these metadata.
-title:
+message: O projeto tem como objetivo geral desenvolver uma aplicação distribuída que facilite o registro e o gerenciamento de empréstimos e dívidas, calcule automaticamente juros e lucros, e acompanhe pagamentos e vencimentos de forma organizada.
+title: Paga Aí
 authors:
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
+  - family-names: Alves Batista
+    given-names: Alex Junio
+  - family-names: da Silva Santos
+    given-names: Cristina Ludimila
+  - family-names: Lucas Moreira
+    given-names: Flavio
+  - family-names: Andrade de Souza
+    given-names: Thiago
+  - family-names: Dimas Tomé
+    given-names: Renata
+  - family-names: Miranda de Sousa
+    given-names: Luan
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
-  - name-suffix: Professor
-    affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Jerônimo de Almeida
+    given-names: Carolina Stephanie
 keywords:
-  - 
-  - 
-repository-code: 
+  - empréstimos
+  - gestão
+repository-code: https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2026-1-e4-proj-infra-t3-paga-ai
 version: 1.0.0
-date-released: 2023-10-31
+date-released: 2026-07-01
